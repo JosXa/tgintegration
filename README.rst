@@ -78,7 +78,8 @@ by sending it a couple of messages and asserting that it responds the way it sho
     assert response.messages[0].sticker
 
 .. raw:: html
-    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png" alt="Sending /start to @BotListBot" height="200px">
+
+    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png" alt="Sending /start to @BotListBot" height="200">
 
 kek
 
