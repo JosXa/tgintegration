@@ -73,7 +73,7 @@ messages and asserting that its responses look about right:
     response = client.send_command_await("start", num_expected=3)
     assert response.num_messages == 3
 
-.. image:: docs/images/start_botlistbot.jpg
+.. image:: https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png
     :width: 200px
     :align: center
     :height: 100px
