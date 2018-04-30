@@ -86,7 +86,8 @@ kek
 
 .. code-block:: python
 
-    examples = response.click_inline_button(r'.*Examples')
+    #
+    examples = response.press_inline_button(r'.*Examples')
     print(examples.full_text)
 
     kb = res[0].reply_markup.inline_keyboard

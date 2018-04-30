@@ -89,7 +89,7 @@ class Response:
                             chat_id = m.chat.id
 
                             action = AwaitableAction(
-                                func=self.client.click_inline_button,
+                                func=self.client.press_inline_button,
                                 args=(chat_id, m, bytes(button.callback_data, "utf-8")),
                                 filters=Filters.chat(chat_id),
                                 max_wait=10,
@@ -250,7 +250,7 @@ class InteractionClient(Client):
         super().add_handler(handler, group)
         return handler, group
 
-    def click_inline_button(self, user_id, on_message, callback_data):
+    def press_inline_button(self, user_id, on_message, callback_data):
         if isinstance(on_message, Message):
             mid = on_message.message_id
         elif isinstance(on_message, int):
