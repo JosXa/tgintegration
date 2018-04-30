@@ -145,7 +145,7 @@ is handled in the ``act_await_response`` method:
 
 .. code-block:: python
 
-    client.act_await_response(action: AwaitableAction) -> Response
+    def act_await_response(self, action: AwaitableAction) -> Response: ...
 
 It expects an ``AwaitableAction`` which is a plan for a message to be sent, while the
 ``IntegrationTestClient`` just makes it easy and removes a lot of the boilerplate code to
