@@ -104,6 +104,7 @@ We can also find and press the inline keyboard buttons:
 
 .. code-block:: python
 
+    # Click the first button matching the pattern
     examples = response.press_inline_button(pattern=r'.*Examples')
 
     assert "Examples for contributing to the BotList" in examples.full_text
