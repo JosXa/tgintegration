@@ -38,7 +38,7 @@ setup(
     install_requires=requirements,
     license="MIT license",
     zip_safe=False,
-    keywords='telegram-integration-test',
+    keywords=['test', 'telegram', 'integration', 'bot', 'continuous'],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
