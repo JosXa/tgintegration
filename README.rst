@@ -18,19 +18,19 @@ telegram-integration-test
      :alt: Updates
 
 
-An Integration Test Framework for `bots on Telegram Messenger <https://core.telegram.org/bots>`_
+An Integration Test Framework for `Bots on Telegram Messenger <https://core.telegram.org/bots>`_
 on top of `Pyrogram <https://github.com/pyrogram/pyrogram>`_.
 
 
 * Free software: MIT license
-* Documentation: https://telegram-integration-test.readthedocs.io.
+# * Documentation: https://telegram-integration-test.readthedocs.io.
 
 
 Features
 --------
 
 * Log into a Telegram user account and interact with bots
-* Abstractions to send messages and retrieve the bot's responses
+* Capable of sending messages and retrieving the bot's responses
 
 Installation
 ------------
@@ -52,8 +52,8 @@ Requirements
 Usage
 -----
 
-Suppose we want to test the `@BotListBot <https://t.me/BotListBot>`_ by sending it a couple of
-messages and asserting that its responses look about right:
+Suppose we want to write integration tests for `@BotListBot <https://t.me/BotListBot>`_
+by sending it a couple of messages and asserting that it responds the way it should:
 
 .. code-block:: python
 
@@ -67,13 +67,15 @@ messages and asserting that its responses look about right:
         min_wait_consecutive=2  # minimum time to wait for consecutive messages
     )
 
-    client.start()  # This is based off a regular Pyrogram Client
+    client.start()
     client.clear_chat()  # Let's start with a blank screen
 
 
     # Send /start to the bot under test and "await" exactly three messages
     response = client.send_command_await("start", num_expected=3)
+
     assert response.num_messages == 3
+    assert response.messages[0].sticker
 
 .. image:: https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png
     :width: 100
@@ -81,9 +83,19 @@ messages and asserting that its responses look about right:
     :height: 100px
     :alt: Sending /start to @BotListBot
 
+kek
+
 .. code-block:: python
     examples = response.click_inline_button(r'.*Examples')
     print(examples.full_text)
+
+
+
+
+
+
+    As it's just a regular Pyrogram client, all the normal methods still work:
+    client.send_message()
 
 
 
