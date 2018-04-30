@@ -55,7 +55,7 @@ Usage
 
 Suppose we want to write integration tests for `@BotListBot <https://t.me/BotListBot>`_
 by sending it a couple of messages and asserting that it responds the way it should.
-First, let's create an `IntegrationTestClient`:
+First, let's create an ``IntegrationTestClient``:
 
 .. code-block:: python
 
@@ -72,7 +72,7 @@ First, let's create an `IntegrationTestClient`:
     client.start()
     client.clear_chat()  # Let's start with a blank screen
 
-Now let's send the `/start` command to the `bot_under_test` and "await" exactly three messages:
+Now let's send the ``/start`` command to the ``bot_under_test`` and "await" exactly three messages:
 
 .. code-block:: python
 
@@ -100,8 +100,8 @@ We can also find and press the inline keyboard buttons in the response:
 
     assert "Examples for contributing to the BotList" in examples.full_text
 
-As the bot edits the message, `press_inline_button` automatically listens for `MessageEdited`
-updates and picks up on the edit, returning it as `Response`.
+As the bot edits the message, ``press_inline_button`` automatically listens for ``MessageEdited``
+updates and picks up on the edit, returning it as ``Response``.
 
 .. raw:: html
 
@@ -116,8 +116,8 @@ So what happens when we send an invalid query or the bot fails to respond?
     client.send_command_await("ayylmao")
 
 
-The `IntegrationTestClient` is based off a regular Pyrogram `Client`, meaning that,
-in addition to the `*_await` methods, all normal calls still work:
+The ``IntegrationTestClient`` is based off a regular Pyrogram ``Client``, meaning that,
+in addition to the ``*_await`` methods, all normal calls still work:
 
 .. code-block:: python
 
