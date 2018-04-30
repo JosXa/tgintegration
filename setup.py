@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """The setup script."""
-
+from pip.req import parse_requirements
 from setuptools import setup, find_packages
 
 with open('README.rst') as readme_file:
@@ -11,9 +11,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
-    'pyrogram'
-]
+requirements = parse_requirements('requirements.txt', session='hack')
 
 setup_requirements = [
     'pytest-runner',
