@@ -5,21 +5,21 @@ telegram-integration-test
 WORK IN PROGRESS. Take bugs with a grain of salt.
 
 .. image:: https://img.shields.io/pypi/v/telegram-integration-test.svg
-        :target: https://pypi.python.org/pypi/telegram-integration-test
+    :target: https://pypi.python.org/pypi/telegram-integration-test
 
 .. image:: https://img.shields.io/travis/JosXa/telegram-integration-test.svg
-        :target: https://travis-ci.org/JosXa/telegram-integration-test
+    :target: https://travis-ci.org/JosXa/telegram-integration-test
 
 .. image:: https://readthedocs.org/projects/telegram-integration-test/badge/?version=latest
-        :target: https://telegram-integration-test.readthedocs.io/en/latest/?badge=latest
+    :target: https://telegram-integration-test.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 .. image:: https://pyup.io/repos/github/JosXa/telegram-integration-test/shield.svg
-     :target: https://pyup.io/repos/github/JosXa/telegram-integration-test/
+    :target: https://pyup.io/repos/github/JosXa/telegram-integration-test/
      :alt: Updates
 
 
-An Integration Test Framework for `Bots on Telegram Messenger <https://core.telegram.org/bots>`_
+    An Integration Test Framework for `Bots on Telegram Messenger <https://core.telegram.org/bots>`_
 on top of `Pyrogram <https://github.com/pyrogram/pyrogram>`_.
 
 
@@ -98,30 +98,46 @@ We can also find and press the inline keyboard buttons in the response:
 
     examples = response.press_inline_button(pattern=r'.*Examples')
 
-    assert "Examples for contributing to the BotList:" in examples.full_text
+    assert "Examples for contributing to the BotList" in examples.full_text
+
+As the bot edits the message, `press_inline_button` automatically listens for `MessageEdited`
+updates and picks up on the edit, returning it as `Response`.
 
 .. raw:: html
 
     <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/examples_botlistbot.png" alt="Sending /start to @BotListBot" width="400">
 
+So what happens when we send an invalid query or the bot fails to respond?
+
 .. code-block:: python
 
-    kb = res[0].reply_markup.inline_keyboard
-    assert len(kb[0]) == 3
-    assert len(kb[1]) == 1
+    # The following instruction will raise an `InvalidResponseError` after
+    # `client.max_wait_response` seconds
+    client.send_command_await("ayylmao")
 
 
-As it's just a regular Pyrogram client, all the normal methods still work:
+The `IntegrationTestClient` is based off a regular Pyrogram `Client`, meaning that,
+in addition to the `*_await` methods, all normal calls still work:
 
 .. code-block:: python
 
     client.send_message(client.bot_under_test, "Hello Pyrogram")
+    client.send_message_await("Hello Pyrogram")  # This automatically uses the bot_under_test as the peer
+    client.send_voice_await("files/voice.ogg")
+    client.send_video_await("files/video.mp4")
 
 
+Integrating with test frameworks
+--------------------------------
+
+TODO
+
+* py.test
+* unittest
 
 
 Credits
----------
+-------
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
