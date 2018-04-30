@@ -152,8 +152,8 @@ It expects an ``AwaitableAction`` which is a plan for a message to be sent, whil
 create these actions.
 
 After executing the action, the client collects all incoming messages that match the ``filters``
- and adds them to the response. Thus you can think of a ``Response`` object as a number of
- messages returned by the peer in reaction to the executed ``AwaitableAction``.
+and adds them to the response. Thus you can think of a ``Response`` object as a number of
+messages returned by the peer in reaction to the executed ``AwaitableAction``.
 
 .. code-block:: python
 
