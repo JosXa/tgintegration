@@ -2,6 +2,7 @@
 telegram-integration-test
 =========================
 
+WORK IN PROGRESS. Take bugs with a grain of salt.
 
 .. image:: https://img.shields.io/pypi/v/telegram-integration-test.svg
         :target: https://pypi.python.org/pypi/telegram-integration-test
@@ -53,7 +54,8 @@ Usage
 -----
 
 Suppose we want to write integration tests for `@BotListBot <https://t.me/BotListBot>`_
-by sending it a couple of messages and asserting that it responds the way it should:
+by sending it a couple of messages and asserting that it responds the way it should.
+First, let's create an `IntegrationTestClient`:
 
 .. code-block:: python
 
@@ -70,37 +72,50 @@ by sending it a couple of messages and asserting that it responds the way it sho
     client.start()
     client.clear_chat()  # Let's start with a blank screen
 
+Now let's send the `/start` command to the `bot_under_test` and "await" exactly three messages:
 
-    # Send /start to the bot under test and "await" exactly three messages
+.. code-block:: python
+
     response = client.send_command_await("start", num_expected=3)
 
     assert response.num_messages == 3
     assert response.messages[0].sticker
+
+Should look like this:
 
 .. raw:: html
 
     <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images
     /start_botlistbot.png" alt="Sending /start to @BotListBot" height="400">
 
-kek
+We can also find and press the inline keyboard buttons in the response:
 
 .. code-block:: python
 
-    #
-    examples = response.press_inline_button(r'.*Examples')
-    print(examples.full_text)
+    second_message = response[1]
+
+    # Three buttons in the first row
+    assert len(second_message.reply_markup.inline_keyboard[0]) == 3
+
+    examples = response.press_inline_button(pattern=r'.*Examples')
+
+    assert "Examples for contributing to the BotList:" in examples.full_text
+
+.. raw:: html
+
+    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images
+    /examples_botlistbot.png" alt="Sending /start to @BotListBot" height="400">
 
     kb = res[0].reply_markup.inline_keyboard
     assert len(kb[0]) == 3
     assert len(kb[1]) == 1
 
 
+As it's just a regular Pyrogram client, all the normal methods still work:
 
+.. code-block:: python
 
-
-
-    As it's just a regular Pyrogram client, all the normal methods still work:
-    client.send_message()
+    client.send_message(client.bot_under_test, "Hello Pyrogram")
 
 
 

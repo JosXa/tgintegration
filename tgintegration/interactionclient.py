@@ -78,7 +78,7 @@ class Response:
     def full_text(self):
         return '\n'.join(x.text for x in self._messages if x.text) or ''
 
-    def click_inline_button(self, pattern: Pattern):
+    def press_inline_button(self, pattern: Pattern):
         pattern = re.compile(pattern)
         for m in self._messages:
             markup = m.reply_markup
