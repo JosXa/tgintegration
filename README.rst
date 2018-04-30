@@ -104,7 +104,9 @@ We can also find and press the inline keyboard buttons in the response:
 
     assert "Examples for contributing to the BotList" in examples.full_text
 
-As the bot edits the message, ``press_inline_button`` automatically listens for ``MessageEdited``
+As the bot edits the message, :code:``press_inline_button` automatically listens
+for
+``MessageEdited``
 updates and picks up on the edit, returning it as ``Response``.
 
 .. raw:: html
