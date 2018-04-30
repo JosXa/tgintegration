@@ -53,11 +53,15 @@ Requirements
 Usage
 -----
 
+**Note**: The importable package is called ``tgintegration``!
+
 Suppose we want to write integration tests for `@BotListBot <https://t.me/BotListBot>`_
 by sending it a couple of messages and asserting that it responds the way it should.
 First, let's create an ``IntegrationTestClient``:
 
 .. code-block:: python
+
+    from tgintegration import IntegrationTestClient
 
     client = IntegrationTestClient(
         bot_under_test='@BotListBot',
@@ -115,7 +119,6 @@ So what happens when we send an invalid query or the bot fails to respond?
     # `client.max_wait_response` seconds
     client.send_command_await("ayylmao")
 
-
 The ``IntegrationTestClient`` is based off a regular Pyrogram ``Client``, meaning that,
 in addition to the ``*_await`` methods, all normal calls still work:
 
@@ -126,6 +129,8 @@ in addition to the ``*_await`` methods, all normal calls still work:
     client.send_voice_await("files/voice.ogg")
     client.send_video_await("files/video.mp4")
 
+Kek
+===
 
 Integrating with test frameworks
 --------------------------------
