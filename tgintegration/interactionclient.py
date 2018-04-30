@@ -81,12 +81,11 @@ class Response:
     def click_inline_button(self, pattern: Pattern):
         pattern = re.compile(pattern)
         for m in self._messages:
-            print(type(m))
             markup = m.reply_markup
             if markup and hasattr(markup, 'inline_keyboard'):
                 for row in markup.inline_keyboard:
                     for button in row:
-                        if pattern.search(button.text):
+                        if pattern.match(button.text):
                             chat_id = m.chat.id
 
                             action = AwaitableAction(
