@@ -23,5 +23,5 @@ deploy:
     secure: PLEASE_REPLACE_ME
   on:
     tags: true
-    repo: JosXa/telegram-integration-test
+    repo: JosXa/tgintegration
     python: 3.6

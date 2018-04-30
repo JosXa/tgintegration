@@ -1,4 +1,4 @@
-* telegram-integration-test version:
+* tgintegration version:
 * Python version:
 * Operating System:
 

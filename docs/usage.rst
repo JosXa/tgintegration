@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use telegram-integration-test in a project::
+To use tgintegration in a project::
 
-    import telegram-integration-test
+    import tgintegration

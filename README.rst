@@ -1,21 +1,21 @@
 =========================
-telegram-integration-test
+tgintegration
 =========================
 
 WORK IN PROGRESS. Take bugs with a grain of salt.
 
-.. image:: https://img.shields.io/pypi/v/telegram-integration-test.svg
-    :target: https://pypi.python.org/pypi/telegram-integration-test
+.. image:: https://img.shields.io/pypi/v/tgintegration.svg
+    :target: https://pypi.python.org/pypi/tgintegration
 
-.. image:: https://img.shields.io/travis/JosXa/telegram-integration-test.svg
-    :target: https://travis-ci.org/JosXa/telegram-integration-test
+.. image:: https://img.shields.io/travis/JosXa/tgintegration.svg
+    :target: https://travis-ci.org/JosXa/tgintegration
 
-.. image:: https://readthedocs.org/projects/telegram-integration-test/badge/?version=latest
-    :target: https://telegram-integration-test.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/tgintegration/badge/?version=latest
+    :target: https://tgintegration.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/JosXa/telegram-integration-test/shield.svg
-    :target: https://pyup.io/repos/github/JosXa/telegram-integration-test/
+.. image:: https://pyup.io/repos/github/JosXa/tgintegration/shield.svg
+    :target: https://pyup.io/repos/github/JosXa/tgintegration/
      :alt: Updates
 
 
@@ -24,7 +24,7 @@ on top of `Pyrogram <https://github.com/pyrogram/pyrogram>`_.
 
 
 * Free software: MIT license
-.. * Documentation: https://telegram-integration-test.readthedocs.io.
+.. * Documentation: https://tgintegration.readthedocs.io.
 
 
 Features
@@ -40,7 +40,7 @@ All hail pip!
 
 .. code-block:: console
 
-    $ pip install telegram-integration-test
+    $ pip install tgintegration
 
 Requirements
 ------------
@@ -89,7 +89,7 @@ Should look like this:
 
 .. raw:: html
 
-    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png" alt="Sending /start to @BotListBot" width="400">
+    <img src="https://github.com/JosXa/tgintegration/blob/master/docs/images/start_botlistbot.png" alt="Sending /start to @BotListBot" width="400">
 
 Let's examine these buttons in the response...
 
@@ -114,7 +114,7 @@ updates and picks up on the edit, returning it as ``Response``.
 
 .. raw:: html
 
-    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/examples_botlistbot.png" alt="Sending /start to @BotListBot" width="400">
+    <img src="https://github.com/JosXa/tgintegration/blob/master/docs/images/examples_botlistbot.png" alt="Sending /start to @BotListBot" width="400">
 
 So what happens when we send an invalid query or the bot fails to respond?
 

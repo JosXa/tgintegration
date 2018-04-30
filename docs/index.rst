@@ -1,4 +1,4 @@
-Welcome to telegram-integration-test's documentation!
+Welcome to tgintegration's documentation!
 ======================================
 
 Contents:

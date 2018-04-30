@@ -25,13 +25,13 @@ test_requirements = [
 ]
 
 setup(
-    name='telegram-integration-test',
+    name='TGIntegration',
     version='0.1.1',
     description="An Integration Test Library for Telegram Messenger Bots on top of Pyrogram.",
     long_description=readme + '\n\n' + history,
     author="Joscha Götzer",
     author_email='joscha.goetzer@gmail.com',
-    url='https://github.com/JosXa/telegram-integration-test',
+    url='https://github.com/JosXa/tgintegration',
     packages=find_packages(include=['tgintegration']),
     include_package_data=True,
     install_requires=requirements,

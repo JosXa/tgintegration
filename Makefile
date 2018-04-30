@@ -65,7 +65,7 @@ coverage: ## check code coverage quickly with the default Python
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/telegram-integration-test.rst
+	rm -f docs/tgintegration.rst
 	rm -f docs/modules.rst
 	sphinx-apidoc -o docs/ tgintegration
 	$(MAKE) -C docs clean
