@@ -23,7 +23,7 @@ on top of `Pyrogram <https://github.com/pyrogram/pyrogram>`_.
 
 
 * Free software: MIT license
-# * Documentation: https://telegram-integration-test.readthedocs.io.
+.. * Documentation: https://telegram-integration-test.readthedocs.io.
 
 
 Features
@@ -60,7 +60,7 @@ by sending it a couple of messages and asserting that it responds the way it sho
     client = IntegrationTestClient(
         bot_under_test='@BotListBot',
         session_name='your-name.session',
-        api_id=API_ID,
+        api_id=API_ID,  # See requirements
         api_hash=API_HASH,
         phone_number="+0123456789",
         max_wait_response=15,  # maximum timeout for bot responses
