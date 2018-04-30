@@ -19,7 +19,7 @@ WORK IN PROGRESS. Take bugs with a grain of salt.
      :alt: Updates
 
 
-    An Integration Test Framework for `Bots on Telegram Messenger <https://core.telegram.org/bots>`_
+        An Integration Test Framework for `Bots on Telegram Messenger <https://core.telegram.org/bots>`_
 on top of `Pyrogram <https://github.com/pyrogram/pyrogram>`_.
 
 
@@ -91,7 +91,7 @@ Should look like this:
 
     <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png" alt="Sending /start to @BotListBot" width="400">
 
-We can also find and press the inline keyboard buttons in the response:
+Let's examine these buttons in the response...
 
 .. code-block:: python
 
@@ -100,13 +100,15 @@ We can also find and press the inline keyboard buttons in the response:
     # Three buttons in the first row
     assert len(second_message.reply_markup.inline_keyboard[0]) == 3
 
+We can also find and press the inline keyboard buttons:
+
+.. code-block:: python
+
     examples = response.press_inline_button(pattern=r'.*Examples')
 
     assert "Examples for contributing to the BotList" in examples.full_text
 
-As the bot edits the message, :code:``press_inline_button` automatically listens
-for
-``MessageEdited``
+As the bot edits the message, ``press_inline_button`` automatically listens for ``MessageEdited``
 updates and picks up on the edit, returning it as ``Response``.
 
 .. raw:: html
@@ -117,9 +119,12 @@ So what happens when we send an invalid query or the bot fails to respond?
 
 .. code-block:: python
 
-    # The following instruction will raise an `InvalidResponseError` after
-    # `client.max_wait_response` seconds
-    client.send_command_await("ayylmao")
+    try:
+        # The following instruction will raise an `InvalidResponseError` after
+        # `client.max_wait_response` seconds
+        client.send_command_await("ayylmao")
+    except InvalidResponseError:
+        print("Raised.")
 
 The ``IntegrationTestClient`` is based off a regular Pyrogram ``Client``, meaning that,
 in addition to the ``*_await`` methods, all normal calls still work:
@@ -131,8 +136,46 @@ in addition to the ``*_await`` methods, all normal calls still work:
     client.send_voice_await("files/voice.ogg")
     client.send_video_await("files/video.mp4")
 
-Kek
-===
+Custom awaitable actions
+========================
+
+The main logic for the timeout between sending a message and receiving a response from the user
+is handled in the ``act_await_response`` method:
+
+.. code-block:: python
+
+    client.act_await_response(action: AwaitableAction) -> Response
+
+It expects an ``AwaitableAction`` which is a plan for a message to be sent, while the
+``IntegrationTestClient`` just makes it easy and removes a lot of the boilerplate code to
+create these actions.
+
+After executing the action, the client collects all incoming messages that match the ``filters``
+ and adds them to the response. Thus you can think of a ``Response`` object as a number of
+ messages returned by the peer in reaction to the executed ``AwaitableAction``.
+
+.. code-block:: python
+
+    from tgintegration import AwaitableAction
+
+    peer = '@BotListBot'
+
+    action = AwaitableAction(
+        func=client.send_message,
+        kwargs=dict(
+            chat_id=peer,
+            text="**Hello World**",
+            parse_mode='markdown'
+        ),
+        # Wait for messages only by the peer we're interacting with
+        filters=Filters.user(peer) & Filters.incoming,
+        # Time out and raise after 15 seconds
+        max_wait=15
+    )
+
+    response = client.act_await_response(action)  # type: Response
+
+
 
 Integrating with test frameworks
 --------------------------------
