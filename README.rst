@@ -104,6 +104,8 @@ We can also find and press the inline keyboard buttons in the response:
 
     <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/examples_botlistbot.png" alt="Sending /start to @BotListBot" height="400">
 
+.. code-block:: python
+
     kb = res[0].reply_markup.inline_keyboard
     assert len(kb[0]) == 3
     assert len(kb[1]) == 1
