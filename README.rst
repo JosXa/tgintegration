@@ -63,24 +63,29 @@ messages and asserting that its responses look about right:
         api_id=API_ID,
         api_hash=API_HASH,
         phone_number="+0123456789",
-        max_wait_response=15,  # maximum timeout for bot responses, seconds
-        min_wait_consecutive=2  # minimum wait time for more than one message
+        max_wait_response=15,  # maximum timeout for bot responses
+        min_wait_consecutive=2  # minimum time to wait for consecutive messages
     )
+
     client.start()  # This is based off a regular Pyrogram Client
     client.clear_chat()  # Let's start with a blank screen
 
-    # Send /start to the bot_under_test and "await" exactly three messages
+
+    # Send /start to the bot under test and "await" exactly three messages
     response = client.send_command_await("start", num_expected=3)
     assert response.num_messages == 3
 
 .. image:: https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png
-    :width: 200px
+    :width: 100
     :align: center
     :height: 100px
     :alt: Sending /start to @BotListBot
 
 .. code-block:: python
-    test
+    examples = response.click_inline_button(r'.*Examples')
+    print(examples.full_text)
+
+
 
 
 Credits
