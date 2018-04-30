@@ -77,7 +77,8 @@ by sending it a couple of messages and asserting that it responds the way it sho
     assert response.num_messages == 3
     assert response.messages[0].sticker
 
-.. raw:: <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png" alt="Sending /start to @BotListBot" height="200px">
+.. raw:: html
+    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png" alt="Sending /start to @BotListBot" height="200px">
 
 kek
 
