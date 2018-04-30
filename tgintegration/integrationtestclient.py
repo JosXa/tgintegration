@@ -9,18 +9,17 @@ from tgintegration.interactionclient import AwaitableAction, InteractionClient
 
 
 class IntegrationTestClient(InteractionClient):
-    def __init__(
-            self,
-            session_name: str,
-            api_id: int,
-            api_hash: str,
-            phone_number: str,
-            bot_under_test: Union[int, str],
-            max_wait_response=15,
-            min_wait_consecutive=2,
-            global_delay=0.2,
+    def __init__(self, session_name: str, api_id: int, api_hash: str, phone_number: str,
+                 bot_under_test: Union[int, str], max_wait_response=15, min_wait_consecutive=2,
+                 global_delay=0.2, *args, **kwargs):
+        super().__init__(
+            session_name=session_name,
+            api_id=api_id,
+            api_hash=api_hash,
+            phone_number=phone_number,
+            *args,
             **kwargs
-    ):
+        )
         self.bot_under_test = bot_under_test
         self.max_wait_response = max_wait_response
         self.min_wait_consecutive = min_wait_consecutive
@@ -32,14 +31,6 @@ class IntegrationTestClient(InteractionClient):
         for name, method in inspect.getmembers(self, predicate=inspect.ismethod):
             if 'send_' in name and '_await' not in name:
                 self._make_awaitable_method(name, method)
-
-        super(type(self), self).__init__(
-            session_name=session_name,
-            api_id=api_id,
-            api_hash=api_hash,
-            phone_number=phone_number,
-            **kwargs
-        )
 
     def _make_awaitable_method(self, name, method):
         def f(*args, filters=None, num_expected=None, **kwargs):
