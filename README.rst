@@ -85,7 +85,7 @@ Should look like this:
 
 .. raw:: html
 
-    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png" alt="Sending /start to @BotListBot" height="400">
+    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png" alt="Sending /start to @BotListBot" width="400">
 
 We can also find and press the inline keyboard buttons in the response:
 
@@ -102,7 +102,7 @@ We can also find and press the inline keyboard buttons in the response:
 
 .. raw:: html
 
-    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/examples_botlistbot.png" alt="Sending /start to @BotListBot" height="400">
+    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/examples_botlistbot.png" alt="Sending /start to @BotListBot" width="400">
 
 .. code-block:: python
 
