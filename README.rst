@@ -77,7 +77,7 @@ messages and asserting that its responses look about right:
     :width: 200px
     :align: center
     :height: 100px
-    :alt: alternate text
+    :alt: Sending /start to @BotListBot
 
 .. code-block:: python
     test
