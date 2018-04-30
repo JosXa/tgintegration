@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """The setup script."""
-from pip.req import parse_requirements
+from pip._internal.req import parse_requirements
 from setuptools import setup, find_packages
 
 with open('README.rst') as readme_file:
@@ -13,6 +13,9 @@ with open('HISTORY.rst') as history_file:
 
 parsed_requirements = parse_requirements('requirements.txt', session='hack')
 requirements = [str(ir.req) for ir in parsed_requirements]
+
+parsed_dev_requirements = parse_requirements('requirements_dev.txt', session='hack')
+requirements_dev = [str(ir.req) for ir in parsed_dev_requirements]
 
 setup_requirements = [
     'pytest-runner',
@@ -26,7 +29,7 @@ test_requirements = [
 
 setup(
     name='tgintegration',
-    version='0.1.1',
+    version='0.1.2',
     description="An Integration Test Library for Telegram Messenger Bots on top of Pyrogram.",
     long_description=readme + '\n\n' + history,
     author="Joscha Götzer",

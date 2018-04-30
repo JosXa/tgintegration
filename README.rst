@@ -53,8 +53,6 @@ Requirements
 Usage
 -----
 
-**Note**: The importable package is called ``tgintegration``!
-
 Suppose we want to write integration tests for `@BotListBot <https://t.me/BotListBot>`_
 by sending it a couple of messages and asserting that it responds the way it should.
 First, let's create an ``IntegrationTestClient``:

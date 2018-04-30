@@ -51,7 +51,6 @@ class AwaitableAction:
                                  "`min_wait_consecutive` must be given.")
         self._num_expected = value
 
-
 class Response:
     def __init__(self, client: 'InteractionClient', to_action: AwaitableAction):
         self.client = client
