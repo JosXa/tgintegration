@@ -79,13 +79,19 @@ by sending it a couple of messages and asserting that it responds the way it sho
 
 .. raw:: html
 
-    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images/start_botlistbot.png" alt="Sending /start to @BotListBot" height="200">
+    <img src="https://github.com/JosXa/telegram-integration-test/blob/master/docs/images
+    /start_botlistbot.png" alt="Sending /start to @BotListBot" height="400px">
 
 kek
 
 .. code-block:: python
+
     examples = response.click_inline_button(r'.*Examples')
     print(examples.full_text)
+
+    kb = res[0].reply_markup.inline_keyboard
+    assert len(kb[0]) == 3
+    assert len(kb[1]) == 1
 
 
 
