@@ -18,7 +18,7 @@ telegram-integration-test
      :alt: Updates
 
 
-An integration test framework for bots on Telegram Messenger on top of Pyrogram.
+An integration test framework for [bots on Telegram Messenger](https://core.telegram.org/bots) on top of [Pyrogram](https://github.com/pyrogram/pyrogram).
 
 
 * Free software: MIT license

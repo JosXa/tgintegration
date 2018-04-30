@@ -48,7 +48,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 
 lint: ## check style with flake8
-	flake8 telegram-integration-test tests
+	flake8 tgintegration tests
 
 test: ## run tests quickly with the default Python
 	py.test
@@ -58,7 +58,7 @@ test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source telegram-integration-test -m pytest
+	coverage run --source tgintegration -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
@@ -66,7 +66,7 @@ coverage: ## check code coverage quickly with the default Python
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/telegram-integration-test.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ telegram-integration-test
+	sphinx-apidoc -o docs/ tgintegration
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
