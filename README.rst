@@ -158,6 +158,7 @@ After executing the action, the client collects all incoming messages that match
 .. code-block:: python
 
     from tgintegration import AwaitableAction
+    from pyrogram import Filters
 
     peer = '@BotListBot'
 
