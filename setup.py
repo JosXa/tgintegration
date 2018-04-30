@@ -25,7 +25,7 @@ test_requirements = [
 ]
 
 setup(
-    name='TGIntegration',
+    name='tgintegration',
     version='0.1.1',
     description="An Integration Test Library for Telegram Messenger Bots on top of Pyrogram.",
     long_description=readme + '\n\n' + history,

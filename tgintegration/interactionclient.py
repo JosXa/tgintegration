@@ -4,10 +4,10 @@ import re
 import time
 from datetime import datetime, timedelta
 from typing import Callable, Dict, List, Pattern, Set
-from pyrogram import Client, Filters, MessageHandler
+
+from pyrogram import Client, Filters, Message, MessageHandler
 from pyrogram.api.errors import FloodWait, RpcMcgetFail
 from pyrogram.api.functions.messages import GetBotCallbackAnswer
-from pyrogram import Message
 from pyrogram.session import Session
 
 # Do not show Pyrogram license
@@ -202,10 +202,22 @@ class InteractionClient(Client):
     def ping_bot(
             self,
             peer,
-            timeout=15,
-            override_messages: List[str] = None,
-            inline_queries: List[str] = None
-    ) -> Response:
+            override_messages=None,
+            max_wait_response=None,
+            min_wait_consecutive=None
+    ):
+        """
+        Send messages to a bot to determine whether it is online.
+
+        Args:
+            peer:
+            override_messages:
+
+        Returns:
+
+        """
+        # TODO: should this method also handle inline queries?
+
         messages = ["/start"]
         if override_messages:
             messages = override_messages
@@ -214,30 +226,22 @@ class InteractionClient(Client):
             for n, m in enumerate(messages):
                 try:
                     if n >= 1:
-                        asyncio.sleep(1)
+                        time.sleep(1)
                     self.send_message(peer, m)
                 except FloodWait as e:
                     if e.x > 5:
                         self.logger.warning("send_message flood: waiting {} seconds".format(e.x))
-                    time.sleep(e.x)  # not asyncio.sleep, rather stop the whole thread
+                    time.sleep(e.x)
                     continue
 
         action = AwaitableAction(
             send_pings,
             filters=Filters.chat(peer),
-            max_wait=timeout,
-            min_wait_consecutive=2,
+            max_wait=max_wait_response,
+            min_wait_consecutive=min_wait_consecutive,
         )
 
-        message_response = self.act_await_response(action)
-
-        if message_response:
-            return message_response
-
-        if inline_queries:
-            for q in inline_queries:
-                res = self.get_inline_bot_results(peer, q)
-                print(res)
+        return self.act_await_response(action)
 
     def remove_handler(self, handler, group: int = 0):
         # TODO: Waiting - Let Dan implement this

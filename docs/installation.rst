@@ -14,7 +14,7 @@ To install tgintegration, run this command in your terminal:
 
     $ pip install tgintegration
 
-This is the preferred method to install TGIntegration, as it will always install the most recent
+This is the preferred method to install tgintegration, as it will always install the most recent
 stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
@@ -27,7 +27,7 @@ you through the process.
 From sources
 ------------
 
-The sources for TGIntegration can be downloaded from the `Github repo`_.
+The sources for tgintegration can be downloaded from the `Github repo`_.
 
 You can either clone the public repository:
 
