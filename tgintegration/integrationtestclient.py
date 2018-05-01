@@ -132,7 +132,6 @@ class IntegrationTestClient(InteractionClient):
         self.send(DeleteHistory(self.peer, max_id=999999999, just_clear=True))
 
 
-# outside of class
 def __modify_await_arg_defaults(class_, method_name, await_method):
     print(f"Modifying {method_name} on {class_.__name__}")
 
