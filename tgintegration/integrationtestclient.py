@@ -1,10 +1,14 @@
 import inspect
 import time
+from typing import List
 
 from pyrogram import Filters
-from pyrogram.api.errors import FloodWait
 from pyrogram.api.functions.messages import DeleteHistory
-from tgintegration.interactionclient import AwaitableAction, InteractionClient
+from pyrogram.api.functions.users import GetFullUser
+from pyrogram.api.types import BotCommand
+from tgintegration.awaitableaction import AwaitableAction
+from tgintegration.interactionclient import InteractionClient
+from tgintegration.response import Response
 
 
 class IntegrationTestClient(InteractionClient):
@@ -19,6 +23,7 @@ class IntegrationTestClient(InteractionClient):
             min_wait_consecutive=2,
             global_delay=0.2,
             **kwargs):
+
         super().__init__(
             session_name=session_name,
             api_id=api_id,
@@ -26,39 +31,19 @@ class IntegrationTestClient(InteractionClient):
             phone_number=phone_number,
             **kwargs
         )
+
         self.bot_under_test = bot_under_test
         self.max_wait_response = max_wait_response
         self.min_wait_consecutive = min_wait_consecutive
-        self.global_delay = global_delay
+        self.global_action_delay = global_delay
 
         self.peer = None
         self.peer_id = None
+        self.command_list = None
 
-        for name, method in inspect.getmembers(self, predicate=inspect.ismethod):
-            if 'send_' in name and '_await' not in name:
-                self._make_awaitable_method(name, method)
+        self._last_response = None
 
-    def _make_awaitable_method(self, name, method):
-        """
-        Injects `*_await` versions of all `send_*` methods.
-        """
-
-        def f(*args, filters=None, num_expected=None, **kwargs):
-            action = AwaitableAction(
-                func=method,
-                args=(self.peer_id, *args),
-                kwargs=kwargs,
-                num_expected=num_expected,
-                filters=self._make_default_filters(filters),
-                max_wait=self.max_wait_response,
-                min_wait_consecutive=self.min_wait_consecutive
-            )
-            return self.act_await_response(action)
-
-        method_name = name + '_await'
-        setattr(self, method_name, f)
-
-    def _make_default_filters(self, user_filters):
+    def get_default_filters(self, user_filters=None):
         if user_filters is None:
             return Filters.chat(self.peer_id) & Filters.incoming
         else:
@@ -80,9 +65,19 @@ class IntegrationTestClient(InteractionClient):
         Raises:
             :class:`Error <pyrogram.Error>`
         """
-        if self.global_delay:
-            time.sleep(self.global_delay)
         return super().send(data)
+
+    def act_await_response(self, action: AwaitableAction) -> Response:
+        if self.global_action_delay and self._last_response:
+            # Sleep for as long as the global delay prescribes
+            sleep = self.global_action_delay - (time.time() - self._last_response.started)
+            if sleep > 0:
+                time.sleep(sleep)
+                print("sleeping for ", sleep)
+
+        response = super().act_await_response(action)
+        self._last_response = response
+        return response
 
     def start(self, debug=False):
         """Use this method to start the Client after creating it.
@@ -100,27 +95,9 @@ class IntegrationTestClient(InteractionClient):
 
         self.peer = self.resolve_peer(self.bot_under_test)
         self.peer_id = self.peer.user_id
+        self.command_list = self._get_command_list()
 
         return res
-
-    def send_command_await(self, command, params=None, filters=None, num_expected=None):
-        """
-        Send a slash-command with corresponding parameters.
-
-        Args:
-            command:
-            params:
-            filters:
-            num_expected:
-
-        Returns:
-
-        """
-        text = "/" + command.lstrip('/')
-        if params:
-            text += ' '
-            text += ' '.join(params)
-        return self.send_message_await(text, filters=filters, num_expected=num_expected)
 
     def ping(self, override_messages=None):
         """
@@ -144,5 +121,42 @@ class IntegrationTestClient(InteractionClient):
             min_wait_consecutive=self.min_wait_consecutive
         )
 
+    def _get_command_list(self) -> List[BotCommand]:
+        return self.send(
+            GetFullUser(
+                id=self.peer
+            )
+        ).bot_info.commands
+
     def clear_chat(self):
         self.send(DeleteHistory(self.peer, max_id=999999999, just_clear=True))
+
+
+# outside of class
+def __modify_await_arg_defaults(class_, method_name, await_method):
+    print(f"Modifying {method_name} on {class_.__name__}")
+
+    def f(self, *args, filters=None, num_expected=None, **kwargs):
+        # Make sure arguments aren't passed twice
+        default_args = dict(
+            max_wait=self.max_wait_response,
+            min_wait_consecutive=self.min_wait_consecutive
+        )
+        default_args.update(**kwargs)
+
+        return await_method(
+            self,
+            self.peer_id,
+            *args,
+            filters=self.get_default_filters(filters),
+            num_expected=num_expected,
+            **default_args
+        )
+
+    f.__name__ = method_name
+    setattr(class_, method_name, f)
+
+
+for name, method in inspect.getmembers(IntegrationTestClient, inspect.isfunction):
+    if name.endswith('_await'):
+        __modify_await_arg_defaults(IntegrationTestClient, name, method)

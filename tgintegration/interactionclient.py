@@ -1,137 +1,28 @@
 import asyncio
+import inspect
 import logging
-import re
 import time
 from datetime import datetime, timedelta
-from typing import Callable, Dict, List, Pattern, Set
+from typing import Union
 
 from pyrogram import Client, Filters, Message, MessageHandler
+from pyrogram.api import types
 from pyrogram.api.errors import FloodWait, RpcMcgetFail
-from pyrogram.api.functions.messages import GetBotCallbackAnswer
+from pyrogram.api.functions.messages import GetBotCallbackAnswer, GetInlineBotResults
+from pyrogram.api.types import InputGeoPoint
 from pyrogram.session import Session
-
 # Do not show Pyrogram license
+from tgintegration.awaitableaction import AwaitableAction
+from tgintegration.containers.inline_results import InlineResults
+from tgintegration.response import InvalidResponseError, Response
+
 Session.notice_displayed = True
-
-
-class AwaitableAction:
-    """
-    Represents an action to be sent by the client while waiting for a response by the peer.
-    """
-
-    def __init__(
-            self,
-            func: Callable,
-            args: List = None,
-            kwargs: Dict = None,
-            filters: Filters = None,
-            num_expected: int = None,
-            max_wait: int = 20,
-            min_wait_consecutive: int = None,
-    ):
-        self.func = func
-        self.args = args or []
-        self.kwargs = kwargs or {}
-        self.filters = filters
-        self._num_expected = num_expected
-        self.consecutive_wait = max(0, min_wait_consecutive) if min_wait_consecutive else 0
-        self.max_wait = max_wait
-
-    @property
-    def num_expected(self):
-        return self._num_expected
-
-    @num_expected.setter
-    def num_expected(self, value):
-        if value is not None:
-            if not isinstance(value, int) or value < 1:
-                raise ValueError("`num_expected` must be an int and greater or equal 1")
-            if value > 1 and not self.consecutive_wait:
-                raise ValueError("If the number of expected messages greater than one, "
-                                 "`min_wait_consecutive` must be given.")
-        self._num_expected = value
-
-class Response:
-    def __init__(self, client: 'InteractionClient', to_action: AwaitableAction):
-        self.client = client
-        self.action = to_action
-        self.action_result = None
-        self._messages = []  # type: List[Message]
-
-    @property
-    def messages(self) -> List[Message]:
-        return self._messages
-
-    def _add_message(self, message: Message):
-        self._messages.append(message)
-
-    @property
-    def empty(self) -> bool:
-        return not self._messages
-
-    @property
-    def num_messages(self) -> int:
-        return len(self._messages)
-
-    @property
-    def full_text(self):
-        return '\n'.join(x.text for x in self._messages if x.text) or ''
-
-    def press_inline_button(self, pattern: Pattern):
-        pattern = re.compile(pattern)
-        for m in self._messages:
-            markup = m.reply_markup
-            if markup and hasattr(markup, 'inline_keyboard'):
-                for row in markup.inline_keyboard:
-                    for button in row:
-                        if pattern.match(button.text):
-                            chat_id = m.chat.id
-
-                            action = AwaitableAction(
-                                func=self.client.press_inline_button,
-                                args=(chat_id, m, bytes(button.callback_data, "utf-8")),
-                                filters=Filters.chat(chat_id),
-                                max_wait=10,
-                                min_wait_consecutive=3
-                            )
-                            return self.client.act_await_response(action)
-        raise ValueError("No button found.")
-
-    @property
-    def keyboard_buttons(self) -> Set[str]:
-        all_buttons = set()
-        for m in self._messages:
-            markup = m.reply_markup
-            if markup and hasattr(markup, 'keyboard'):
-                for row in markup.keyboard:
-                    for button in row:
-                        all_buttons.add(button)
-        return all_buttons
-
-    @property
-    def last_message_timestamp(self) -> datetime:
-        if self.empty:
-            return None
-        # TODO: Dan should fix this
-        return datetime.fromtimestamp(self._messages[-1].date)
-
-    def __getitem__(self, item):
-        return self._messages[item]
-
-    def __str__(self):
-        if self.empty:
-            return "Empty response"
-        return '\nthen\n'.join(['"{}"'.format(m.text) for m in self._messages])
-
-
-class InvalidResponseError(Exception):
-    pass
 
 
 class InteractionClient(Client):
     def __init__(self, *args, **kwargs):
         self.logger = logging.getLogger(self.__class__.__name__)
-        super(InteractionClient, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def act_await_response(self, action: AwaitableAction) -> Response:
         response = Response(self, action)
@@ -147,6 +38,9 @@ class InteractionClient(Client):
             ), -1)
 
         try:
+            response.started = time.time()
+
+            print(action.args, action.kwargs)
             response.action_result = action.func(*action.args, **action.kwargs)
 
             timeout_end = datetime.now() + timedelta(seconds=action.max_wait)
@@ -242,16 +136,34 @@ class InteractionClient(Client):
 
         return self.act_await_response(action)
 
-    def remove_handler(self, handler, group: int = 0):
-        # TODO: Waiting - Let Dan implement this
-        if group not in self.dispatcher.groups:
-            raise ValueError("Wrong group you sucker")
+    def get_inline_bot_results(
+            self,
+            bot: int or str,
+            query: str,
+            offset: str = "",
+            location_or_geo: Union[tuple, InputGeoPoint] = None
+    ):
+        if location_or_geo:
+            if isinstance(location_or_geo, tuple):
+                geo_point = InputGeoPoint(
+                    lat=location_or_geo[0],
+                    long=location_or_geo[1]
+                )
+            else:
+                geo_point = location_or_geo
+        else:
+            geo_point = None
 
-        self.dispatcher.groups[group].remove(handler)
-
-    def add_handler(self, handler, group: int = 0):
-        super().add_handler(handler, group)
-        return handler, group
+        request = self.send(
+            GetInlineBotResults(
+                bot=self.resolve_peer(bot),
+                peer=types.InputPeerSelf(),
+                query=query,
+                offset=offset,
+                geo_point=geo_point
+            )
+        )
+        return InlineResults(self, bot, query, request, offset, geo_point=geo_point)
 
     def press_inline_button(self, user_id, on_message, callback_data):
         if isinstance(on_message, Message):
@@ -268,3 +180,68 @@ class InteractionClient(Client):
                 data=callback_data
             )
         )
+
+    def send_command_await(self, chat_id, command, params=None, filters=None, num_expected=None,
+                           max_wait=15, min_wait_consecutive=2):
+        """
+        Send a slash-command with corresponding parameters.
+
+        Args:
+            command:
+            params:
+            filters:
+            num_expected:
+
+        Returns:
+
+        """
+        text = "/" + command.lstrip('/')
+        if params:
+            text += ' '
+            text += ' '.join(params)
+
+        return self.send_message_await(
+            chat_id,
+            text,
+            filters=filters,
+            num_expected=num_expected,
+            max_wait=max_wait,
+            min_wait_consecutive=min_wait_consecutive
+        )
+
+
+def __make_awaitable_method(class_, method_name, send_method):
+    """
+    Injects `*_await` version of a `send_*` method.
+    """
+    print(f"adding {method_name}_await to {class_.__name__}")
+
+    def f(
+            self,
+            *args,  # usually the chat_id and a string
+            filters=None,
+            num_expected=None,
+            max_wait=15,
+            min_wait_consecutive=2,
+            **kwargs
+    ):
+        action = AwaitableAction(
+            func=send_method,
+            args=(self, *args),
+            kwargs=kwargs,
+            num_expected=num_expected,
+            filters=filters,
+            max_wait=max_wait,
+            min_wait_consecutive=min_wait_consecutive
+        )
+        return self.act_await_response(action)
+
+    method_name += '_await'
+    f.__name__ = method_name
+
+    setattr(class_, method_name, f)
+
+
+for name, method in inspect.getmembers(InteractionClient, predicate=inspect.isfunction):
+    if name.startswith('send_') and not name.endswith('_await'):
+        __make_awaitable_method(InteractionClient, name, method)
