@@ -1,1 +1,1 @@
-pyrogram==0.7.1
+pyrogram>=0.7.2

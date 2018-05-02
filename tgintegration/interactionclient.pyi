@@ -14,7 +14,6 @@ from tgintegration import AwaitableAction, Response
 
 
 class InteractionClient(Client):
-
     logger: Logger = ...
 
     def __init__(self, session_name: str, api_id: int or str = None, api_hash: str = None,
@@ -29,6 +28,14 @@ class InteractionClient(Client):
     def send(self, data: Object) -> Any: ...
 
     def start(self, debug: bool = ...): ...
+
+    def ping_bot(
+            self,
+            peer: int or str,
+            override_messages: List[str] = None,
+            max_wait_response: float = None,
+            min_wait_consecutive: float = None
+    ) -> Response: ...
 
     def act_await_response(self, action: AwaitableAction) -> Response: ...
 

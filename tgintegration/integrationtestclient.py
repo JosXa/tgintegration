@@ -14,11 +14,11 @@ from tgintegration.response import Response
 class IntegrationTestClient(InteractionClient):
     def __init__(
             self,
-            session_name,
-            api_id,
-            api_hash,
-            phone_number,
             bot_under_test,
+            session_name=None,
+            api_id=None,
+            api_hash=None,
+            phone_number=None,
             max_wait_response=15,
             min_wait_consecutive=2,
             global_delay=0.2,
@@ -55,8 +55,9 @@ class IntegrationTestClient(InteractionClient):
         Adapted to include the global delays.
 
         This method makes possible to manually call every single Telegram API method in a low-level manner.
-        Available functions are listed in the :obj:`functions <pyrogram.api.functions>` package and may accept compound
-        data types from :obj:`types <pyrogram.api.types>` as well as bare types such as ``int``, ``str``, etc...
+        Available functions are listed in the :obj:`functions <pyrogram.api.functions>` package and may accept
+        compound data types from :obj:`types <pyrogram.api.types>` as well as bare types such as ``int``, ``str``,
+        etc...
 
         Args:
             data (``Object``):
@@ -73,7 +74,6 @@ class IntegrationTestClient(InteractionClient):
             sleep = self.global_action_delay - (time.time() - self._last_response.started)
             if sleep > 0:
                 time.sleep(sleep)
-                print("sleeping for ", sleep)
 
         response = super().act_await_response(action)
         self._last_response = response
@@ -129,12 +129,10 @@ class IntegrationTestClient(InteractionClient):
         ).bot_info.commands
 
     def clear_chat(self):
-        self.send(DeleteHistory(self.peer, max_id=999999999, just_clear=True))
+        self.send(DeleteHistory(self.peer, max_id=0))
 
 
 def __modify_await_arg_defaults(class_, method_name, await_method):
-    print(f"Modifying {method_name} on {class_.__name__}")
-
     def f(self, *args, filters=None, num_expected=None, **kwargs):
         # Make sure arguments aren't passed twice
         default_args = dict(

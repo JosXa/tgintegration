@@ -40,7 +40,6 @@ class InteractionClient(Client):
         try:
             response.started = time.time()
 
-            print(action.args, action.kwargs)
             response.action_result = action.func(*action.args, **action.kwargs)
 
             timeout_end = datetime.now() + timedelta(seconds=action.max_wait)
@@ -181,16 +180,12 @@ class InteractionClient(Client):
             )
         )
 
-    def send_command_await(self, chat_id, command, params=None, filters=None, num_expected=None,
-                           max_wait=15, min_wait_consecutive=2):
+    def send_command(self, chat_id, command, params=None):
         """
         Send a slash-command with corresponding parameters.
 
         Args:
             command:
-            params:
-            filters:
-            num_expected:
 
         Returns:
 
@@ -200,21 +195,13 @@ class InteractionClient(Client):
             text += ' '
             text += ' '.join(params)
 
-        return self.send_message_await(
-            chat_id,
-            text,
-            filters=filters,
-            num_expected=num_expected,
-            max_wait=max_wait,
-            min_wait_consecutive=min_wait_consecutive
-        )
+        return self.send_message(chat_id, text)
 
 
 def __make_awaitable_method(class_, method_name, send_method):
     """
     Injects `*_await` version of a `send_*` method.
     """
-    print(f"adding {method_name}_await to {class_.__name__}")
 
     def f(
             self,
