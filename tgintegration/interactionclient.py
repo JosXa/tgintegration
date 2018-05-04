@@ -13,7 +13,7 @@ from pyrogram.api.types import InputGeoPoint
 from pyrogram.session import Session
 # Do not show Pyrogram license
 from tgintegration.awaitableaction import AwaitableAction
-from tgintegration.containers.inline_results import InlineResults
+from tgintegration.containers import InlineResultContainer
 from tgintegration.response import InvalidResponseError, Response
 
 Session.notice_displayed = True
@@ -175,7 +175,7 @@ class InteractionClient(Client):
                 geo_point=geo_point
             )
         )
-        return InlineResults(self, bot, query, request, offset, geo_point=geo_point)
+        return InlineResultContainer(self, bot, query, request, offset, geo_point=geo_point)
 
     def press_inline_button(self, user_id, on_message, callback_data):
         if isinstance(on_message, Message):

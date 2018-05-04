@@ -1,6 +1,11 @@
 import traceback
 
+import os
+from pathlib import Path
+
 from tgintegration import IntegrationTestClient
+
+examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 client = IntegrationTestClient(
     session_name='my_account',
@@ -8,7 +13,7 @@ client = IntegrationTestClient(
     max_wait_response=15,  # Maximum time in seconds to wait for a response from the bot
     min_wait_consecutive=None,  # Do not wait for more than one message
     global_delay=2.0,  # The @IdleTownBot has a spam limit of about 1.9s
-    workdir='../'  # Load configuration from parent folder
+    workdir=examples_dir  # Load configuration from parent folder
 )
 client.start()
 

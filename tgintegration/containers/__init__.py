@@ -1,2 +1,2 @@
-from tgintegration.containers.inlineresults import InlineResultsContainer, InlineResult
+from tgintegration.containers.inlineresults import InlineResultContainer, InlineResult
 
