@@ -34,10 +34,10 @@ class InteractionClient(Client):
             peer: int or str,
             override_messages: List[str] = None,
             max_wait_response: float = None,
-            min_wait_consecutive: float = None
+            min_wait_consecutive: float = None,
     ) -> Response: ...
 
-    def act_await_response(self, action: AwaitableAction) -> Response: ...
+    def act_await_response(self, action: AwaitableAction, raise_: bool = ...) -> Response: ...
 
     def send_audio_await(
             self,
@@ -47,6 +47,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             caption: str = ...,
             parse_mode: str = ...,
             duration: int = ...,
@@ -66,6 +67,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             progress: Callable = ...
     ) -> Response:
         ...
@@ -79,6 +81,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             last_name: str = ...,
             disable_notification: bool = ...,
             reply_to_message_id: int = ...
@@ -93,6 +96,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             caption: str = ...,
             parse_mode: str = ...,
             disable_notification: bool = ...,
@@ -109,6 +113,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             disable_notification: bool = ...,
             reply_to_message_id: int = ...
     ) -> Response: ...
@@ -121,6 +126,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             disable_notification: bool = ...,
             reply_to_message_id: int = ...
     ) -> Response: ...
@@ -133,6 +139,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             **kwargs
     ) -> Response: ...
 
@@ -144,6 +151,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
     ) -> Response: ...
 
     def send_photo_await(
@@ -154,6 +162,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             caption: str = ...,
             parse_mode: str = ...,
             ttl_seconds: int = ...,
@@ -170,6 +179,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             disable_notification: bool = ...,
             reply_to_message_id: int = ...,
             progress: Callable = ...
@@ -186,6 +196,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             foursquare_id: str = ...,
             disable_notification: bool = ...,
             reply_to_message_id: int = ...
@@ -199,6 +210,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             caption: str = ...,
             parse_mode: str = ...,
             duration: int = ...,
@@ -219,6 +231,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             duration: int = ...,
             length: int = ...,
             disable_notification: bool = ...,
@@ -234,6 +247,7 @@ class InteractionClient(Client):
             num_expected: int = ...,
             max_wait: float = ...,
             min_wait_consecutive: float = ...,
+            raise_: bool = ...,
             caption: str = ...,
             parse_mode: str = ...,
             duration: int = ...,

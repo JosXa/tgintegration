@@ -63,10 +63,9 @@ First, let's create an ``IntegrationTestClient``:
 
     client = IntegrationTestClient(
         bot_under_test='@BotListBot',
-        session_name='your-name.session',
-        api_id=API_ID,  # See requirements
+        session_name='my_account',
+        api_id=API_ID,
         api_hash=API_HASH,
-        phone_number="+0123456789",
         max_wait_response=15,  # maximum timeout for bot responses
         min_wait_consecutive=2  # minimum time to wait for consecutive messages
     )
@@ -83,7 +82,7 @@ Now let's send the ``/start`` command to the ``bot_under_test`` and "await" exac
     assert response.num_messages == 3
     assert response.messages[0].sticker
 
-Should look like this:
+The result should look like this:
 
 .. raw:: html
 

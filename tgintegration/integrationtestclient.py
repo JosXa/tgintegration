@@ -22,6 +22,7 @@ class IntegrationTestClient(InteractionClient):
             max_wait_response=15,
             min_wait_consecutive=2,
             global_delay=0.2,
+            raise_no_response=True,
             **kwargs):
 
         super().__init__(
@@ -35,6 +36,7 @@ class IntegrationTestClient(InteractionClient):
         self.bot_under_test = bot_under_test
         self.max_wait_response = max_wait_response
         self.min_wait_consecutive = min_wait_consecutive
+        self.raise_no_response = raise_no_response
         self.global_action_delay = global_delay
 
         self.peer = None
@@ -68,14 +70,14 @@ class IntegrationTestClient(InteractionClient):
         """
         return super().send(data)
 
-    def act_await_response(self, action: AwaitableAction) -> Response:
+    def act_await_response(self, action: AwaitableAction, raise_=True) -> Response:
         if self.global_action_delay and self._last_response:
             # Sleep for as long as the global delay prescribes
             sleep = self.global_action_delay - (time.time() - self._last_response.started)
             if sleep > 0:
                 time.sleep(sleep)
 
-        response = super().act_await_response(action)
+        response = super().act_await_response(action, raise_=raise_)
         self._last_response = response
         return response
 
@@ -133,11 +135,12 @@ class IntegrationTestClient(InteractionClient):
 
 
 def __modify_await_arg_defaults(class_, method_name, await_method):
-    def f(self, *args, filters=None, num_expected=None, **kwargs):
+    def f(self, *args, filters=None, num_expected=None, raise_=True, **kwargs):
         # Make sure arguments aren't passed twice
         default_args = dict(
             max_wait=self.max_wait_response,
-            min_wait_consecutive=self.min_wait_consecutive
+            min_wait_consecutive=self.min_wait_consecutive,
+            raise_=raise_ if raise_ is not None else self.raise_no_response
         )
         default_args.update(**kwargs)
 

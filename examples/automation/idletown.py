@@ -5,9 +5,10 @@ from tgintegration import IntegrationTestClient
 client = IntegrationTestClient(
     session_name='my_account',
     bot_under_test='@IdleTownBot',
-    max_wait_response=30,  # Maximum time in seconds to wait for a response from the bot
+    max_wait_response=15,  # Maximum time in seconds to wait for a response from the bot
     min_wait_consecutive=None,  # Do not wait for more than one message
-    global_delay=2.0  # The @IdleTownBot has a spam limit of about 1.9s
+    global_delay=2.0,  # The @IdleTownBot has a spam limit of about 1.9s
+    workdir='../'  # Load configuration from parent folder
 )
 client.start()
 
@@ -24,13 +25,13 @@ def get_buttons(response):
     return res
 
 
-client.clear_chat()
-
 while True:
     try:
         # Setup
+        # client.clear_chat()
         start = client.send_command_await("start")
 
+        # Extract keyboard buttons of /start response
         main_buttons = get_buttons(start)
 
         # Get World Exp if possible
@@ -52,6 +53,7 @@ while True:
         hero = get_buttons(client.send_message_await(main_buttons["hero"]))
         equip_buttons = get_buttons(client.send_message_await(hero["equipment"]))
 
+        # For every possible equipment, upgrade it until there are not enough resources left
         for equip in (b for k, b in equip_buttons.items() if 'up' in k):
             while True:
                 response_text = client.send_message_await(equip).full_text
@@ -62,14 +64,18 @@ while True:
         battle = get_buttons(client.send_message_await(main_buttons['battle']))
         arena = get_buttons(client.send_message_await(battle['arena']))
         normal_match = get_buttons(client.send_message_await(arena['normalmatch']))
-        fight = get_buttons(client.send_message_await(normal_match['fight']))
+        if 'fight' in normal_match:
+            fight = get_buttons(client.send_message_await(normal_match['fight']))
 
         # Attack Boss
-        client.send_message_await(get_buttons(main_buttons['battle']))
-        bosses = get_buttons(client.send_message_await(get_buttons(main_buttons['bosses'])))
-        client.send_message_await(get_buttons(bosses['attackmax']))
+        bosses = get_buttons(client.send_message_await(battle['bosses']))
+        if 'attackmax' in bosses:
+            client.send_message_await(bosses['attackmax'])
     except KeyboardInterrupt:
         print('Done.')
+        break
     except:
         traceback.print_exc()
         pass
+
+client.stop()

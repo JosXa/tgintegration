@@ -24,7 +24,7 @@ class InteractionClient(Client):
         self.logger = logging.getLogger(self.__class__.__name__)
         super().__init__(*args, **kwargs)
 
-    def act_await_response(self, action: AwaitableAction) -> Response:
+    def act_await_response(self, action: AwaitableAction, raise_=True) -> Response:
         response = Response(self, action)
 
         def collect(_, message):
@@ -45,7 +45,10 @@ class InteractionClient(Client):
             timeout_end = datetime.now() + timedelta(seconds=action.max_wait)
 
             while response.empty:
+                if time.time() - response.started > 5:
+                    self.logger.debug("No response received yet after 5 seconds")
                 if datetime.now() > timeout_end:
+                    self.logger.debug("Aborting as no response was received after {} seconds.".format(action.max_wait))
                     return response
                 asyncio.sleep(0.3)
 
@@ -57,22 +60,32 @@ class InteractionClient(Client):
                 while True:
                     now = datetime.now()
 
-                    if action.num_expected:
-                        if response.num_messages < action.num_expected:
-                            if now > timeout_end:
-                                raise InvalidResponseError(
-                                    "Expected {} messages but only received {} after waiting {} "
-                                    "seconds.".format(
-                                        action.num_expected,
-                                        response.num_messages,
-                                        action.max_wait
-                                    ))
+                    if response.num_messages < action.num_expected:
+                        if now > timeout_end:
+                            msg = "Expected {} messages but only received {} after waiting {} "
+                            "seconds.".format(
+                                action.num_expected,
+                                response.num_messages,
+                                action.max_wait
+                            )
+
+                            if raise_:
+                                raise InvalidResponseError(msg)
+                            else:
+                                self.logger.debug(msg)
+                                return False
+
                         elif response.num_messages > action.num_expected:
-                            raise InvalidResponseError(
-                                "Expected {} messages but received {}.".format(
-                                    action.num_expected,
-                                    response.num_messages
-                                ))
+                            msg = "Expected {} messages but received {}.".format(
+                                action.num_expected,
+                                response.num_messages
+                            )
+
+                            if raise_:
+                                raise InvalidResponseError(msg)
+                            else:
+                                self.logger.debug(msg)
+                                return False
                         else:
                             return response
                     else:
@@ -86,7 +99,7 @@ class InteractionClient(Client):
 
             return response
         except RpcMcgetFail as e:
-            self.logger.info(e)
+            self.logger.warning(e)
             time.sleep(60)  # Internal Telegram error
         finally:
             self.remove_handler(handler, group)
@@ -210,6 +223,7 @@ def __make_awaitable_method(class_, method_name, send_method):
             num_expected=None,
             max_wait=15,
             min_wait_consecutive=2,
+            raise_=True,
             **kwargs
     ):
         action = AwaitableAction(
@@ -221,7 +235,7 @@ def __make_awaitable_method(class_, method_name, send_method):
             max_wait=max_wait,
             min_wait_consecutive=min_wait_consecutive
         )
-        return self.act_await_response(action)
+        return self.act_await_response(action, raise_=raise_)
 
     method_name += '_await'
     f.__name__ = method_name

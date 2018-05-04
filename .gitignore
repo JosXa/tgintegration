@@ -62,3 +62,5 @@ target/
 .python-version
 /examples/test.py
 /examples/config.ini
+
+*.session

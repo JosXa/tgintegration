@@ -8,5 +8,5 @@ Pyrogram to parse it automatically.
 
 Remember that in a productive environment, you should probably use environment variables or 
 another configuration source and pass them directly to the initializer of the Client. 
-However, for the sakeof simplicity in these example, the .ini approach works quite well to get 
+However, for the sake of simplicity in these example, the .ini approach works quite well to get 
 up and running quickly.
