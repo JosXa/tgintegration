@@ -29,7 +29,7 @@ test_requirements = [
 
 setup(
     name='tgintegration',
-    version='0.1.3',
+    version='0.1.4',
     description="An Integration Test Library for Telegram Messenger Bots on top of Pyrogram.",
     long_description=readme + '\n\n' + history,
     author="Joscha Götzer",

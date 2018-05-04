@@ -59,7 +59,7 @@ class InlineResult:
         return self.id == other.id
 
 
-class InlineResults:
+class InlineResultsContainer:
     def __init__(
             self,
             client: InteractionClient,
