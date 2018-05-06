@@ -106,23 +106,11 @@ class InteractionClient(Client):
 
     def ping_bot(
             self,
-            peer,
+            bot,
             override_messages=None,
             max_wait_response=None,
             min_wait_consecutive=None
     ):
-        """
-        Send messages to a bot to determine whether it is online.
-
-        Args:
-            peer:
-            override_messages:
-
-        Returns:
-
-        """
-        # TODO: should this method also handle inline queries?
-
         messages = ["/start"]
         if override_messages:
             messages = override_messages
@@ -132,7 +120,7 @@ class InteractionClient(Client):
                 try:
                     if n >= 1:
                         time.sleep(1)
-                    self.send_message(peer, m)
+                    self.send_message(bot, m)
                 except FloodWait as e:
                     if e.x > 5:
                         self.logger.warning("send_message flood: waiting {} seconds".format(e.x))
@@ -141,7 +129,7 @@ class InteractionClient(Client):
 
         action = AwaitableAction(
             send_pings,
-            filters=Filters.chat(peer),
+            filters=Filters.chat(bot),
             max_wait=max_wait_response,
             min_wait_consecutive=min_wait_consecutive,
         )

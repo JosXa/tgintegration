@@ -81,10 +81,8 @@ class BotIntegrationClient(InteractionClient):
         return res
 
     def ping(self, override_messages=None):
-        # TODO: should this method also handle inline queries?
-
         return super().ping_bot(
-            peer=self.peer_id,
+            bot=self.peer_id,
             override_messages=override_messages,
             max_wait_response=self.max_wait_response,
             min_wait_consecutive=self.min_wait_consecutive

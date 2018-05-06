@@ -8,7 +8,6 @@ from logging import Logger
 from typing import *
 
 from pyrogram import ChatAction, Client
-from pyrogram.api import Object
 from pyrogram.api.types import InputGeoPoint, Message
 from pyrogram.api.types.messages import BotCallbackAnswer
 from pyrogram.client.filters.filter import Filter
@@ -18,6 +17,11 @@ from .response import Response
 
 
 class InteractionClient(Client):
+    """
+    Ameliorated Pyrogram ``Client`` with convenience methods for sending a message and waiting for
+    one or multiple responses from the peer.
+    """
+
     logger: Logger = ...
 
     def __init__(self, session_name: str, api_id: int or str = None, api_hash: str = None,
@@ -25,25 +29,114 @@ class InteractionClient(Client):
                  phone_code: str or callable = None, password: str = None, force_sms: bool = False,
                  first_name: str = None, last_name: str = None, workers: int = 4,
                  workdir: str = ".") -> Any:
+        """
+        Initializes this client instance.
+
+        Args:
+            session_name:
+                Name to uniquely identify a session of either a User or a Bot.
+                For Users: pass a string of your choice, e.g.: "my_main_account".
+                For Bots: pass your Bot API token, e.g.: "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+                Note: as long as a valid User session file exists, Pyrogram won't ask you again to
+                input your phone number.
+
+            api_id (``int``, *optional*):
+                The *api_id* part of your Telegram API Key, as integer. E.g.: 12345
+                This is an alternative way to pass it if you don't want to use the *config.ini* file.
+
+            api_hash (``str``, *optional*):
+                The *api_hash* part of your Telegram API Key, as string. E.g.: "0123456789abcdef0123456789abcdef"
+                This is an alternative way to pass it if you don't want to use the *config.ini* file.
+
+            proxy (``dict``, *optional*):
+                Your SOCKS5 Proxy settings as dict,
+                e.g.: *dict(hostname="11.22.33.44", port=1080, username="user", password="pass")*.
+                *username* and *password* can be omitted if your proxy doesn't require authorization.
+                This is an alternative way to setup a proxy if you don't want to use the *config.ini* file.
+
+            test_mode (``bool``, *optional*):
+                Enable or disable log-in to testing servers. Defaults to False.
+                Only applicable for new sessions and will be ignored in case previously
+                created sessions are loaded.
+
+            phone_number (``str``, *optional*):
+                Pass your phone number (with your Country Code prefix included) to avoid
+                entering it manually. Only applicable for new sessions.
+
+            phone_code (``str`` | ``callable``, *optional*):
+                Pass the phone code as string (for test numbers only), or pass a callback function
+                which must return the correct phone code as string (e.g., "12345").
+                Only applicable for new sessions.
+
+            password (``str``, *optional*):
+                Pass your Two-Step Verification password (if you have one) to avoid entering it
+                manually. Only applicable for new sessions.
+
+            force_sms (``str``, *optional*):
+                Pass True to force Telegram sending the authorization code via SMS.
+                Only applicable for new sessions.
+
+            first_name (``str``, *optional*):
+                Pass a First Name to avoid entering it manually. It will be used to automatically
+                create a new Telegram account in case the phone number you passed is not registered yet.
+                Only applicable for new sessions.
+
+            last_name (``str``, *optional*):
+                Same purpose as *first_name*; pass a Last Name to avoid entering it manually. It can
+                be an empty string: "". Only applicable for new sessions.
+
+            workers (``int``, *optional*):
+                Thread pool size for handling incoming updates. Defaults to 4.
+
+            workdir (``str``, *optional*):
+                Define a custom working directory. The working directory is the location in your filesystem
+                where Pyrogram will store your session files. Defaults to "." (current directory).
+        """
         super().__init__(session_name, api_id, api_hash, proxy, test_mode, phone_number,
                          phone_code, password, force_sms, first_name, last_name, workers, workdir)
         ...
 
-    def act_await_response(self, action: AwaitableAction, raise_=True) -> Response: ...
+    def act_await_response(self, action: AwaitableAction, raise_=True) -> Response:
+        """
+        Executes the request defined by an ``AwaitableAction``, gathers up the responses from
+        the peer, and returns a ``Response`` object as soon as the peer is done replying.
 
-    def send(self, data: Object) -> Any: ...
+        Args:
+            action: The action to be executed.
+            raise_: Whether to raise a ``NoRespnseReceived`` error or just return ``None`` when
+            the peer fails to respond to the action. Defaults to raising the exception.
 
-    def start(self, debug: bool = ...): ...
+        Returns:
+            A ``Response`` containing all the messages that matched the action's ``filters``.
+
+        """
+        ...
 
     def ping_bot(
             self,
-            peer: int or str,
+            bot: int or str,
             override_messages: List[str] = None,
             max_wait_response: float = None,
             min_wait_consecutive: float = None,
-    ) -> Response: ...
+    ) -> Union[Response, bool]:
+        """
+        Sends startup commands (/start) to a bot to determine whether it is online.
+        If the bot replies, a ``Response`` object with the collected messages is returned,
+        otherwise ``False``.
 
-    def send_command(self, chat_id: Union[int, str], command: str, params: List[str] = None) -> Message:
+        Args:
+            bot: The bot to ping.
+            override_messages: A list of messages to send to the bot. Defaults to ``["/start"]``.
+            max_wait_response: Maximum time in seconds to wait for a reply.
+            min_wait_consecutive: Minimum time in seconds to wait for more than one reply.
+
+        Returns:
+            A ``Response`` if the bot replies, ``False`` otherwise.
+        """
+        ...
+
+    def send_command(self, chat_id: Union[int, str], command: str,
+                     params: List[str] = None) -> Message:
         ...
 
     def send_audio_await(
