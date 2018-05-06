@@ -7,9 +7,10 @@ from tgintegration import InteractionClient, Response
 
 
 class InlineResult:
-    _client: InteractionClient
     result: BotInlineResult
     query_id: int
+
+    _client: InteractionClient
 
     def __init__(self, client: InteractionClient, result: BotInlineResult, query_id: int):
         ...
@@ -42,12 +43,13 @@ class InlineResult:
 
 
 class InlineResultContainer:
-    _client: InteractionClient
     bot: Union[int, str]
     query: str
-    _bot_results: BotResults
     current_offset: str
     geo_point: Union[InputGeoPoint, None]
+
+    _client: InteractionClient
+    _bot_results: BotResults
 
     def __init__(
             self,
