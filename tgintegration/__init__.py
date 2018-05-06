@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from tgintegration.integrationtestclient import BotIntegrationClient
+from tgintegration.botintegrationclient import BotIntegrationClient
 from tgintegration.interactionclient import InteractionClient
 from tgintegration.response import Response
 from tgintegration.awaitableaction import AwaitableAction
