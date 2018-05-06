@@ -131,7 +131,7 @@ class InteractionClient(Client):
             min_wait_consecutive: Minimum time in seconds to wait for more than one reply.
 
         Returns:
-            A ``Response`` if the bot replies, ``False`` otherwise.
+            A ``Response`` object if the bot replies, ``False`` otherwise.
         """
         ...
 
