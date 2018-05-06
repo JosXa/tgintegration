@@ -47,7 +47,9 @@ class InteractionClient(Client):
                 if time.time() - response.started > 5:
                     self.logger.debug("No response received yet after 5 seconds")
                 if datetime.now() > timeout_end:
-                    self.logger.debug("Aborting as no response was received after {} seconds.".format(action.max_wait))
+                    self.logger.debug(
+                        "Aborting as no response was received after {} seconds.".format(
+                            action.max_wait))
                     return response
                 time.sleep(0.3)
 
@@ -204,6 +206,8 @@ class InteractionClient(Client):
         return self.send_message(bot, text)
 
 
+# region Dynamic code generation
+
 def __make_awaitable_method(class_, method_name, send_method):
     """
     Injects `*_await` version of a `send_*` method.
@@ -239,3 +243,5 @@ def __make_awaitable_method(class_, method_name, send_method):
 for name, method in inspect.getmembers(InteractionClient, predicate=inspect.isfunction):
     if name.startswith('send_') and not name.endswith('_await'):
         __make_awaitable_method(InteractionClient, name, method)
+
+# endregion

@@ -1,4 +1,4 @@
-tgintegration package
+TgIntegration package
 =====================
 
 Submodules

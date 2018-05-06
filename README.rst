@@ -55,7 +55,7 @@ Usage
 
 Suppose we want to write integration tests for `@BotListBot <https://t.me/BotListBot>`_
 by sending it a couple of messages and asserting that it responds the way it should.
-First, let's create an ``BotIntegrationClient``:
+First, let's create a ``BotIntegrationClient``:
 
 .. code-block:: python
 
@@ -63,7 +63,7 @@ First, let's create an ``BotIntegrationClient``:
 
     client = BotIntegrationClient(
         bot_under_test='@BotListBot',
-        session_name='my_account',
+        session_name='my_account',  # arbitrary file path to the Pyrogram session file
         api_id=API_ID,
         api_hash=API_HASH,
         max_wait_response=15,  # maximum timeout for bot responses

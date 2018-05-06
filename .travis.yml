@@ -23,5 +23,5 @@ deploy:
     secure: PLEASE_REPLACE_ME
   on:
     tags: true
-    repo: JosXa/tgintegration
+    repo: JosXa/TgIntegration
     python: 3.6

@@ -55,7 +55,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'tgintegration'
+project = u'Tgintegration'
 copyright = u"2018, Joscha Götzer"
 
 # The version info for the project you're documenting, acts as replacement
