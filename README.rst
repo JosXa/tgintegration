@@ -55,13 +55,13 @@ Usage
 
 Suppose we want to write integration tests for `@BotListBot <https://t.me/BotListBot>`_
 by sending it a couple of messages and asserting that it responds the way it should.
-First, let's create an ``IntegrationTestClient``:
+First, let's create an ``BotIntegrationClient``:
 
 .. code-block:: python
 
-    from tgintegration import IntegrationTestClient
+    from tgintegration import BotIntegrationClient
 
-    client = IntegrationTestClient(
+    client = BotIntegrationClient(
         bot_under_test='@BotListBot',
         session_name='my_account',
         api_id=API_ID,
@@ -124,7 +124,7 @@ So what happens when we send an invalid query or the bot fails to respond?
     except InvalidResponseError:
         print("Raised.")
 
-The ``IntegrationTestClient`` is based off a regular Pyrogram ``Client``, meaning that,
+The ``BotIntegrationClient`` is based off a regular Pyrogram ``Client``, meaning that,
 in addition to the ``*_await`` methods, all normal calls still work:
 
 .. code-block:: python
@@ -145,7 +145,7 @@ is handled in the ``act_await_response`` method:
     def act_await_response(self, action: AwaitableAction) -> Response: ...
 
 It expects an ``AwaitableAction`` which is a plan for a message to be sent, while the
-``IntegrationTestClient`` just makes it easy and removes a lot of the boilerplate code to
+``BotIntegrationClient`` just makes it easy and removes a lot of the boilerplate code to
 create these actions.
 
 After executing the action, the client collects all incoming messages that match the ``filters``

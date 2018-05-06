@@ -1,19 +1,27 @@
 import re
 from datetime import datetime
-from typing import List, Pattern, Set
+from typing import List, Pattern, Set, TypeVar
 
-from pyrogram import Message, Filters
+from pyrogram import Filters, InlineKeyboardMarkup, Message
+from pyrogram.client.types.reply_markup.reply_keyboard_markup import ReplyKeyboardMarkup
 from tgintegration.awaitableaction import AwaitableAction
+from tgintegration.containers import InlineKeyboard, ReplyKeyboard
+
+InteractionClient = TypeVar('InteractionClient')
 
 
 class Response:
-    def __init__(self, client: 'InteractionClient', to_action: AwaitableAction):
+    def __init__(self, client: InteractionClient, to_action: AwaitableAction):
         self.client = client
         self.action = to_action
 
         self.started = None  # type: float
         self.action_result = None
         self._messages = []  # type: List[Message]
+
+        # cached properties
+        self.__reply_keyboard = None  # type: ReplyKeyboard
+        self.__inline_keyboards = None  # type: List[InlineKeyboard]
 
     @property
     def messages(self) -> List[Message]:
@@ -53,6 +61,55 @@ class Response:
                             )
                             return self.client.act_await_response(action)
         raise ValueError("No button found.")
+
+    @property
+    def reply_keyboard(self) -> ReplyKeyboard:
+        if self.__reply_keyboard:
+            return self.__reply_keyboard
+        if self.empty:
+            return None
+
+        # Contingent upon the way Telegram works,
+        # only the *last* message with buttons in a response object matters
+        messages = reversed(self.messages)
+        for m in messages:
+            if isinstance(m.reply_markup, ReplyKeyboardMarkup):
+                last_kb_msg = m
+                break
+        else:
+            return None  # No message with a keyboard found
+
+        reply_keyboard = ReplyKeyboard(
+            client=self.client,
+            chat_id=last_kb_msg.chat.id,
+            message_id=last_kb_msg.message_id,
+            button_rows=last_kb_msg.reply_markup.keyboard
+        )
+        self.__reply_keyboard = reply_keyboard
+        return reply_keyboard
+
+    @property
+    def inline_keyboards(self) -> List[InlineKeyboard]:
+        if self.__inline_keyboards:
+            return self.__inline_keyboards
+        if self.empty:
+            return None
+
+        inline_keyboards = []
+
+        for message in self.messages:
+            if isinstance(message.reply_markup, InlineKeyboardMarkup):
+                inline_keyboards.append(
+                    InlineKeyboard(
+                        client=self.client,
+                        chat_id=message.chat.id,
+                        message_id=message.message_id,
+                        button_rows=message.reply_markup.inline_keyboard
+                    )
+                )
+
+        self.__inline_keyboards = inline_keyboards
+        return inline_keyboards
 
     @property
     def keyboard_buttons(self) -> Set[str]:

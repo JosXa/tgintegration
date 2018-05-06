@@ -1,9 +1,7 @@
-import asyncio
 import inspect
 import logging
 import time
 from datetime import datetime, timedelta
-from typing import Union
 
 from pyrogram import Client, Filters, Message, MessageHandler
 from pyrogram.api import types
@@ -11,11 +9,11 @@ from pyrogram.api.errors import FloodWait, RpcMcgetFail
 from pyrogram.api.functions.messages import GetBotCallbackAnswer, GetInlineBotResults
 from pyrogram.api.types import InputGeoPoint
 from pyrogram.session import Session
-# Do not show Pyrogram license
-from tgintegration.awaitableaction import AwaitableAction
-from tgintegration.containers import InlineResultContainer
-from tgintegration.response import InvalidResponseError, Response
+from .awaitableaction import AwaitableAction
+from .containers import InlineResultContainer
+from .response import InvalidResponseError, Response
 
+# Do not show Pyrogram license
 Session.notice_displayed = True
 
 
@@ -24,7 +22,7 @@ class InteractionClient(Client):
         self.logger = logging.getLogger(self.__class__.__name__)
         super().__init__(*args, **kwargs)
 
-    def act_await_response(self, action: AwaitableAction, raise_=True) -> Response:
+    def act_await_response(self, action, raise_=True):
         response = Response(self, action)
 
         def collect(_, message):
@@ -40,6 +38,7 @@ class InteractionClient(Client):
         try:
             response.started = time.time()
 
+            # print(action.args, action.kwargs)
             response.action_result = action.func(*action.args, **action.kwargs)
 
             timeout_end = datetime.now() + timedelta(seconds=action.max_wait)
@@ -50,7 +49,7 @@ class InteractionClient(Client):
                 if datetime.now() > timeout_end:
                     self.logger.debug("Aborting as no response was received after {} seconds.".format(action.max_wait))
                     return response
-                asyncio.sleep(0.3)
+                time.sleep(0.3)
 
             if action.consecutive_wait:
                 consecutive_delta = timedelta(seconds=action.consecutive_wait)
@@ -60,20 +59,21 @@ class InteractionClient(Client):
                 while True:
                     now = datetime.now()
 
-                    if response.num_messages < action.num_expected:
-                        if now > timeout_end:
-                            msg = "Expected {} messages but only received {} after waiting {} "
-                            "seconds.".format(
-                                action.num_expected,
-                                response.num_messages,
-                                action.max_wait
-                            )
+                    if action.num_expected:
+                        if response.num_messages < action.num_expected:
+                            if now > timeout_end:
+                                msg = "Expected {} messages but only received {} after waiting {} "
+                                "seconds.".format(
+                                    action.num_expected,
+                                    response.num_messages,
+                                    action.max_wait
+                                )
 
-                            if raise_:
-                                raise InvalidResponseError(msg)
-                            else:
-                                self.logger.debug(msg)
-                                return False
+                                if raise_:
+                                    raise InvalidResponseError(msg)
+                                else:
+                                    self.logger.debug(msg)
+                                    return False
 
                         elif response.num_messages > action.num_expected:
                             msg = "Expected {} messages but received {}.".format(
@@ -95,7 +95,7 @@ class InteractionClient(Client):
                         ):
                             return response
 
-                    asyncio.sleep(0.3)
+                    time.sleep(0.2)
 
             return response
         except RpcMcgetFail as e:
@@ -150,10 +150,10 @@ class InteractionClient(Client):
 
     def get_inline_bot_results(
             self,
-            bot: int or str,
-            query: str,
-            offset: str = "",
-            location_or_geo: Union[tuple, InputGeoPoint] = None
+            bot,
+            query,
+            offset,
+            location_or_geo=None
     ):
         if location_or_geo:
             if isinstance(location_or_geo, tuple):
@@ -177,7 +177,7 @@ class InteractionClient(Client):
         )
         return InlineResultContainer(self, bot, query, request, offset, geo_point=geo_point)
 
-    def press_inline_button(self, user_id, on_message, callback_data):
+    def press_inline_button(self, chat_id, on_message, callback_data, retries=0):
         if isinstance(on_message, Message):
             mid = on_message.message_id
         elif isinstance(on_message, int):
@@ -185,13 +185,18 @@ class InteractionClient(Client):
         else:
             raise ValueError("Invalid argument `on_message`")
 
-        return self.send(
-            GetBotCallbackAnswer(
-                peer=self.resolve_peer(user_id),
-                msg_id=mid,
-                data=callback_data
-            )
+        request = GetBotCallbackAnswer(
+            peer=self.resolve_peer(chat_id),
+            msg_id=mid,
+            data=bytes(callback_data, 'utf-8')
         )
+
+        if retries > 0:
+            return self.session.send(request, retries=retries)
+        else:
+            # noinspection PyProtectedMember
+            self.session._send(request, wait_response=False)
+            return True
 
     def send_command(self, chat_id, command, params=None):
         """

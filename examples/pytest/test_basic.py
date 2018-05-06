@@ -1,14 +1,14 @@
-from tgintegration import IntegrationTestClient
+from tgintegration import BotIntegrationClient
 
 
-def test_start(client: IntegrationTestClient):
+def test_start(client: BotIntegrationClient):
     # Send /start and wait for 3 messages
     res = client.send_command_await("/start", num_expected=3)
     assert res.num_messages == 3
     assert res[0].sticker
 
 
-def test_help(client: IntegrationTestClient):
+def test_help(client: BotIntegrationClient):
     # Send /help and wait for one message
     res = client.send_command_await("/help", num_expected=1)
 

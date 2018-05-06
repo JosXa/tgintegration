@@ -9,8 +9,12 @@ from typing import *
 
 from pyrogram import ChatAction, Client
 from pyrogram.api import Object
+from pyrogram.api.types import InputGeoPoint, Message
+from pyrogram.api.types.messages import BotCallbackAnswer
 from pyrogram.client.filters.filter import Filter
-from tgintegration import AwaitableAction, Response
+from tgintegration import InlineResultContainer
+from .awaitableaction import AwaitableAction
+from .response import Response
 
 
 class InteractionClient(Client):
@@ -25,6 +29,8 @@ class InteractionClient(Client):
                          phone_code, password, force_sms, first_name, last_name, workers, workdir)
         ...
 
+    def act_await_response(self, action: AwaitableAction, raise_=True) -> Response: ...
+
     def send(self, data: Object) -> Any: ...
 
     def start(self, debug: bool = ...): ...
@@ -37,7 +43,8 @@ class InteractionClient(Client):
             min_wait_consecutive: float = None,
     ) -> Response: ...
 
-    def act_await_response(self, action: AwaitableAction, raise_: bool = ...) -> Response: ...
+    def send_command(self, chat_id: Union[int, str], command: str, params: List[str] = None) -> Message:
+        ...
 
     def send_audio_await(
             self,
@@ -255,3 +262,32 @@ class InteractionClient(Client):
             reply_to_message_id: int = ...,
             progress: Callable = ...
     ) -> Response: ...
+
+    def get_inline_bot_results(
+            self,
+            bot: int or str,
+            query: str,
+            offset: str = "",
+            location_or_geo: Union[tuple, InputGeoPoint] = ...
+    ) -> InlineResultContainer: ...
+
+    def send_inline_bot_result_await(
+            self,
+            chat_id: int or str,
+            query_id: int,
+            result_id: str,
+            filters: Filter = ...,
+            num_expected: int = ...,
+            max_wait: float = ...,
+            min_wait_consecutive: float = ...,
+            raise_: bool = ...,
+            disable_notification: bool = None,
+            reply_to_message_id: int = None
+    ) -> Response: ...
+
+    def press_inline_button(
+            self,
+            chat_id: int or str,
+            on_message: Union[int, Message],
+            callback_data,
+            retries=0) -> BotCallbackAnswer: ...

@@ -6,12 +6,10 @@ from pyrogram import Filters
 from pyrogram.api.functions.messages import DeleteHistory
 from pyrogram.api.functions.users import GetFullUser
 from pyrogram.api.types import BotCommand
-from tgintegration.awaitableaction import AwaitableAction
-from tgintegration.interactionclient import InteractionClient
-from tgintegration.response import Response
+from .interactionclient import InteractionClient
 
 
-class IntegrationTestClient(InteractionClient):
+class BotIntegrationClient(InteractionClient):
     def __init__(
             self,
             bot_under_test,
@@ -21,7 +19,7 @@ class IntegrationTestClient(InteractionClient):
             phone_number=None,
             max_wait_response=15,
             min_wait_consecutive=2,
-            global_delay=0.2,
+            global_action_delay=0.2,
             raise_no_response=True,
             **kwargs):
 
@@ -37,7 +35,7 @@ class IntegrationTestClient(InteractionClient):
         self.max_wait_response = max_wait_response
         self.min_wait_consecutive = min_wait_consecutive
         self.raise_no_response = raise_no_response
-        self.global_action_delay = global_delay
+        self.global_action_delay = global_action_delay
 
         self.peer = None
         self.peer_id = None
@@ -51,26 +49,7 @@ class IntegrationTestClient(InteractionClient):
         else:
             return user_filters & Filters.chat(self.peer_id) & Filters.incoming
 
-    def send(self, data):
-        """Use this method to send Raw Function queries.
-
-        Adapted to include the global delays.
-
-        This method makes possible to manually call every single Telegram API method in a low-level manner.
-        Available functions are listed in the :obj:`functions <pyrogram.api.functions>` package and may accept
-        compound data types from :obj:`types <pyrogram.api.types>` as well as bare types such as ``int``, ``str``,
-        etc...
-
-        Args:
-            data (``Object``):
-                The API Scheme function filled with proper arguments.
-
-        Raises:
-            :class:`Error <pyrogram.Error>`
-        """
-        return super().send(data)
-
-    def act_await_response(self, action: AwaitableAction, raise_=True) -> Response:
+    def act_await_response(self, action, raise_=True):
         if self.global_action_delay and self._last_response:
             # Sleep for as long as the global delay prescribes
             sleep = self.global_action_delay - (time.time() - self._last_response.started)
@@ -102,18 +81,6 @@ class IntegrationTestClient(InteractionClient):
         return res
 
     def ping(self, override_messages=None):
-        """
-        Send messages to a bot to determine whether it is online.
-
-        Specify a list of ``override_messages`` that should be sent to the bot, defaults to /start.
-
-        Args:
-            override_messages: List of messages to be sent
-
-        Returns:
-            Response
-        """
-
         # TODO: should this method also handle inline queries?
 
         return super().ping_bot(
@@ -131,8 +98,10 @@ class IntegrationTestClient(InteractionClient):
         ).bot_info.commands
 
     def clear_chat(self):
-        self.send(DeleteHistory(self.peer, max_id=0))
+        self.send(DeleteHistory(self.peer, max_id=0, just_clear=False))
 
+
+# region Dynamic code generation
 
 def __modify_await_arg_defaults(class_, method_name, await_method):
     def f(self, *args, filters=None, num_expected=None, raise_=True, **kwargs):
@@ -157,6 +126,8 @@ def __modify_await_arg_defaults(class_, method_name, await_method):
     setattr(class_, method_name, f)
 
 
-for name, method in inspect.getmembers(IntegrationTestClient, inspect.isfunction):
+for name, method in inspect.getmembers(BotIntegrationClient, inspect.isfunction):
     if name.endswith('_await'):
-        __modify_await_arg_defaults(IntegrationTestClient, name, method)
+        __modify_await_arg_defaults(BotIntegrationClient, name, method)
+
+# endregion

@@ -35,7 +35,7 @@ setup(
     author="Joscha Götzer",
     author_email='joscha.goetzer@gmail.com',
     url='https://github.com/JosXa/tgintegration',
-    packages=find_packages(include=['tgintegration']),
+    packages=find_packages(include=['tgintegration', 'tgintegration.containers']),
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
