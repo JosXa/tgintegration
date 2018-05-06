@@ -186,7 +186,7 @@ class InteractionClient(Client):
             self.session._send(request, wait_response=False)
             return True
 
-    def send_command(self, chat_id, command, params=None):
+    def send_command(self, bot, command, params=None):
         """
         Send a slash-command with corresponding parameters.
 
@@ -201,7 +201,7 @@ class InteractionClient(Client):
             text += ' '
             text += ' '.join(params)
 
-        return self.send_message(chat_id, text)
+        return self.send_message(bot, text)
 
 
 def __make_awaitable_method(class_, method_name, send_method):
