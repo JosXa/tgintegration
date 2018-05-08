@@ -4,10 +4,10 @@ TgIntegration package
 Submodules
 ----------
 
-tgintegration\.integrationtestclient module
+tgintegration\.botintegrationclient module
 -------------------------------------------
 
-.. automodule:: tgintegration.integrationtestclient
+.. automodule:: tgintegration.botintegrationclient
     :members:
     :undoc-members:
     :show-inheritance:
