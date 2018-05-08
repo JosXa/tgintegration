@@ -4,24 +4,22 @@
 from typing import Any, Callable, List, Union
 
 from pyrogram import ChatAction
-from pyrogram.api import Object
 from pyrogram.api.types import BotCommand, PeerUser
 from pyrogram.client.filters.filter import Filter
-# noinspection PyMissingConstructor
 from .interactionclient import InteractionClient
 from .response import Response
 
 
 class BotIntegrationClient(InteractionClient):
-    bot_under_test: Union[int, str] = ...
-    max_wait_response: float = ...
-    min_wait_consecutive: float = ...
-    global_action_delay: float = ...
-    peer: PeerUser = ...
-    peer_id: int = ...
-    command_list: List[BotCommand] = ...
+    bot_under_test: Union[int, str]
+    max_wait_response: float
+    min_wait_consecutive: float
+    global_action_delay: float
+    peer: PeerUser
+    peer_id: int
+    command_list: List[BotCommand]
 
-    _last_response: Response = ...
+    _last_response: Response
 
     def __init__(
             self, bot_under_test: Union[int, str], session_name: str = None, api_id: int = None, api_hash: str =
