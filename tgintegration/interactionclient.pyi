@@ -21,7 +21,7 @@ class InteractionClient(Client):
     TODO: Waiting for arrival
     """
 
-    logger: Logger = ...
+    logger: Logger
 
     def __init__(self, session_name: str, api_id: int or str = None, api_hash: str = None,
                  proxy: dict = None, test_mode: bool = False, phone_number: str = None,
