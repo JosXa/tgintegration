@@ -12,4 +12,5 @@ pytest==2.9.2
 pytest-runner==2.11.1
 sphinx-autodoc-typehints
 pyrogram>=0.7.3
+sphinx
 
