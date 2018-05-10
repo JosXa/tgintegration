@@ -13,8 +13,6 @@ def client():
     examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     c = BotIntegrationClient(
-        api_id=34057,
-        api_hash='a89154bb0cde970cae0848dc7f7a6108',
         session_name='my_account',
         bot_under_test='@BotListBot',  # We're going to test the @BotListBot
         max_wait_response=8,  # Wait max 8 seconds for responses, ...

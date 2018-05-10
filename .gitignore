@@ -64,3 +64,4 @@ target/
 /examples/config.ini
 
 *.session
+test.*

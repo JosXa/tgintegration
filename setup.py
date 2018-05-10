@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """The setup script."""
+import os
+
 from pip._internal.req import parse_requirements
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -27,6 +29,18 @@ test_requirements = [
     # TODO: put package test requirements here
 ]
 
+packages = find_packages(exclude='tests')
+
+stub_files = []
+for p in packages:
+    path = p.replace('.', '/')
+    files_in_path = [os.path.join(path, x) for x in os.listdir(path) if x.endswith('.pyi')]
+    if files_in_path:
+        stub_files.append(
+            (path, files_in_path)
+        )
+print(stub_files)
+
 setup(
     name='tgintegration',
     version='0.2.0',
@@ -35,7 +49,8 @@ setup(
     author="Joscha Götzer",
     author_email='joscha.goetzer@gmail.com',
     url='https://github.com/JosXa/tgintegration',
-    packages=find_packages(include=['tgintegration', 'tgintegration.containers']),
+    packages=packages,
+    data_files=stub_files,
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
@@ -46,13 +61,10 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
     test_suite='tests',
     tests_require=test_requirements,
