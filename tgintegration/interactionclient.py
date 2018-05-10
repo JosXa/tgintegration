@@ -1,5 +1,8 @@
+import base64
 import inspect
+import json
 import logging
+import os
 import time
 from datetime import datetime, timedelta
 
@@ -7,6 +10,7 @@ from pyrogram import Client, Filters, Message, MessageHandler
 from pyrogram.api import types
 from pyrogram.api.errors import FloodWait, RpcMcgetFail
 from pyrogram.api.functions.messages import GetBotCallbackAnswer, GetInlineBotResults
+from pyrogram.api.functions.users import GetUsers
 from pyrogram.api.types import InputGeoPoint
 from pyrogram.session import Session
 from .awaitableaction import AwaitableAction
@@ -142,7 +146,7 @@ class InteractionClient(Client):
             self,
             bot,
             query,
-            offset,
+            offset='',
             location_or_geo=None
     ):
         if location_or_geo:
@@ -205,8 +209,60 @@ class InteractionClient(Client):
 
         return self.send_message(bot, text)
 
+    def export_minimal_session_b64(self, filename, include_peers=None):
+        auth_key = base64.b64encode(self.auth_key).decode()
+        auth_key = [auth_key[i: i + 43] for i in range(0, len(auth_key), 43)]
+
+        s = dict(
+            dc_id=self.dc_id,
+            test_mode=self.test_mode,
+            auth_key=auth_key,
+            user_id=self.user_id,
+            date=self.date,
+        )
+
+        if include_peers:
+            if not isinstance(include_peers, list):
+                include_peers = [include_peers]
+
+            peer_details = self.send(GetUsers([self.resolve_peer(x) for x in include_peers]))
+
+            peers_by_id = {}
+            peers_by_username = {}
+            peers_by_phone = {}
+
+            for peer in peer_details:
+                peers_by_id[peer.id] = peer.access_hash
+                if peer.username:
+                    peers_by_username[peer.username.lower()] = peer.id
+                if peer.phone:
+                    peers_by_phone[peer.phone] = peer.id
+
+            s.update(dict(
+                peers_by_id=peers_by_id,
+                peers_by_username=peers_by_username,
+                peers_by_phone=peers_by_phone
+            ))
+
+        uglified_json = json.dumps(s, separators=(',', ':'))
+        b64_encoded = base64.b64encode(bytes(uglified_json, 'utf-8')).decode()
+
+        os.makedirs(self.workdir, exist_ok=True)
+
+        with open(filename, 'w', encoding='utf-8') as f:
+            f.write(b64_encoded)
+        return b64_encoded
+
+    @classmethod
+    def create_session_from_export(cls, encoded_bytes, output_session):
+        decoded = base64.b64decode(encoded_bytes).decode()
+
+        with open(output_session, "w", encoding="utf-8") as f:
+            json.dump(json.loads(decoded), f, indent=4)
+
 
 # region Dynamic code generation
+
 
 def __make_awaitable_method(class_, method_name, send_method):
     """

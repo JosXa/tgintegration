@@ -1,5 +1,5 @@
-Welcome to tgintegration's documentation!
-======================================
+Welcome to TgIntegration's documentation!
+=========================================
 
 Contents:
 

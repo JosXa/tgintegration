@@ -20,7 +20,7 @@ class BotIntegrationClient(InteractionClient):
             max_wait_response=15,
             min_wait_consecutive=2,
             global_action_delay=0.2,
-            raise_no_response=True,
+            raise_no_response=True,  # TODO: actually implement this
             **kwargs):
 
         super().__init__(
@@ -86,6 +86,19 @@ class BotIntegrationClient(InteractionClient):
             override_messages=override_messages,
             max_wait_response=self.max_wait_response,
             min_wait_consecutive=self.min_wait_consecutive
+        )
+
+    def get_inline_results(
+            self,
+            query,
+            offset='',
+            location_or_geo=None
+    ):
+        return self.get_inline_bot_results(
+            self.peer_id,
+            query=query,
+            offset=offset,
+            location_or_geo=location_or_geo
         )
 
     def _get_command_list(self) -> List[BotCommand]:

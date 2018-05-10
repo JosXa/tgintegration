@@ -25,12 +25,13 @@ import sys
 # Get the project root dir, which is the parent dir of this
 cwd = os.getcwd()
 project_root = os.path.dirname(cwd)
+docs_path = os.path.join(project_root, 'docs')
 
 # Insert the project root dir as the first element in the PYTHONPATH.
 # This lets us ensure that the source package is imported, and that its
 # version is used.
 sys.path.insert(0, project_root)
-
+sys.path.insert(0, docs_path)
 
 import tgintegration
 
@@ -41,7 +42,8 @@ import tgintegration
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx_autodoc_typehints', 'sphinx.ext.viewcode', 'sphinxpyistubs']
+extensions = ['sphinx.ext.autodoc', 'sphinx_autodoc_typehints', 'sphinx.ext.viewcode',
+              'sphinxpyistubs']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

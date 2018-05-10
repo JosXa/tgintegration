@@ -21,7 +21,7 @@ class InteractionClient(Client):
     TODO: Waiting for arrival
     """
 
-    # logger: Logger = ...
+    logger: Logger = ...
 
     def __init__(self, session_name: str, api_id: int or str = None, api_hash: str = None,
                  proxy: dict = None, test_mode: bool = False, phone_number: str = None,
@@ -393,3 +393,15 @@ class InteractionClient(Client):
             on_message: Union[int, Message],
             callback_data,
             retries=0) -> BotCallbackAnswer: ...
+
+    def export_minimal_session_b64(
+            self,
+            filename: str,
+            include_peers: List[Union[str, int]] = None
+    ) -> str:
+        ...
+
+    @classmethod
+    def create_session_from_export(cls, encoded_bytes: bytes, output_session: str):
+        ...
+

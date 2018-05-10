@@ -74,7 +74,7 @@ class InlineResultContainer:
     def has_next_page(self) -> bool:
         ...
 
-    def load_next_page(self) -> Union[InlineResultContainer, None]:
+    def load_next_page(self) -> Union['InlineResultContainer', None]:
         ...
 
     def can_switch_pm(self) -> bool:
