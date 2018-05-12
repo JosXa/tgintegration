@@ -47,6 +47,10 @@ class InlineResult:
     def id(self):
         return self.result.id
 
+    @property
+    def full_text(self):
+        return "{}\n{}".format(self.result.title, self.result.description)
+
     def __str__(self):
         return str(self.result)
 

@@ -1,8 +1,6 @@
-=========================
-tgintegration
-=========================
-
-WORK IN PROGRESS. Take bugs with a grain of salt.
+=============
+TgIntegration
+=============
 
 .. image:: https://img.shields.io/pypi/v/tgintegration.svg
     :target: https://pypi.python.org/pypi/tgintegration
@@ -22,6 +20,7 @@ WORK IN PROGRESS. Take bugs with a grain of salt.
         An Integration Test Framework for `Bots on Telegram Messenger <https://core.telegram.org/bots>`_
 on top of `Pyrogram <https://github.com/pyrogram/pyrogram>`_.
 
+No more mocking of every single Bot API object, just test your bot in real-world scenarios.
 
 * Free software: MIT license
 .. * Documentation: https://tgintegration.readthedocs.io.

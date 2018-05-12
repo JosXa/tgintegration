@@ -20,12 +20,20 @@ class BotIntegrationClient(InteractionClient):
 
     _last_response: Response = ...
 
+    # do you know a a way to automate this?
+
     def __init__(
-            self, bot_under_test: Union[int, str], session_name: str = None, api_id: int = None,
-            api_hash: str =
-            None, phone_number: str = None, max_wait_response: int = None,
-            min_wait_consecutive: int = None,
-            raise_no_response: bool = None, global_action_delay: int = None, workdir: str = '.',
+            self,
+            bot_under_test: Union[int, str],
+            session_name: str = None,
+            api_id: int = None,
+            api_hash: str = None,
+            phone_number: str = None,
+            max_wait_response: int = None,
+            min_wait_consecutive: float = None,
+            raise_no_response: bool = None,
+            global_action_delay: int = None,
+            workdir: str = '.',
             **kwargs: Any
     ) -> Any:
         super().__init__(session_name, api_id, api_hash, phone_number, workdir=workdir)

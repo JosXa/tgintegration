@@ -1,4 +1,5 @@
 import re
+import time
 from datetime import datetime
 from typing import List, Pattern, Set, TypeVar
 
@@ -28,6 +29,7 @@ class Response:
         return self._messages
 
     def _add_message(self, message: Message):
+        message.exact_timestamp = time.time()
         self._messages.append(message)
 
     @property
