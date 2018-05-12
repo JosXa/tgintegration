@@ -17,7 +17,7 @@ TgIntegration
      :alt: Updates
 
 
-        An Integration Test Framework for `Bots on Telegram Messenger <https://core.telegram.org/bots>`_
+An Integration Test Framework for `Bots on Telegram Messenger <https://core.telegram.org/bots>`_
 on top of `Pyrogram <https://github.com/pyrogram/pyrogram>`_.
 
 No more mocking of every single Bot API object, just test your bot in real-world scenarios.
