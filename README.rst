@@ -80,7 +80,7 @@ Now let's send the ``/start`` command to the ``bot_under_test`` and "await" exac
     :startinline: true
     :linenos: true
     :linenos_offset: true
-    :include: tgintegration/examples/readmeexample.py
+    :include: examples/readmeexample.py
     :start-after: ^
     :end-before: $
 
