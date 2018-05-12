@@ -1,6 +1,5 @@
 from tgintegration import BotIntegrationClient
 
-
 def test_start(client: BotIntegrationClient):
     # Send /start and wait for 3 messages
     res = client.send_command_await("/start", num_expected=3)

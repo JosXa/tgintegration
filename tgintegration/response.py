@@ -1,50 +1,48 @@
 import re
 import time
 from datetime import datetime
-from typing import List, Pattern, Set, TypeVar
 
-from pyrogram import Filters, InlineKeyboardMarkup, Message
+from pyrogram import Filters, InlineKeyboardMarkup
 from pyrogram.client.types.reply_markup.reply_keyboard_markup import ReplyKeyboardMarkup
+
 from tgintegration.awaitableaction import AwaitableAction
 from tgintegration.containers import InlineKeyboard, ReplyKeyboard
 
-InteractionClient = TypeVar('InteractionClient')
-
 
 class Response:
-    def __init__(self, client: InteractionClient, to_action: AwaitableAction):
+    def __init__(self, client, to_action):
         self.client = client
         self.action = to_action
 
-        self.started = None  # type: float
+        self.started = None
         self.action_result = None
-        self._messages = []  # type: List[Message]
+        self._messages = []
 
         # cached properties
-        self.__reply_keyboard = None  # type: ReplyKeyboard
-        self.__inline_keyboards = None  # type: List[InlineKeyboard]
+        self.__reply_keyboard = None
+        self.__inline_keyboards = None
 
     @property
-    def messages(self) -> List[Message]:
+    def messages(self):
         return self._messages
 
-    def _add_message(self, message: Message):
+    def _add_message(self, message):
         message.exact_timestamp = time.time()
         self._messages.append(message)
 
     @property
-    def empty(self) -> bool:
+    def empty(self):
         return not self._messages
 
     @property
-    def num_messages(self) -> int:
+    def num_messages(self):
         return len(self._messages)
 
     @property
     def full_text(self):
         return '\n'.join(x.text for x in self._messages if x.text) or ''
 
-    def press_inline_button(self, pattern: Pattern):
+    def press_inline_button(self, pattern):
         pattern = re.compile(pattern)
         for m in self._messages:
             markup = m.reply_markup
@@ -65,7 +63,7 @@ class Response:
         raise ValueError("No button found.")
 
     @property
-    def reply_keyboard(self) -> ReplyKeyboard:
+    def reply_keyboard(self):
         if self.__reply_keyboard:
             return self.__reply_keyboard
         if self.empty:
@@ -91,7 +89,7 @@ class Response:
         return reply_keyboard
 
     @property
-    def inline_keyboards(self) -> List[InlineKeyboard]:
+    def inline_keyboards(self):
         if self.__inline_keyboards:
             return self.__inline_keyboards
         if self.empty:
@@ -114,7 +112,7 @@ class Response:
         return inline_keyboards
 
     @property
-    def keyboard_buttons(self) -> Set[str]:
+    def keyboard_buttons(self):
         all_buttons = set()
         for m in self._messages:
             markup = m.reply_markup
@@ -125,7 +123,7 @@ class Response:
         return all_buttons
 
     @property
-    def last_message_timestamp(self) -> datetime:
+    def last_message_timestamp(self):
         if self.empty:
             return None
         # TODO: Dan should fix this

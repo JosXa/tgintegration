@@ -41,7 +41,7 @@ All hail pip!
 
 .. code-block:: console
 
-    $ pip install tgintegration
+    $ pip install tgintegration --upgrade
 
 Requirements
 ------------
@@ -64,11 +64,11 @@ First, let's create a ``BotIntegrationClient``:
 
     client = BotIntegrationClient(
         bot_under_test='@BotListBot',
-        session_name='my_account',  # arbitrary file path to the Pyrogram session file
-        api_id=API_ID,
-        api_hash=API_HASH,
-        max_wait_response=15,  # maximum timeout for bot responses
-        min_wait_consecutive=2  # minimum time to wait for consecutive messages
+        session_name='my_account',  # Arbitrary file path to the Pyrogram session file
+        api_id=API_ID,  # See "Requirements" above, ...
+        api_hash=API_HASH,  # alternatively use a `config.ini` file
+        max_wait_response=15,  # Maximum timeout for bot responses
+        min_wait_consecutive=2  # Minimum time to wait for consecutive messages
     )
 
     client.start()
@@ -77,10 +77,21 @@ First, let's create a ``BotIntegrationClient``:
 Now let's send the ``/start`` command to the ``bot_under_test`` and "await" exactly three messages:
 
 .. code-block:: python
+    :startinline: true
+    :linenos: true
+    :linenos_offset: true
+    :include: tgintegration/examples/readmeexample.py
+    # :start-after: # TODO
+    # :end-before: # ending-regular-expression
+
+# response = client.send_command_await("start", num_expected=3)
+
+.. code-block:: python
+
 
     response = client.send_command_await("start", num_expected=3)
 
-    assert response.num_messages == 3
+    assert len(response.messages) == 3
     assert response.messages[0].sticker
 
 The result should look like this:
