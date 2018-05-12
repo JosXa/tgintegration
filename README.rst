@@ -30,7 +30,9 @@ Features
 --------
 
 * Log into a Telegram user account and interact with bots
-* Capable of sending messages and retrieving the bot's responses
+* Send messages and wait for the response
+* Perform inline queries and match the expected result
+* Automate everything about Telegram bots
 
 Installation
 ------------
