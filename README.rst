@@ -81,8 +81,8 @@ Now let's send the ``/start`` command to the ``bot_under_test`` and "await" exac
     :linenos: true
     :linenos_offset: true
     :include: tgintegration/examples/readmeexample.py
-    # :start-after: # TODO
-    # :end-before: # ending-regular-expression
+    :start-after: ^
+    :end-before: $
 
 # response = client.send_command_await("start", num_expected=3)
 
