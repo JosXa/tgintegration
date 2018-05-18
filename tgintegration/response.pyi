@@ -15,6 +15,7 @@ class Response:
     started: float
     action_result: Any
     _messages: List[Message]
+    num_messages: int
     empty: bool
     full_text: str
     reply_keyboard: ReplyKeyboard
@@ -31,9 +32,6 @@ class Response:
         ...
 
     def _add_message(self, message: Message):
-        ...
-
-    def press_inline_button(self, pattern: Pattern):
         ...
 
     def __getitem__(self, item):

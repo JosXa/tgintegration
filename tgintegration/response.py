@@ -1,11 +1,9 @@
-import re
 import time
 from datetime import datetime
 
-from pyrogram import Filters, InlineKeyboardMarkup
+from pyrogram import InlineKeyboardMarkup
 from pyrogram.client.types.reply_markup.reply_keyboard_markup import ReplyKeyboardMarkup
 
-from tgintegration.awaitableaction import AwaitableAction
 from tgintegration.containers import InlineKeyboard, ReplyKeyboard
 
 
@@ -41,26 +39,6 @@ class Response:
     @property
     def full_text(self):
         return '\n'.join(x.text for x in self._messages if x.text) or ''
-
-    def press_inline_button(self, pattern):
-        pattern = re.compile(pattern)
-        for m in self._messages:
-            markup = m.reply_markup
-            if markup and hasattr(markup, 'inline_keyboard'):
-                for row in markup.inline_keyboard:
-                    for button in row:
-                        if pattern.match(button.text):
-                            chat_id = m.chat.id
-
-                            action = AwaitableAction(
-                                func=self.client.press_inline_button,
-                                args=(chat_id, m, bytes(button.callback_data, "utf-8")),
-                                filters=Filters.chat(chat_id),
-                                max_wait=10,
-                                min_wait_consecutive=3
-                            )
-                            return self.client.act_await_response(action)
-        raise ValueError("No button found.")
 
     @property
     def reply_keyboard(self):

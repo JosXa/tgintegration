@@ -6,6 +6,7 @@ from pyrogram import Filters
 from pyrogram.api.functions.messages import DeleteHistory
 from pyrogram.api.functions.users import GetFullUser
 from pyrogram.api.types import BotCommand
+
 from .interactionclient import InteractionClient
 
 
@@ -49,14 +50,17 @@ class BotIntegrationClient(InteractionClient):
         else:
             return user_filters & Filters.chat(self.peer_id) & Filters.incoming
 
-    def act_await_response(self, action, raise_=True):
+    def act_await_response(self, action, raise_=None):
         if self.global_action_delay and self._last_response:
             # Sleep for as long as the global delay prescribes
             sleep = self.global_action_delay - (time.time() - self._last_response.started)
             if sleep > 0:
                 time.sleep(sleep)
 
-        response = super().act_await_response(action, raise_=raise_)
+        response = super().act_await_response(
+            action,
+            raise_=raise_ if raise_ is not None else self.raise_no_response
+        )
         self._last_response = response
         return response
 
@@ -115,7 +119,8 @@ class BotIntegrationClient(InteractionClient):
 # region Dynamic code generation
 
 def __modify_await_arg_defaults(class_, method_name, await_method):
-    def f(self, *args, filters=None, num_expected=None, raise_=True, **kwargs):
+    # TODO: functools.wraps
+    def f(self, *args, filters=None, num_expected=None, raise_=None, **kwargs):
         # Make sure arguments aren't passed twice
         default_args = dict(
             max_wait=self.max_wait_response,
@@ -137,8 +142,29 @@ def __modify_await_arg_defaults(class_, method_name, await_method):
     setattr(class_, method_name, f)
 
 
+# def __modify_send_arg_defaults(class_, method_name, send_method):
+#     def f(self, *args, filters=None, num_expected=None, **kwargs):
+#         # Make sure arguments aren't passed twice
+#
+#         return send_method(
+#             self,
+#             self.peer_id,
+#             *args,
+#             filters=self.get_default_filters(filters),
+#             num_expected=num_expected,
+#             **kwargs
+#         )
+#
+#     f.__name__ = method_name
+#     setattr(class_, method_name, f)
+
+
 for name, method in inspect.getmembers(BotIntegrationClient, inspect.isfunction):
+    if not name.startswith('send_'):
+        continue
     if name.endswith('_await'):
         __modify_await_arg_defaults(BotIntegrationClient, name, method)
+    # else:
+    #     __modify_send_arg_defaults(BotIntegrationClient, name, method)
 
 # endregion

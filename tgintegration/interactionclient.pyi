@@ -27,7 +27,7 @@ class InteractionClient(Client):
                  proxy: dict = None, test_mode: bool = False, phone_number: str = None,
                  phone_code: str or callable = None, password: str = None, force_sms: bool = False,
                  first_name: str = None, last_name: str = None, workers: int = 4,
-                 workdir: str = ".") -> Any:
+                 workdir: str = ".", config_file="./config.ini") -> Any:
         """
         Initializes this client instance.
 
@@ -92,7 +92,8 @@ class InteractionClient(Client):
                 where Pyrogram will store your session files. Defaults to "." (current directory).
         """
         super().__init__(session_name, api_id, api_hash, proxy, test_mode, phone_number,
-                         phone_code, password, force_sms, first_name, last_name, workers, workdir)
+                         phone_code, password, force_sms, first_name, last_name, workers,
+                         workdir, config_file=config_file)
         ...
 
     def act_await_response(self, action: AwaitableAction, raise_=True) -> Response:

@@ -13,14 +13,17 @@ from typing import Dict
 
 examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# This example uses the configuration of `config.ini` (see examples/README)
 client = BotIntegrationClient(
     session_name='my_account',
     bot_under_test='@IdleTownBot',
     max_wait_response=15,  # Maximum time in seconds to wait for a response from the bot
     min_wait_consecutive=None,  # Do not wait for more than one message
     global_action_delay=2.3,  # The @IdleTownBot has a spam limit of about 1.9s
-    workdir=examples_dir  # Load configuration from parent folder
+    workdir=examples_dir,  # Load configuration from parent folder
+    config_file=os.path.join(examples_dir, 'config.ini')
 )
+
 client.load_config()
 client.start()
 

@@ -22,6 +22,12 @@ class AwaitableAction:
         self.args = args or []
         self.kwargs = kwargs or {}
         self.filters = filters
+        if num_expected is not None:
+            if num_expected == 0:
+                raise ValueError("When no response is expected (num_expected = 0), use the normal "
+                                 "send_* method without awaiting instead of an AwaitableAction.")
+            elif num_expected < 0:
+                raise ValueError("Negative expections make no sense.")
         self._num_expected = num_expected
         self.consecutive_wait = max(0, min_wait_consecutive) if min_wait_consecutive else 0
         self.max_wait = max_wait

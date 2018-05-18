@@ -31,7 +31,8 @@ class InlineResult:
             filters=None,
             num_expected=None,
             disable_notification=None,
-            reply_to_message_id=None
+            reply_to_message_id=None,
+            raise_=None
     ):
         return self._client.send_inline_bot_result_await(
             chat_id,
@@ -40,7 +41,8 @@ class InlineResult:
             filters=filters,
             num_expected=num_expected,
             disable_notification=disable_notification,
-            reply_to_message_id=reply_to_message_id
+            reply_to_message_id=reply_to_message_id,
+            raise_=raise_
         )
 
     @property

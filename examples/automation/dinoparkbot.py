@@ -1,4 +1,5 @@
 import logging
+import os
 import random
 import re
 import time
@@ -6,6 +7,8 @@ import traceback
 
 from tgintegration import BotIntegrationClient
 from tgintegration.containers import ReplyKeyboard
+
+examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class DinoParkGame:
@@ -26,7 +29,8 @@ class DinoParkGame:
             bot_under_test='@DinoParkBot',
             max_wait_response=20,
             min_wait_consecutive=2.0,
-            global_action_delay=1.0
+            global_action_delay=1.0,
+            config_file=os.path.join(examples_dir, 'config.ini')
         )
         self.client.start()
 
@@ -148,6 +152,7 @@ def str_to_int(value: str):
 
 
 if __name__ == '__main__':
+    # This example uses the configuration of `config.ini` (see examples/README)
     game = DinoParkGame(session_name='my_account', log_level=logging.DEBUG)
     while True:
         try:

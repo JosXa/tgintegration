@@ -1,8 +1,9 @@
 from typing import Any, Callable, List, Union
 
-from pyrogram import ChatAction
+from pyrogram import ChatAction, Message
 from pyrogram.api.types import BotCommand, InputGeoPoint, PeerUser
 from pyrogram.client.filters.filter import Filter
+
 from .containers import InlineResultContainer
 from .interactionclient import InteractionClient
 from .response import Response
@@ -34,9 +35,11 @@ class BotIntegrationClient(InteractionClient):
             raise_no_response: bool = None,
             global_action_delay: int = None,
             workdir: str = '.',
+            config_file="./config.ini",
             **kwargs: Any
     ) -> Any:
-        super().__init__(session_name, api_id, api_hash, phone_number, workdir=workdir)
+        super().__init__(session_name, api_id, api_hash, phone_number, workdir=workdir,
+                         config_file=config_file)
         ...
 
     def start(self, debug: bool = ...):

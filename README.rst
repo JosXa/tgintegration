@@ -77,22 +77,10 @@ First, let's create a ``BotIntegrationClient``:
 Now let's send the ``/start`` command to the ``bot_under_test`` and "await" exactly three messages:
 
 .. code-block:: python
-    :startinline: true
-    :linenos: true
-    :linenos_offset: true
-    :include: examples/readmeexample.py
-    :start-after: ^
-    :end-before: $
-
-# response = client.send_command_await("start", num_expected=3)
-
-.. code-block:: python
-
-
     response = client.send_command_await("start", num_expected=3)
 
-    assert len(response.messages) == 3
-    assert response.messages[0].sticker
+    assert response.num_messages == 3
+    assert response.messages[0].sticker  # First message is a sticker
 
 The result should look like this:
 
@@ -104,12 +92,13 @@ Let's examine these buttons in the response...
 
 .. code-block:: python
 
-    second_message = response[1]
+    # Extract first (and only) inline keyboard from the replies
+    inline_keyboard = response.inline_keyboards[0]
 
     # Three buttons in the first row
-    assert len(second_message.reply_markup.inline_keyboard[0]) == 3
+    assert len(inline_keyboard.rows[0]) == 3
 
-We can also find and press the inline keyboard buttons:
+We can also query and press the inline keyboard buttons:
 
 .. code-block:: python
 
@@ -131,20 +120,31 @@ So what happens when we send an invalid query or the bot fails to respond?
 
     try:
         # The following instruction will raise an `InvalidResponseError` after
-        # `client.max_wait_response` seconds
-        client.send_command_await("ayylmao")
+        # `client.max_wait_response` seconds. This is because we passed `raise_no_response = True`
+        # in the client initialization.
+        client.send_command_await("ayylmao", raise_=True)
     except InvalidResponseError:
-        print("Raised.")
+        print("Raised.")  # Ok
 
 The ``BotIntegrationClient`` is based off a regular Pyrogram ``Client``, meaning that,
-in addition to the ``*_await`` methods, all normal calls still work:
+in addition to the ``send_*_await`` methods, all normal Pyro methods still work:
 
 .. code-block:: python
+    client.send_message(client.bot_under_test, "Hello from Pyrogram")
 
-    client.send_message(client.bot_under_test, "Hello Pyrogram")
-    client.send_message_await("Hello Pyrogram")  # This automatically uses the bot_under_test as the peer
-    client.send_voice_await("files/voice.ogg")
-    client.send_video_await("files/video.mp4")
+    # `send_*_await` methods automatically use the `bot_under_test` as peer:
+    res = client.send_message_await("Hello from TgIntegration", max_wait=2, raise_=False)
+    # If `raise_` is explicitly set to False, no exception is raised:
+    assert res.empty
+    # Note that when no response is expected and no validation thereof is necessary, ...
+    client.send_photo_await("media/photo.jpg", max_wait=0, raise_=False)
+    client.send_voice_await("media/voice.ogg", max_wait=0, raise_=False)
+    # ... it makes more sense to use the "unawaitable" methods:
+    client.send_photo(client.bot_under_test, "media/photo.jpg")
+    client.send_voice(client.bot_under_test, "media/voice.ogg")
+
+
+
 
 Custom awaitable actions
 ========================

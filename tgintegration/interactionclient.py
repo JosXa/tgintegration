@@ -13,12 +13,15 @@ from pyrogram.api.functions.messages import GetBotCallbackAnswer, GetInlineBotRe
 from pyrogram.api.functions.users import GetUsers
 from pyrogram.api.types import InputGeoPoint
 from pyrogram.session import Session
+
 from .awaitableaction import AwaitableAction
 from .containers import InlineResultContainer
 from .response import InvalidResponseError, Response
 
 # Do not show Pyrogram license
 Session.notice_displayed = True
+
+SLEEP_DURATION = 0.15
 
 
 class InteractionClient(Client):
@@ -40,34 +43,48 @@ class InteractionClient(Client):
             ), -1)
 
         try:
+            # Start timer
             response.started = time.time()
 
-            # print(action.args, action.kwargs)
+            # Execute the action
             response.action_result = action.func(*action.args, **action.kwargs)
 
+            # Calculate maximum wait time
             timeout_end = datetime.now() + timedelta(seconds=action.max_wait)
 
+            # Wait for the first reply
             while response.empty:
+
                 if time.time() - response.started > 5:
                     self.logger.debug("No response received yet after 5 seconds")
-                if datetime.now() > timeout_end:
-                    self.logger.debug(
-                        "Aborting as no response was received after {} seconds.".format(
-                            action.max_wait))
-                    return response
-                time.sleep(0.3)
 
+                if datetime.now() > timeout_end:
+                    msg = "Aborting because no response was received after {} seconds.".format(
+                        action.max_wait)
+
+                    if raise_:
+                        raise InvalidResponseError(msg)
+                    else:
+                        self.logger.debug(msg)
+
+                    return response
+
+                time.sleep(SLEEP_DURATION)
+
+            # A response was received
             if action.consecutive_wait:
+                # Wait for more consecutive messages from the peer
                 consecutive_delta = timedelta(seconds=action.consecutive_wait)
 
-                # A response was received
-                # Wait for consecutive messages from the peer
                 while True:
                     now = datetime.now()
 
-                    if action.num_expected:
+                    if action.num_expected is not None:
+                        # User has set explicit number of messages to await
                         if response.num_messages < action.num_expected:
+                            # Less messages than expected (so far)
                             if now > timeout_end:
+                                # Timed out
                                 msg = "Expected {} messages but only received {} after waiting {} "
                                 "seconds.".format(
                                     action.num_expected,
@@ -75,19 +92,21 @@ class InteractionClient(Client):
                                     action.max_wait
                                 )
 
-                                if raise_:
+                                if raise_:  # TODO: should this really be toggleable? raise always?
                                     raise InvalidResponseError(msg)
                                 else:
                                     self.logger.debug(msg)
                                     return False
+                            # else: continue
 
                         elif response.num_messages > action.num_expected:
+                            # More messages than expected
                             msg = "Expected {} messages but received {}.".format(
                                 action.num_expected,
                                 response.num_messages
                             )
 
-                            if raise_:
+                            if raise_:  # TODO: should this really be toggleable? raise always?
                                 raise InvalidResponseError(msg)
                             else:
                                 self.logger.debug(msg)
@@ -95,19 +114,23 @@ class InteractionClient(Client):
                         else:
                             return response
                     else:
+                        # User has not provided an expected number of messages
                         if (
-                                now > response.last_message_timestamp + consecutive_delta
-                                or now > timeout_end
+                                now > (response.last_message_timestamp + consecutive_delta)
+                                or
+                                now > timeout_end
                         ):
                             return response
 
-                    time.sleep(0.2)
+                    time.sleep(SLEEP_DURATION)
 
             return response
+
         except RpcMcgetFail as e:
             self.logger.warning(e)
             time.sleep(60)  # Internal Telegram error
         finally:
+            # Remove the one-off handler for this action
             self.remove_handler(handler, group)
 
     def ping_bot(
@@ -269,9 +292,10 @@ def __make_awaitable_method(class_, method_name, send_method):
     Injects `*_await` version of a `send_*` method.
     """
 
+    # TODO: functools.wraps
     def f(
             self,
-            *args,  # usually the chat_id and a string
+            *args,  # usually the chat_id and a string (e.g. text, command, file_id)
             filters=None,
             num_expected=None,
             max_wait=15,
