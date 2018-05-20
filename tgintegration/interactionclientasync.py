@@ -1,3 +1,4 @@
+import asyncio
 import base64
 import inspect
 import json
@@ -24,12 +25,12 @@ Session.notice_displayed = True
 SLEEP_DURATION = 0.15
 
 
-class InteractionClient(Client):
+class InteractionClientAsync(Client):
     def __init__(self, *args, **kwargs):
         self.logger = logging.getLogger(self.__class__.__name__)
         super().__init__(*args, **kwargs)
 
-    def act_await_response(self, action, raise_=True):
+    async def act_await_response(self, action, raise_=True):
         response = Response(self, action)
 
         def collect(_, message):
@@ -69,7 +70,7 @@ class InteractionClient(Client):
 
                     return response
 
-                time.sleep(SLEEP_DURATION)
+                await asyncio.sleep(SLEEP_DURATION)
 
             # A response was received
             if action.consecutive_wait:
@@ -122,7 +123,7 @@ class InteractionClient(Client):
                         ):
                             return response
 
-                    time.sleep(SLEEP_DURATION)
+                    await asyncio.sleep(SLEEP_DURATION)
 
             return response
 
@@ -133,7 +134,7 @@ class InteractionClient(Client):
             # Remove the one-off handler for this action
             self.remove_handler(handler, group)
 
-    def ping_bot(
+    async def ping_bot(
             self,
             bot,
             override_messages=None,
@@ -144,16 +145,16 @@ class InteractionClient(Client):
         if override_messages:
             messages = override_messages
 
-        def send_pings():
+        async def send_pings():
             for n, m in enumerate(messages):
                 try:
                     if n >= 1:
-                        time.sleep(1)
+                        await asyncio.sleep(1)
                     self.send_message(bot, m)
                 except FloodWait as e:
                     if e.x > 5:
                         self.logger.warning("send_message flood: waiting {} seconds".format(e.x))
-                    time.sleep(e.x)
+                    await asyncio.sleep(e.x)
                     continue
 
         action = AwaitableAction(
@@ -163,7 +164,7 @@ class InteractionClient(Client):
             min_wait_consecutive=min_wait_consecutive,
         )
 
-        return self.act_await_response(action)
+        return await self.act_await_response(action)
 
     def get_inline_bot_results(
             self,
@@ -288,7 +289,7 @@ def __make_awaitable_method(class_, method_name, send_method):
     """
 
     # TODO: functools.wraps
-    def f(
+    async def f(
             self,
             *args,  # usually the chat_id and a string (e.g. text, command, file_id)
             filters=None,
@@ -307,7 +308,7 @@ def __make_awaitable_method(class_, method_name, send_method):
             max_wait=max_wait,
             min_wait_consecutive=min_wait_consecutive
         )
-        return self.act_await_response(action, raise_=raise_)
+        return await self.act_await_response(action, raise_=raise_)
 
     method_name += '_await'
     f.__name__ = method_name
@@ -315,8 +316,8 @@ def __make_awaitable_method(class_, method_name, send_method):
     setattr(class_, method_name, f)
 
 
-for name, method in inspect.getmembers(InteractionClient, predicate=inspect.isfunction):
+for name, method in inspect.getmembers(InteractionClientAsync, predicate=inspect.isfunction):
     if name.startswith('send_') and not name.endswith('_await'):
-        __make_awaitable_method(InteractionClient, name, method)
+        __make_awaitable_method(InteractionClientAsync, name, method)
 
 # endregion

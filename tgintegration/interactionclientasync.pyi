@@ -11,7 +11,7 @@ from .awaitableaction import AwaitableAction
 from .response import Response
 
 
-class InteractionClient(Client):
+class InteractionClientAsync(Client):
     """
     Ameliorated Pyrogram ``Client`` with convenience methods for sending a message and waiting for
     one or multiple responses from the peer.
@@ -97,7 +97,7 @@ class InteractionClient(Client):
                          workdir, config_file=config_file)
         ...
 
-    def act_await_response(self, action: AwaitableAction, raise_=True) -> Response:
+    async def act_await_response(self, action: AwaitableAction, raise_=True) -> Response:
         """
         Executes the request defined by an ``AwaitableAction``, gathers up the responses from
         the peer, and returns a ``Response`` object as soon as the peer is done replying.
@@ -113,7 +113,7 @@ class InteractionClient(Client):
         """
         ...
 
-    def ping_bot(
+    async def ping_bot(
             self,
             bot: int or str,
             override_messages: List[str] = None,
@@ -136,7 +136,7 @@ class InteractionClient(Client):
         """
         ...
 
-    def send_command(self, bot: Union[int, str], command: str,
+    async def send_command(self, bot: Union[int, str], command: str,
                      params: List[str] = None) -> Message:
         """
         Sends a slash-command to a bot
@@ -150,7 +150,7 @@ class InteractionClient(Client):
         """
         ...
 
-    def send_audio_await(
+    async def send_audio_await(
             self,
             chat_id: int or str,
             audio: str,
@@ -170,7 +170,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_chat_action_await(
+    async def send_chat_action_await(
             self,
             chat_id: int or str,
             action: ChatAction or str,
@@ -183,7 +183,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_contact_await(
+    async def send_contact_await(
             self,
             chat_id: int or str,
             phone_number: str,
@@ -199,7 +199,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_document_await(
+    async def send_document_await(
             self,
             chat_id: int or str,
             document: str,
@@ -215,7 +215,7 @@ class InteractionClient(Client):
             progress: Callable = ...
     ) -> Response: ...
 
-    def send_location_await(
+    async def send_location_await(
             self,
             chat_id: int or str,
             latitude: float,
@@ -229,7 +229,7 @@ class InteractionClient(Client):
             reply_to_message_id: int = ...
     ) -> Response: ...
 
-    def send_media_group_await(
+    async def send_media_group_await(
             self,
             chat_id: int or str,
             media: list,
@@ -242,7 +242,7 @@ class InteractionClient(Client):
             reply_to_message_id: int = ...
     ) -> Response: ...
 
-    def send_message_await(
+    async def send_message_await(
             self,
             chat_id: int or str,
             text,
@@ -254,7 +254,7 @@ class InteractionClient(Client):
             **kwargs
     ) -> Response: ...
 
-    def send_command_await(
+    async def send_command_await(
             self,
             chat_id: int or str,
             command: str,
@@ -265,7 +265,7 @@ class InteractionClient(Client):
             raise_: bool = ...,
     ) -> Response: ...
 
-    def send_photo_await(
+    async def send_photo_await(
             self,
             chat_id: int or str,
             photo: str,
@@ -282,7 +282,7 @@ class InteractionClient(Client):
             progress: Callable = ...
     ) -> Response: ...
 
-    def send_sticker_await(
+    async def send_sticker_await(
             self,
             chat_id: int or str,
             sticker: str,
@@ -296,7 +296,7 @@ class InteractionClient(Client):
             progress: Callable = ...
     ) -> Response: ...
 
-    def send_venue_await(
+    async def send_venue_await(
             self,
             chat_id: int or str,
             latitude: float,
@@ -313,7 +313,7 @@ class InteractionClient(Client):
             reply_to_message_id: int = ...
     ) -> Response: ...
 
-    def send_video_await(
+    async def send_video_await(
             self,
             chat_id: int or str,
             video: str,
@@ -334,7 +334,7 @@ class InteractionClient(Client):
             progress: Callable = ...
     ) -> Response: ...
 
-    def send_video_note_await(
+    async def send_video_note_await(
             self,
             chat_id: int or str,
             video_note: str,
@@ -350,7 +350,7 @@ class InteractionClient(Client):
             progress: Callable = ...
     ) -> Response: ...
 
-    def send_voice_await(
+    async def send_voice_await(
             self,
             chat_id: int or str,
             voice: str,
@@ -376,7 +376,7 @@ class InteractionClient(Client):
             longitude: int = None
     ) -> InlineResultContainer: ...
 
-    def send_inline_bot_result_await(
+    async def send_inline_bot_result_await(
             self,
             chat_id: int or str,
             query_id: int,
@@ -407,3 +407,4 @@ class InteractionClient(Client):
     @classmethod
     def create_session_from_export(cls, encoded_bytes: bytes, output_session: str):
         ...
+
