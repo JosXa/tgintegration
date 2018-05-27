@@ -104,11 +104,11 @@ We can also query and press the inline keyboard buttons:
 .. code-block:: python
 
     # Click the first button matching the pattern
-    examples = response.press_inline_button(pattern=r'.*Examples')
+    examples = response.inline_keyboards[0].press_button_await(pattern=r'.*Examples')
 
     assert "Examples for contributing to the BotList" in examples.full_text
 
-As the bot edits the message, ``press_inline_button`` automatically listens for ``MessageEdited``
+As the bot edits the message, ``press_button_await`` automatically listens for ``MessageEdited``
 updates and picks up on the edit, returning it as ``Response``.
 
 .. image:: https://github.com/JosXa/tgintegration/blob/master/docs/images/examples_botlistbot.png
@@ -177,7 +177,7 @@ messages returned by the peer in reaction to the executed ``AwaitableAction``.
         kwargs=dict(
             chat_id=peer,
             text="**Hello World**",
-            parse_mode='markdown'
+            parse_mode="markdown"
         ),
         # Wait for messages only by the peer we're interacting with
         filters=Filters.user(peer) & Filters.incoming,
