@@ -39,7 +39,6 @@ for p in packages:
         stub_files.append(
             (path, files_in_path)
         )
-print(stub_files)
 
 setup(
     name='tgintegration',
@@ -57,7 +56,6 @@ setup(
     zip_safe=False,
     keywords=['test', 'telegram', 'integration', 'bot', 'automation'],
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',

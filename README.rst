@@ -23,7 +23,7 @@ on top of `Pyrogram <https://github.com/pyrogram/pyrogram>`_.
 No more mocking of every single Bot API object, just test your bot in real-world scenarios.
 
 * Free software: MIT license
-.. * Documentation: https://tgintegration.readthedocs.io.
+* Documentation: https://tgintegration.readthedocs.io.
 
 
 Features
@@ -77,6 +77,7 @@ First, let's create a ``BotIntegrationClient``:
 Now let's send the ``/start`` command to the ``bot_under_test`` and "await" exactly three messages:
 
 .. code-block:: python
+
     response = client.send_command_await("start", num_expected=3)
 
     assert response.num_messages == 3
@@ -130,6 +131,7 @@ The ``BotIntegrationClient`` is based off a regular Pyrogram ``Client``, meaning
 in addition to the ``send_*_await`` methods, all normal Pyro methods still work:
 
 .. code-block:: python
+
     client.send_message(client.bot_under_test, "Hello from Pyrogram")
 
     # `send_*_await` methods automatically use the `bot_under_test` as peer:
