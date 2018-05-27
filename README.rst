@@ -23,7 +23,8 @@ on top of `Pyrogram <https://github.com/pyrogram/pyrogram>`_.
 No more mocking of every single Bot API object, just test your bot in real-world scenarios.
 
 * Free software: MIT license
-* Documentation: https://tgintegration.readthedocs.io.
+
+.. * Documentation: https://tgintegration.readthedocs.io.
 
 
 Features
