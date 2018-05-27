@@ -42,7 +42,7 @@ for p in packages:
 
 setup(
     name='tgintegration',
-    version='0.2.1',
+    version='0.2.2',
     description="An Integration Test Library for Telegram Messenger Bots on top of Pyrogram.",
     long_description=readme + '\n\n' + history,
     author="Joscha Götzer",
