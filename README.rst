@@ -86,9 +86,10 @@ Now let's send the ``/start`` command to the ``bot_under_test`` and "await" exac
 
 The result should look like this:
 
-.. raw:: html
-
-    <img src="https://github.com/JosXa/tgintegration/blob/master/docs/images/start_botlistbot.png" alt="Sending /start to @BotListBot" width="400">
+.. image:: https://github.com/JosXa/tgintegration/blob/master/docs/images/start_botlistbot.png
+    :align: center
+    :alt: Sending /start to @BotListBot
+    :width: 400px
 
 Let's examine these buttons in the response...
 
@@ -112,9 +113,10 @@ We can also query and press the inline keyboard buttons:
 As the bot edits the message, ``press_inline_button`` automatically listens for ``MessageEdited``
 updates and picks up on the edit, returning it as ``Response``.
 
-.. raw:: html
-
-    <img src="https://github.com/JosXa/tgintegration/blob/master/docs/images/examples_botlistbot.png" alt="Sending /start to @BotListBot" width="400">
+.. image:: https://github.com/JosXa/tgintegration/blob/master/docs/images/examples_botlistbot.png
+    :align: center
+    :alt: Get Examples from @BotListBot
+    :width: 400px
 
 So what happens when we send an invalid query or the bot fails to respond?
 
