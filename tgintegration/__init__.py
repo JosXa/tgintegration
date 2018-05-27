@@ -9,7 +9,7 @@ from tgintegration.response import (InvalidResponseError, Response)
 
 __author__ = """Joscha Götzer"""
 __email__ = 'joscha.goetzer@gmail.com'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 __all__ = [
     "AwaitableAction", "Response", "InteractionClient", "InteractionClientAsync",

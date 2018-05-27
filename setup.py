@@ -43,7 +43,7 @@ print(stub_files)
 
 setup(
     name='tgintegration',
-    version='0.2.0',
+    version='0.2.1',
     description="An Integration Test Library for Telegram Messenger Bots on top of Pyrogram.",
     long_description=readme + '\n\n' + history,
     author="Joscha Götzer",
