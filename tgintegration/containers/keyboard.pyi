@@ -12,6 +12,7 @@ class ReplyKeyboard:
     _message_id: int
     _peer_id: int
     rows = List[List[KeyboardButton]]
+    num_buttons: int
 
     def __init__(
             self,
@@ -21,7 +22,7 @@ class ReplyKeyboard:
             button_rows: List[List[KeyboardButton]]
     ): ...
 
-    def _find_button(self, pattern: Pattern) -> Union[KeyboardButton, None]:
+    def find_button(self, pattern: Pattern) -> Union[KeyboardButton, None]:
         ...
 
     def press_button(self, pattern: Pattern, quote: bool = False) -> Message:
@@ -43,6 +44,7 @@ class InlineKeyboard:
     _message_id: int
     _peer_id: int
     rows: List[List[InlineKeyboardButton]]
+    num_buttons: int
 
     def __init__(
             self,
@@ -53,7 +55,7 @@ class InlineKeyboard:
     ):
         ...
 
-    def _find_button(self, pattern: Pattern = None, index: int = None) -> Union[InlineKeyboardButton, None]:
+    def find_button(self, pattern: Pattern = None, index: int = None) -> Union[InlineKeyboardButton, None]:
         ...
 
     def press_button(self, pattern: Pattern = None, index: int = None) -> BotCallbackAnswer:
@@ -68,6 +70,9 @@ class InlineKeyboard:
             min_wait_consecutive=1.5,
             raise_: bool = True,
     ) -> Response:
+        ...
+
+    def __eq__(self, other: object) -> bool:
         ...
 
 

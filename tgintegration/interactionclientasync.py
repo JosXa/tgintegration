@@ -48,7 +48,9 @@ class InteractionClientAsync(Client):
             response.started = time.time()
 
             # Execute the action
-            response.action_result = action.func(*action.args, **action.kwargs)
+            response.action_result = await asyncio.ensure_future(
+                action.func(*action.args, **action.kwargs)
+            )
 
             # Calculate maximum wait time
             timeout_end = datetime.now() + timedelta(seconds=action.max_wait)
@@ -139,7 +141,8 @@ class InteractionClientAsync(Client):
             bot,
             override_messages=None,
             max_wait_response=None,
-            min_wait_consecutive=None
+            min_wait_consecutive=None,
+            raise_=True
     ):
         messages = ["/start"]
         if override_messages:
@@ -154,7 +157,7 @@ class InteractionClientAsync(Client):
                 except FloodWait as e:
                     if e.x > 5:
                         self.logger.warning("send_message flood: waiting {} seconds".format(e.x))
-                    await asyncio.sleep(e.x)
+                    time.sleep(e.x)
                     continue
 
         action = AwaitableAction(
@@ -164,7 +167,7 @@ class InteractionClientAsync(Client):
             min_wait_consecutive=min_wait_consecutive,
         )
 
-        return await self.act_await_response(action)
+        return await self.act_await_response(action, raise_=raise_)
 
     def get_inline_bot_results(
             self,

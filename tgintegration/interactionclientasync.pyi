@@ -119,6 +119,7 @@ class InteractionClientAsync(Client):
             override_messages: List[str] = None,
             max_wait_response: float = None,
             min_wait_consecutive: float = None,
+            raise_: bool = True
     ) -> Union[Response, bool]:
         """
         Sends startup commands (/start) to a bot to determine whether it is online.

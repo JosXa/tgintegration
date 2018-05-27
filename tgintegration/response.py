@@ -107,6 +107,16 @@ class Response:
         # TODO: Dan should fix this
         return datetime.fromtimestamp(self._messages[-1].date)
 
+    def __eq__(self, other):
+        if not isinstance(other, Response):
+            return False
+
+        return (
+                self.full_text == other.full_text and
+                self.inline_keyboards == other.inline_keyboards
+                # TODO: self.keyboard == other.keyboard
+        )
+
     def __getitem__(self, item):
         return self._messages[item]
 

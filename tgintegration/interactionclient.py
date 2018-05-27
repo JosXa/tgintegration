@@ -173,10 +173,12 @@ class InteractionClient(Client):
             latitude=None,
             longitude=None
     ):
-        geo_point = InputGeoPoint(
-            lat=latitude,
-            long=longitude
-        )
+        geo_point = None
+        if latitude and longitude:
+            geo_point = InputGeoPoint(
+                lat=latitude,
+                long=longitude
+            )
 
         request = self.send(
             GetInlineBotResults(
