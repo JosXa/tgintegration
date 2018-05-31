@@ -1,7 +1,7 @@
 from typing import Any, Callable, List, Union
 
-from pyrogram import ChatAction, Message
-from pyrogram.api.types import BotCommand, InputGeoPoint, PeerUser
+from pyrogram import ChatAction
+from pyrogram.api.types import BotCommand, PeerUser
 from pyrogram.client.filters.filter import Filter
 
 from .containers import InlineResultContainer
@@ -272,6 +272,7 @@ class BotIntegrationClient(InteractionClient):
             self,
             query: str,
             offset: str = '',
-            location_or_geo: Union[tuple, InputGeoPoint] = ...
+            latitude: int = None,
+            longitude: int = None
     ) -> InlineResultContainer:
         ...

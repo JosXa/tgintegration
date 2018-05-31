@@ -1,5 +1,4 @@
 import inspect
-import time
 from typing import List
 
 from pyrogram import Filters
@@ -21,7 +20,7 @@ class BotIntegrationClient(InteractionClient):
             max_wait_response=15,
             min_wait_consecutive=2,
             global_action_delay=0.2,
-            raise_no_response=True,  # TODO: actually implement this
+            raise_no_response=True,
             **kwargs):
 
         super().__init__(
@@ -29,6 +28,7 @@ class BotIntegrationClient(InteractionClient):
             api_id=api_id,
             api_hash=api_hash,
             phone_number=phone_number,
+            global_action_delay=global_action_delay,
             **kwargs
         )
 
@@ -36,33 +36,16 @@ class BotIntegrationClient(InteractionClient):
         self.max_wait_response = max_wait_response
         self.min_wait_consecutive = min_wait_consecutive
         self.raise_no_response = raise_no_response
-        self.global_action_delay = global_action_delay
 
         self.peer = None
         self.peer_id = None
         self.command_list = None
-
-        self._last_response = None
 
     def get_default_filters(self, user_filters=None):
         if user_filters is None:
             return Filters.chat(self.peer_id) & Filters.incoming
         else:
             return user_filters & Filters.chat(self.peer_id) & Filters.incoming
-
-    def act_await_response(self, action, raise_=None):
-        if self.global_action_delay and self._last_response:
-            # Sleep for as long as the global delay prescribes
-            sleep = self.global_action_delay - (time.time() - self._last_response.started)
-            if sleep > 0:
-                time.sleep(sleep)
-
-        response = super().act_await_response(
-            action,
-            raise_=raise_ if raise_ is not None else self.raise_no_response
-        )
-        self._last_response = response
-        return response
 
     def start(self, debug=False):
         """Use this method to start the Client after creating it.
@@ -96,13 +79,15 @@ class BotIntegrationClient(InteractionClient):
             self,
             query,
             offset='',
-            location_or_geo=None
+            latitude=None,
+            longitude=None
     ):
         return self.get_inline_bot_results(
             self.peer_id,
             query=query,
             offset=offset,
-            location_or_geo=location_or_geo
+            latitude=latitude,
+            longitude=longitude
         )
 
     def _get_command_list(self) -> List[BotCommand]:
@@ -164,7 +149,5 @@ for name, method in inspect.getmembers(BotIntegrationClient, inspect.isfunction)
         continue
     if name.endswith('_await'):
         __modify_await_arg_defaults(BotIntegrationClient, name, method)
-    # else:
-    #     __modify_send_arg_defaults(BotIntegrationClient, name, method)
 
 # endregion

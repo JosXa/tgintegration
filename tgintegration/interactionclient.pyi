@@ -22,13 +22,16 @@ class InteractionClient(Client):
     TODO: Waiting for arrival
     """
 
-    logger: Logger = ...
+    logger: Logger
+    _last_response: Response
+    global_action_delay: float
 
     def __init__(self, session_name: str, api_id: int or str = None, api_hash: str = None,
                  proxy: dict = None, test_mode: bool = False, phone_number: str = None,
                  phone_code: str or callable = None, password: str = None, force_sms: bool = False,
                  first_name: str = None, last_name: str = None, workers: int = 4,
-                 workdir: str = ".", config_file="./config.ini") -> Any:
+                 workdir: str = ".", config_file="./config.ini", global_action_delay: float =
+                 None) -> None:
         """
         Initializes this client instance.
 

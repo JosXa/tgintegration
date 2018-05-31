@@ -26,11 +26,20 @@ SLEEP_DURATION = 0.15
 
 
 class InteractionClientAsync(Client):
-    def __init__(self, *args, **kwargs):
-        self.logger = logging.getLogger(self.__class__.__name__)
+    def __init__(self, *args, global_action_delay=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.global_action_delay = global_action_delay
+        self._last_response = None
 
     async def act_await_response(self, action, raise_=True):
+
+        if self.global_action_delay and self._last_response:
+            # Sleep for as long as the global delay prescribes
+            sleep = self.global_action_delay - (time.time() - self._last_response.started)
+            if sleep > 0:
+                time.sleep(sleep)  # not async
+
         response = Response(self, action)
 
         def collect(_, message):
@@ -69,8 +78,7 @@ class InteractionClientAsync(Client):
                         raise InvalidResponseError(msg)
                     else:
                         self.logger.debug(msg)
-
-                    return response
+                        return response
 
                 await asyncio.sleep(SLEEP_DURATION)
 
@@ -115,6 +123,7 @@ class InteractionClientAsync(Client):
                                 self.logger.debug(msg)
                                 return False
                         else:
+                            self._last_response = response
                             return response
                     else:
                         # User has not provided an expected number of messages
@@ -123,10 +132,12 @@ class InteractionClientAsync(Client):
                                 or
                                 now > timeout_end
                         ):
+                            self._last_response = response
                             return response
 
                     await asyncio.sleep(SLEEP_DURATION)
 
+            self._last_response = response
             return response
 
         except RpcMcgetFail as e:
@@ -177,10 +188,12 @@ class InteractionClientAsync(Client):
             latitude=None,
             longitude=None
     ):
-        geo_point = InputGeoPoint(
-            lat=latitude,
-            long=longitude
-        )
+        geo_point = None
+        if latitude and longitude:
+            geo_point = InputGeoPoint(
+                lat=latitude,
+                long=longitude
+            )
 
         request = self.send(
             GetInlineBotResults(
