@@ -47,6 +47,7 @@ class InlineResultContainer:
     query: str
     current_offset: str
     geo_point: Union[InputGeoPoint, None]
+    results: List[BotInlineResult]
 
     _client: InteractionClient
     _bot_results: BotResults
@@ -60,9 +61,6 @@ class InlineResultContainer:
             offset: str = ...,
             geo_point: InputGeoPoint = None
     ):
-        ...
-
-    def results(self) -> List[BotInlineResult]:
         ...
 
     def query_id(self) -> str:

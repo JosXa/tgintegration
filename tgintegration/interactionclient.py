@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import time
+import traceback
 from datetime import datetime, timedelta
 
 from pyrogram import Client, Filters, Message, MessageHandler
@@ -32,7 +33,6 @@ class InteractionClient(Client):
         self._last_response = None
 
     def act_await_response(self, action, raise_=True):
-
         if self.global_action_delay and self._last_response:
             # Sleep for as long as the global delay prescribes
             sleep = self.global_action_delay - (time.time() - self._last_response.started)
@@ -45,18 +45,23 @@ class InteractionClient(Client):
             # noinspection PyProtectedMember
             response._add_message(message)
 
+        print('adding handler')
         handler, group = self.add_handler(
             MessageHandler(
                 collect,
                 filters=action.filters
-            ), -1)
+            ), -1
+        )
+        print('done')
 
         try:
             # Start timer
             response.started = time.time()
 
             # Execute the action
+            print('acting')
             response.action_result = action.func(*action.args, **action.kwargs)
+            print(response.action_result)
 
             # Calculate maximum wait time
             timeout_end = datetime.now() + timedelta(seconds=action.max_wait)
@@ -329,7 +334,7 @@ def __make_awaitable_method(class_, method_name, send_method):
 
 
 for name, method in inspect.getmembers(InteractionClient, predicate=inspect.isfunction):
-    if name.startswith('send_') and not name.endswith('_await'):
+    if (name.startswith('send_') or name.startswith('forward_')) and not name.endswith('_await'):
         __make_awaitable_method(InteractionClient, name, method)
 
 # endregion

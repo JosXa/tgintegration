@@ -394,6 +394,21 @@ class InteractionClientAsync(Client):
             reply_to_message_id: int = None
     ) -> Response: ...
 
+    # TODO: document, add to BotIntegrationClient
+    def forward_messages_await(
+            self,
+            chat_id: int or str,
+            from_chat_id: int or str,
+            message_ids,
+            filters: Filter = ...,
+            num_expected: int = ...,
+            max_wait: float = ...,
+            min_wait_consecutive: float = ...,
+            raise_: bool = ...,
+            disable_notification: bool = None
+    ) -> Response:
+        ...
+
     def press_inline_button(
             self,
             chat_id: int or str,

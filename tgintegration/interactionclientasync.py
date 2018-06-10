@@ -333,7 +333,7 @@ def __make_awaitable_method(class_, method_name, send_method):
 
 
 for name, method in inspect.getmembers(InteractionClientAsync, predicate=inspect.isfunction):
-    if name.startswith('send_') and not name.endswith('_await'):
+    if (name.startswith('send_') or name.startswith('forward_')) and not name.endswith('_await'):
         __make_awaitable_method(InteractionClientAsync, name, method)
 
 # endregion
