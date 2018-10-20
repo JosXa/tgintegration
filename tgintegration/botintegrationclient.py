@@ -59,7 +59,7 @@ class BotIntegrationClient(InteractionClient):
         Raises:
             :class:`Error <pyrogram.Error>`
         """
-        res = super().start(debug=debug)
+        res = super().start()
 
         self.peer = self.resolve_peer(self.bot_under_test)
         self.peer_id = self.peer.user_id
