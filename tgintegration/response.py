@@ -2,7 +2,10 @@ import time
 from datetime import datetime
 
 from pyrogram import InlineKeyboardMarkup
-from pyrogram.client.types.reply_markup.reply_keyboard_markup import ReplyKeyboardMarkup
+try:
+    from pyrogram.client.types.bots.reply_keyboard_markup import ReplyKeyboardMarkup
+except ImportError:
+    from pyrogram.client.types.reply_markup.reply_keyboard_markup import ReplyKeyboardMarkup
 
 from tgintegration.containers import InlineKeyboard, ReplyKeyboard
 
