@@ -218,7 +218,7 @@ class InteractionClient(Client):
         request = GetBotCallbackAnswer(
             peer=self.resolve_peer(chat_id),
             msg_id=mid,
-            data=bytes(callback_data, 'utf-8')
+            data=callback_data
         )
 
         if retries > 0:
