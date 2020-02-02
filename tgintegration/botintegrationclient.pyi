@@ -3,6 +3,7 @@ from typing import Any, Callable, List, Union
 from pyrogram import ChatAction
 from pyrogram.api.types import BotCommand, PeerUser
 from pyrogram.client.filters.filter import Filter
+from pyrogram.client.storage import Storage
 
 from .containers import InlineResultContainer
 from .interactionclient import InteractionClient
@@ -26,7 +27,7 @@ class BotIntegrationClient(InteractionClient):
     def __init__(
             self,
             bot_under_test: Union[int, str],
-            session_name: str = None,
+            session_name: Union[str, Storage] = None,
             api_id: int = None,
             api_hash: str = None,
             phone_number: str = None,
