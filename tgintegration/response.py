@@ -1,8 +1,7 @@
 import time
 from datetime import datetime
 
-from pyrogram import InlineKeyboardMarkup
-from pyrogram.client.types.reply_markup.reply_keyboard_markup import ReplyKeyboardMarkup
+from pyrogram import InlineKeyboardMarkup, ReplyKeyboardMarkup
 
 from tgintegration.containers import InlineKeyboard, ReplyKeyboard
 
