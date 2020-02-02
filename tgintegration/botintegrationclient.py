@@ -47,19 +47,14 @@ class BotIntegrationClient(InteractionClient):
         else:
             return user_filters & Filters.chat(self.peer_id) & Filters.incoming
 
-    def start(self, debug=False):
+    def start(self):
         """Use this method to start the Client after creating it.
         Requires no parameters.
-
-        Args:
-            debug (``bool``, optional):
-                Enable or disable debug mode. When enabled, extra logging
-                lines will be printed out on your console.
 
         Raises:
             :class:`Error <pyrogram.Error>`
         """
-        res = super().start(debug=debug)
+        res = super().start()
 
         self.peer = self.resolve_peer(self.bot_under_test)
         self.peer_id = self.peer.user_id
