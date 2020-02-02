@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 from pyrogram import Client, Filters, Message, MessageHandler
 from pyrogram.api import types
-from pyrogram.api.errors import FloodWait, RpcMcgetFail
+from pyrogram.errors import FloodWait, RpcMcgetFail
 from pyrogram.api.functions.messages import GetBotCallbackAnswer, GetInlineBotResults
 from pyrogram.api.functions.users import GetUsers
 from pyrogram.api.types import InputGeoPoint
