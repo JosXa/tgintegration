@@ -257,65 +257,6 @@ class InteractionClient(Client):
 
         return self.send_message(bot, text)
 
-    def export_minimal_session_b64(
-        self, filename: str, include_peers: List[Union[str, int]] = None
-    ) -> str:
-        raise DeprecationWarning("Now integrated in Pyrogram.")
-        # raise NotImplemented
-        # auth_key = base64.b64encode(self.session.auth_key).decode()
-        # auth_key = [auth_key[i : i + 43] for i in range(0, len(auth_key), 43)]
-        #
-        # s = dict(
-        #     dc_id=self.session.dc_id,
-        #     test_mode=self.test_mode,
-        #     auth_key=auth_key,
-        #     user_id=self.session.user_id,
-        #     date=self.session.date,
-        # )
-        #
-        # if include_peers:
-        #     if not isinstance(include_peers, list):
-        #         include_peers = [include_peers]
-        #
-        #     peer_details = self.send(
-        #         GetUsers([self.resolve_peer(x) for x in include_peers])
-        #     )
-        #
-        #     peers_by_id = {}
-        #     peers_by_username = {}
-        #     peers_by_phone = {}
-        #
-        #     for peer in peer_details:
-        #         peers_by_id[peer.id] = peer.access_hash
-        #         if peer.username:
-        #             peers_by_username[peer.username.lower()] = peer.id
-        #         if peer.phone:
-        #             peers_by_phone[peer.phone] = peer.id
-        #
-        #     s.update(
-        #         dict(
-        #             peers_by_id=peers_by_id,
-        #             peers_by_username=peers_by_username,
-        #             peers_by_phone=peers_by_phone,
-        #         )
-        #     )
-        #
-        # uglified_json = json.dumps(s, separators=(",", ":"))
-        # b64_encoded = base64.b64encode(bytes(uglified_json, "utf-8")).decode()
-        #
-        # os.makedirs(self.workdir, exist_ok=True)
-        #
-        # with open(filename, "w", encoding="utf-8") as f:
-        #     f.write(b64_encoded)
-        # return b64_encoded
-
-    @classmethod
-    def create_session_from_export(cls, encoded_bytes: bytes, output_session: str):
-        decoded = base64.b64decode(encoded_bytes).decode()
-
-        with open(output_session, "w", encoding="utf-8") as f:
-            json.dump(json.loads(decoded), f, indent=4)
-
     def send_audio_await(
         self,
         chat_id: Union[int, str],

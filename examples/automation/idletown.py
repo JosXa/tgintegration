@@ -45,7 +45,6 @@ def get_buttons(response: Response) -> Dict[str, str]:
 
 
 def main():
-    # type: () -> None
     while True:
         try:
             # Setup
@@ -86,6 +85,7 @@ def main():
             battle = get_buttons(controller.send_message_await(main_buttons['battle']))
             arena = get_buttons(controller.send_message_await(battle['arena']))
             normal_match = get_buttons(controller.send_message_await(arena['normalmatch']))
+
             if 'fight' in normal_match:
                 fight = get_buttons(controller.send_message_await(normal_match['fight']))
 
