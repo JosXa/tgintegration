@@ -1,34 +1,31 @@
-import asyncio
 import base64
 import inspect
 import json
 import logging
-import os
 import time
 from datetime import datetime, timedelta
-from typing import Union
+from typing import *
+from typing_extensions import Final
 
 from pyrogram import Client, Filters, Message, MessageHandler
 from pyrogram.api import types
 from pyrogram.api.functions.messages import GetBotCallbackAnswer, GetInlineBotResults
-from pyrogram.api.functions.users import GetUsers
 from pyrogram.api.types import InputGeoPoint
+from pyrogram.api.types import Message
+from pyrogram.api.types.messages import BotCallbackAnswer
+from pyrogram.client.filters.filter import Filter
+from pyrogram.client.methods.messages.send_chat_action import ChatAction
 from pyrogram.errors import RpcMcgetFail, FloodWait
 from pyrogram.session import Session
 
-from .awaitableaction import AwaitableAction
 from tgintegration.containers.response import InvalidResponseError, Response
+from .awaitableaction import AwaitableAction
+from .containers.inlineresults import InlineResultContainer
 
 # Do not show Pyrogram license
-from .containers.inlineresults import InlineResultContainer
-from typing import *
-from pyrogram.api.types import Message
-from pyrogram.api.types.messages import BotCallbackAnswer
-from .awaitableaction import AwaitableAction
-
 Session.notice_displayed = True
 
-SLEEP_DURATION = 0.15
+SLEEP_DURATION: Final = 0.15
 
 
 class InteractionClient(Client):
@@ -38,7 +35,9 @@ class InteractionClient(Client):
         self.global_action_delay = global_action_delay
         self._last_response = None
 
-    def act_await_response(self, action: AwaitableAction, raise_=True) -> Response:
+    def act_await_response(
+        self, action: AwaitableAction, raise_=True
+    ) -> Optional[Response]:
         if self.global_action_delay and self._last_response:
             # Sleep for as long as the global delay prescribes
             sleep = self.global_action_delay - (
@@ -58,7 +57,7 @@ class InteractionClient(Client):
         group = -99  # TODO: find new, empty group
         if group not in self.dispatcher.groups:
             self.dispatcher.groups[group] = []
-        handler = MessageHandler(collect, filters=action.filters), -1
+        handler = MessageHandler(collect, filters=action.filters)
         self.dispatcher.groups[group].append(handler)
 
         try:
@@ -66,9 +65,7 @@ class InteractionClient(Client):
             response.started = time.time()
 
             # Execute the action
-            print("acting")
             response.action_result = action.func(*action.args, **action.kwargs)
-            print(response.action_result)
 
             # Calculate maximum wait time
             timeout_end = datetime.now() + timedelta(seconds=action.max_wait)
@@ -106,11 +103,13 @@ class InteractionClient(Client):
                             # Less messages than expected (so far)
                             if now > timeout_end:
                                 # Timed out
-                                msg = "Expected {} messages but only received {} after waiting {} "
-                                "seconds.".format(
-                                    action.num_expected,
-                                    response.num_messages,
-                                    action.max_wait,
+                                msg = (
+                                    "Expected {} messages but only received {} "
+                                    "after waiting {} seconds.".format(
+                                        action.num_expected,
+                                        response.num_messages,
+                                        action.max_wait,
+                                    )
                                 )
 
                                 if (
@@ -119,7 +118,7 @@ class InteractionClient(Client):
                                     raise InvalidResponseError(msg)
                                 else:
                                     self.logger.debug(msg)
-                                    return False
+                                    return None
                             # else: continue
 
                         elif response.num_messages > action.num_expected:
@@ -134,7 +133,7 @@ class InteractionClient(Client):
                                 raise InvalidResponseError(msg)
                             else:
                                 self.logger.debug(msg)
-                                return False
+                                return None
                         else:
                             self._last_response = response
                             return response
@@ -161,7 +160,7 @@ class InteractionClient(Client):
 
     def ping_bot(
         self,
-        bot: int or str,
+        bot: Union[int, str],
         override_messages: List[str] = None,
         max_wait_response: float = None,
         min_wait_consecutive: float = None,
@@ -193,14 +192,14 @@ class InteractionClient(Client):
 
         return self.act_await_response(action)
 
-    def get_inline_bot_results(
+    def query_inline(
         self,
         bot: Union[int, str],
         query: str = "",
         offset: str = "",
         latitude: float = None,
         longitude: float = None,
-    ):
+    ) -> InlineResultContainer:
         geo_point = None
         if latitude and longitude:
             geo_point = InputGeoPoint(lat=latitude, long=longitude)
@@ -220,11 +219,11 @@ class InteractionClient(Client):
 
     def press_inline_button(
         self,
-        chat_id: int or str,
+        chat_id: Union[int, str],
         on_message: Union[int, Message],
         callback_data,
         retries=0,
-    ) -> BotCallbackAnswer:
+    ) -> Optional[BotCallbackAnswer]:
         if isinstance(on_message, Message):
             mid = on_message.message_id
         elif isinstance(on_message, int):
@@ -243,19 +242,13 @@ class InteractionClient(Client):
         else:
             # noinspection PyProtectedMember
             self.session._send(request, wait_response=False)
-            return True
+            return None
 
     def send_command(
         self, bot: Union[int, str], command: str, params: List[str] = None
     ) -> Message:
         """
         Send a slash-command with corresponding parameters.
-
-        Args:
-            command:
-
-        Returns:
-
         """
         text = "/" + command.lstrip("/")
         if params:
@@ -267,52 +260,54 @@ class InteractionClient(Client):
     def export_minimal_session_b64(
         self, filename: str, include_peers: List[Union[str, int]] = None
     ) -> str:
-        auth_key = base64.b64encode(self.auth_key).decode()
-        auth_key = [auth_key[i : i + 43] for i in range(0, len(auth_key), 43)]
-
-        s = dict(
-            dc_id=self.dc_id,
-            test_mode=self.test_mode,
-            auth_key=auth_key,
-            user_id=self.user_id,
-            date=self.date,
-        )
-
-        if include_peers:
-            if not isinstance(include_peers, list):
-                include_peers = [include_peers]
-
-            peer_details = self.send(
-                GetUsers([self.resolve_peer(x) for x in include_peers])
-            )
-
-            peers_by_id = {}
-            peers_by_username = {}
-            peers_by_phone = {}
-
-            for peer in peer_details:
-                peers_by_id[peer.id] = peer.access_hash
-                if peer.username:
-                    peers_by_username[peer.username.lower()] = peer.id
-                if peer.phone:
-                    peers_by_phone[peer.phone] = peer.id
-
-            s.update(
-                dict(
-                    peers_by_id=peers_by_id,
-                    peers_by_username=peers_by_username,
-                    peers_by_phone=peers_by_phone,
-                )
-            )
-
-        uglified_json = json.dumps(s, separators=(",", ":"))
-        b64_encoded = base64.b64encode(bytes(uglified_json, "utf-8")).decode()
-
-        os.makedirs(self.workdir, exist_ok=True)
-
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(b64_encoded)
-        return b64_encoded
+        raise DeprecationWarning("Now integrated in Pyrogram.")
+        # raise NotImplemented
+        # auth_key = base64.b64encode(self.session.auth_key).decode()
+        # auth_key = [auth_key[i : i + 43] for i in range(0, len(auth_key), 43)]
+        #
+        # s = dict(
+        #     dc_id=self.session.dc_id,
+        #     test_mode=self.test_mode,
+        #     auth_key=auth_key,
+        #     user_id=self.session.user_id,
+        #     date=self.session.date,
+        # )
+        #
+        # if include_peers:
+        #     if not isinstance(include_peers, list):
+        #         include_peers = [include_peers]
+        #
+        #     peer_details = self.send(
+        #         GetUsers([self.resolve_peer(x) for x in include_peers])
+        #     )
+        #
+        #     peers_by_id = {}
+        #     peers_by_username = {}
+        #     peers_by_phone = {}
+        #
+        #     for peer in peer_details:
+        #         peers_by_id[peer.id] = peer.access_hash
+        #         if peer.username:
+        #             peers_by_username[peer.username.lower()] = peer.id
+        #         if peer.phone:
+        #             peers_by_phone[peer.phone] = peer.id
+        #
+        #     s.update(
+        #         dict(
+        #             peers_by_id=peers_by_id,
+        #             peers_by_username=peers_by_username,
+        #             peers_by_phone=peers_by_phone,
+        #         )
+        #     )
+        #
+        # uglified_json = json.dumps(s, separators=(",", ":"))
+        # b64_encoded = base64.b64encode(bytes(uglified_json, "utf-8")).decode()
+        #
+        # os.makedirs(self.workdir, exist_ok=True)
+        #
+        # with open(filename, "w", encoding="utf-8") as f:
+        #     f.write(b64_encoded)
+        # return b64_encoded
 
     @classmethod
     def create_session_from_export(cls, encoded_bytes: bytes, output_session: str):
@@ -320,6 +315,264 @@ class InteractionClient(Client):
 
         with open(output_session, "w", encoding="utf-8") as f:
             json.dump(json.loads(decoded), f, indent=4)
+
+    def send_audio_await(
+        self,
+        chat_id: Union[int, str],
+        audio: str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        caption: str = ...,
+        parse_mode: str = ...,
+        duration: int = ...,
+        performer: str = ...,
+        title: str = ...,
+        disable_notification: bool = ...,
+        reply_to_message_id: int = ...,
+        progress: Callable = ...,
+    ) -> Response:
+        ...
+
+    def send_chat_action_await(
+        self,
+        chat_id: Union[int, str],
+        action: ChatAction or str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        progress: Callable = ...,
+    ) -> Response:
+        ...
+
+    def send_contact_await(
+        self,
+        chat_id: Union[int, str],
+        phone_number: str,
+        first_name: str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        last_name: str = ...,
+        disable_notification: bool = ...,
+        reply_to_message_id: int = ...,
+    ) -> Response:
+        ...
+
+    def send_document_await(
+        self,
+        chat_id: Union[int, str],
+        document: str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        caption: str = ...,
+        parse_mode: str = ...,
+        disable_notification: bool = ...,
+        reply_to_message_id: int = ...,
+        progress: Callable = ...,
+    ) -> Response:
+        ...
+
+    def send_location_await(
+        self,
+        chat_id: Union[int, str],
+        latitude: float,
+        longitude: float,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        disable_notification: bool = ...,
+        reply_to_message_id: int = ...,
+    ) -> Response:
+        ...
+
+    def send_media_group_await(
+        self,
+        chat_id: Union[int, str],
+        media: list,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        disable_notification: bool = ...,
+        reply_to_message_id: int = ...,
+    ) -> Response:
+        ...
+
+    def send_message_await(
+        self,
+        chat_id: Union[int, str],
+        text,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        **kwargs
+    ) -> Response:
+        ...
+
+    def send_command_await(
+        self,
+        chat_id: Union[int, str],
+        command: str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+    ) -> Response:
+        ...
+
+    def send_photo_await(
+        self,
+        chat_id: Union[int, str],
+        photo: str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        caption: str = ...,
+        parse_mode: str = ...,
+        ttl_seconds: int = ...,
+        disable_notification: bool = ...,
+        reply_to_message_id: int = ...,
+        progress: Callable = ...,
+    ) -> Response:
+        ...
+
+    def send_sticker_await(
+        self,
+        chat_id: Union[int, str],
+        sticker: str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        disable_notification: bool = ...,
+        reply_to_message_id: int = ...,
+        progress: Callable = ...,
+    ) -> Response:
+        ...
+
+    def send_venue_await(
+        self,
+        chat_id: Union[int, str],
+        latitude: float,
+        longitude: float,
+        title: str,
+        address: str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        foursquare_id: str = ...,
+        disable_notification: bool = ...,
+        reply_to_message_id: int = ...,
+    ) -> Response:
+        ...
+
+    def send_video_await(
+        self,
+        chat_id: Union[int, str],
+        video: str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        caption: str = ...,
+        parse_mode: str = ...,
+        duration: int = ...,
+        width: int = ...,
+        height: int = ...,
+        thumb: str = ...,
+        supports_streaming: bool = ...,
+        disable_notification: bool = ...,
+        reply_to_message_id: int = ...,
+        progress: Callable = ...,
+    ) -> Response:
+        ...
+
+    def send_video_note_await(
+        self,
+        chat_id: Union[int, str],
+        video_note: str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        duration: int = ...,
+        length: int = ...,
+        disable_notification: bool = ...,
+        reply_to_message_id: int = ...,
+        progress: Callable = ...,
+    ) -> Response:
+        ...
+
+    def send_voice_await(
+        self,
+        chat_id: Union[int, str],
+        voice: str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        caption: str = ...,
+        parse_mode: str = ...,
+        duration: int = ...,
+        disable_notification: bool = ...,
+        reply_to_message_id: int = ...,
+        progress: Callable = ...,
+    ) -> Response:
+        ...
+
+    def send_inline_bot_result_await(
+        self,
+        chat_id: Union[int, str],
+        query_id: int,
+        result_id: str,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        disable_notification: bool = None,
+        reply_to_message_id: int = None,
+    ) -> Response:
+        ...
+
+    # TODO: document, add to BotController
+    def forward_messages_await(
+        self,
+        chat_id: Union[int, str],
+        from_chat_id: Union[int, str],
+        message_ids,
+        filters: Filter = ...,
+        num_expected: int = ...,
+        max_wait: float = ...,
+        min_wait_consecutive: float = ...,
+        raise_: bool = ...,
+        disable_notification: bool = None,
+    ) -> Response:
+        ...
 
 
 # region Dynamic code generation

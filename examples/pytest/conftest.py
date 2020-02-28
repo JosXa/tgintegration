@@ -6,11 +6,11 @@ import pytest
 from tgintegration import BotIntegrationClient
 
 
-# Create a session-scoped fixture that all tests use to receive their BotIntegrationClient instance
+# Create a session-scoped fixture that all tests use to receive their BotController instance
 @pytest.yield_fixture(scope="session")
 def client():
     # Setup
-    print('Initializing BotIntegrationClient')
+    print('Initializing BotController')
 
     examples_dir = Path(__file__).parent.parent
 

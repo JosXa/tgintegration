@@ -1,1 +1,2 @@
 pyrogram>=0.7.4
+typing-extensions

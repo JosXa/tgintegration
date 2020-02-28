@@ -18,7 +18,7 @@ def test_explore_button(client: BotIntegrationClient):
         if count == 0:
             break  # ok
 
-        # Pressing an inline button also makes the BotIntegrationClient listen for edit events.
+        # Pressing an inline button also makes the BotController listen for edit events.
         explore = explore.inline_keyboards[0].press_button_await(index=2)
         assert not explore.empty, 'Pressing the "Explore" button had no effect.'
         count -= 1

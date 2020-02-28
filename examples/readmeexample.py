@@ -53,7 +53,7 @@ try:
 except InvalidResponseError:
     print("Raised.")  # Ok
 
-# The `BotIntegrationClient` is based off a regular Pyrogram Client, meaning that, in addition to
+# The `BotController` is based off a regular Pyrogram Client, meaning that, in addition to
 #  the `send_*_await` methods, all normal Pyro methods still work:
 print("Calling a normal `send_message` method...")
 client.send_message(client.bot_under_test, "Hello from Pyrogram")  # Not waiting for response
@@ -63,11 +63,11 @@ res = client.send_message_await("Hello from TgIntegration", max_wait=2, raise_=F
 # If `raise_` is explicitly set to False, no exception is raised:
 assert res.empty
 # Note that when no response is expected and no validation thereof is necessary, ...
-client.send_photo_await("_media/photo.jpg", max_wait=0, raise_=False)
-client.send_voice_await("_media/voice.ogg", max_wait=0, raise_=False)
+client.send_photo_await("_assets/photo.jpg", max_wait=0, raise_=False)
+client.send_voice_await("_assets/voice.ogg", max_wait=0, raise_=False)
 # ... it makes more sense to use the "unawaitable" methods:
-client.send_photo(client.bot_under_test, "_media/photo.jpg")
-client.send_voice(client.bot_under_test, "_media/voice.ogg")
+client.send_photo(client.bot_under_test, "_assets/photo.jpg")
+client.send_voice(client.bot_under_test, "_assets/voice.ogg")
 
 # Custom awaitable Actions
 from tgintegration import AwaitableAction, Response

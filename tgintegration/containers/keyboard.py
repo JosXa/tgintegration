@@ -1,17 +1,26 @@
 import itertools
 import re
 import weakref
-from typing import *
+from typing import Union, List, Pattern, Optional, TYPE_CHECKING
 
-from pyrogram import Filters, KeyboardButton, Message
+from pyrogram import Filters, KeyboardButton, Message, Client
 from pyrogram import InlineKeyboardButton
 from pyrogram.api.types.messages import BotCallbackAnswer
 
 from tgintegration import AwaitableAction
 
+if TYPE_CHECKING:
+    from tgintegration import Response
+
 
 class ReplyKeyboard:
-    def __init__(self, client, chat_id, message_id, button_rows):
+    def __init__(
+        self,
+        client: Client,
+        chat_id: Union[int, str],
+        message_id: int,
+        button_rows: List[List[KeyboardButton]],
+    ):
         self._client = weakref.proxy(client)
         self._message_id = message_id
         self._peer_id = chat_id
@@ -23,7 +32,7 @@ class ReplyKeyboard:
             for button_text in row:
                 if compiled.match(button_text):
                     return button_text
-        raise NoButtonFound
+        raise NoButtonFound(f"No clickable entity found for pattern r'{pattern}'")
 
     def press_button(self, pattern, quote=False) -> Message:
         button = self.find_button(pattern)
@@ -34,9 +43,13 @@ class ReplyKeyboard:
             reply_to_message_id=self._message_id if quote else None,
         )
 
+    @property
+    def num_buttons(self) -> int:
+        return sum(len(row) for row in self.rows)
+
     def press_button_await(
         self, pattern, filters=None, num_expected=None, raise_=True, quote=False
-    ):
+    ) -> "Response":
         button = self.find_button(pattern)
 
         if filters:
@@ -55,13 +68,15 @@ class ReplyKeyboard:
         )
         return self._client.act_await_response(action, raise_=raise_)
 
-    @property
-    def num_buttons(self) -> int:
-        return sum(len(row) for row in self.rows)
-
 
 class InlineKeyboard:
-    def __init__(self, client, chat_id, message_id, button_rows):
+    def __init__(
+        self,
+        client: Client,
+        chat_id: Union[int, str],
+        message_id: int,
+        button_rows: List[List[InlineKeyboardButton]],
+    ):
         self._client = weakref.proxy(client)
         self._message_id = message_id
         self._peer_id = chat_id
@@ -102,12 +117,12 @@ class InlineKeyboard:
 
     def press_button_await(
         self,
-        pattern=None,
-        index=None,
-        num_expected=None,
-        max_wait=8,
-        min_wait_consecutive=1.5,
-        raise_=True,
+        pattern: Union[Pattern, str] = None,
+        index: Optional[int] = None,
+        num_expected: Optional[int] = None,
+        max_wait: float = 8,
+        min_wait_consecutive: float = 1.5,
+        raise_: Optional[bool] = True,
     ):
         button = self.find_button(pattern, index)
 

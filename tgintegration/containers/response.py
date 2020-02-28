@@ -1,18 +1,19 @@
 import time
 from datetime import datetime
 from typing import *
-from typing import Any, List, Set
+from typing import Any, List, Set, TypeVar
 
-from pyrogram import InlineKeyboardMarkup, ReplyKeyboardMarkup
+from pyrogram import InlineKeyboardMarkup, ReplyKeyboardMarkup, Client
 from pyrogram import Message
 
 from tgintegration.awaitableaction import AwaitableAction
 from tgintegration.containers.keyboard import ReplyKeyboard, InlineKeyboard
 
 
+
 class Response:
-    def __init__(self, service, to_action):
-        self._service = service
+    def __init__(self, client: Client, to_action: AwaitableAction):
+        self._client = client
         self.action = to_action
 
         self.started: Optional[float] = None
@@ -41,7 +42,7 @@ class Response:
 
     @property
     def full_text(self) -> str:
-        return '\n'.join(x.text for x in self._messages if x.text) or ''
+        return "\n".join(x.text for x in self._messages if x.text) or ""
 
     @property
     def reply_keyboard(self) -> Optional[ReplyKeyboard]:
@@ -61,10 +62,10 @@ class Response:
             return None  # No message with a keyboard found
 
         reply_keyboard = ReplyKeyboard(
-            client=self._service,
+            client=self._client,
             chat_id=last_kb_msg.chat.id,
             message_id=last_kb_msg.message_id,
-            button_rows=last_kb_msg.reply_markup.keyboard
+            button_rows=last_kb_msg.reply_markup.keyboard,
         )
         self.__reply_keyboard = reply_keyboard
         return reply_keyboard
@@ -82,10 +83,10 @@ class Response:
             if isinstance(message.reply_markup, InlineKeyboardMarkup):
                 inline_keyboards.append(
                     InlineKeyboard(
-                        client=self._service,
+                        client=self._client,
                         chat_id=message.chat.id,
                         message_id=message.message_id,
-                        button_rows=message.reply_markup.inline_keyboard
+                        button_rows=message.reply_markup.inline_keyboard,
                     )
                 )
 
@@ -97,7 +98,7 @@ class Response:
         all_buttons = set()
         for m in self._messages:
             markup = m.reply_markup
-            if markup and hasattr(markup, 'keyboard'):
+            if markup and hasattr(markup, "keyboard"):
                 for row in markup.keyboard:
                     for button in row:
                         all_buttons.add(button)
@@ -127,9 +128,9 @@ class Response:
             return False
 
         return (
-                self.full_text == other.full_text and
-                self.inline_keyboards == other.inline_keyboards
-                # TODO: self.keyboard == other.keyboard
+            self.full_text == other.full_text
+            and self.inline_keyboards == other.inline_keyboards
+            # TODO: self.keyboard == other.keyboard
         )
 
     def __getitem__(self, item):
@@ -138,7 +139,7 @@ class Response:
     def __str__(self):
         if self.empty:
             return "Empty response"
-        return '\nthen\n'.join(['"{}"'.format(m.text) for m in self._messages])
+        return "\nthen\n".join(['"{}"'.format(m.text) for m in self._messages])
 
 
 class InvalidResponseError(Exception):

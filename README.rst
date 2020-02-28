@@ -57,13 +57,13 @@ Usage
 
 Suppose we want to write integration tests for `@BotListBot <https://t.me/BotListBot>`_
 by sending it a couple of messages and asserting that it responds the way it should.
-First, let's create a ``BotIntegrationClient``:
+First, let's create a ``BotController``:
 
 .. code-block:: python
 
-    from tgintegration import BotIntegrationClient
+    from tgintegration import BotController
 
-    client = BotIntegrationClient(
+    client = BotController(
         bot_under_test='@BotListBot',
         session_name='my_account',  # Arbitrary file path to the Pyrogram session file
         api_id=API_ID,  # See "Requirements" above, ...
@@ -126,7 +126,7 @@ So what happens when we send an invalid query or the bot fails to respond?
     except InvalidResponseError:
         print("Raised.")  # Ok
 
-The ``BotIntegrationClient`` is based off a regular Pyrogram ``Client``, meaning that,
+The ``BotController`` is based off a regular Pyrogram ``Client``, meaning that,
 in addition to the ``send_*_await`` methods, all normal Pyro methods still work:
 
 .. code-block:: python
@@ -158,7 +158,7 @@ is handled in the ``act_await_response`` method:
     def act_await_response(self, action: AwaitableAction) -> Response: ...
 
 It expects an ``AwaitableAction`` which is a plan for a message to be sent, while the
-``BotIntegrationClient`` just makes it easy and removes a lot of the boilerplate code to
+``BotController`` just makes it easy and removes a lot of the boilerplate code to
 create these actions.
 
 After executing the action, the client collects all incoming messages that match the ``filters``

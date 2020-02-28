@@ -8,12 +8,12 @@ from pyrogram.api.types import InputGeoPoint, Message
 from pyrogram.api.types.messages import BotResults
 from pyrogram.client.filters.filter import Filter
 
-InteractionClient = TypeVar('InteractionClient')
+InteractionClient = TypeVar("InteractionClient")
 
 
 class InlineResult:
     def __init__(
-        self, client: 'InteractionClient', result: BotInlineResult, query_id: int
+        self, client: "InteractionClient", result: BotInlineResult, query_id: int
     ):
         self._client = client
         self.result = result

@@ -4,9 +4,9 @@ import random
 import re
 import time
 import traceback
+from typing import Optional
 
-from tgintegration import BotIntegrationClient
-from tgintegration.containers import ReplyKeyboard
+from tgintegration import InteractionClient, BotController, ReplyKeyboard
 
 examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,25 +20,28 @@ class DinoParkGame:
         self.withdrawal_balance = None
         self.diamonds = None
 
-        self.menu = None  # type: ReplyKeyboard
+        self.menu = None  # type: Optional[ReplyKeyboard]
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(log_level)
 
-        self.client = BotIntegrationClient(
+        client = InteractionClient(
             session_name=session_name,
-            bot_under_test='@DinoParkBot',
-            max_wait_response=20,
-            min_wait_consecutive=2.0,
             global_action_delay=1.0,
             config_file=os.path.join(examples_dir, 'config.ini')
         )
-        self.client.start()
+
+        self.controller = BotController(
+            bot_under_test='@DinoParkNextBot',
+            client=client
+        )
+
+        self.controller.start()
 
         self._update_keyboard()
         self.update_balance()
 
     def _update_keyboard(self):
-        start = self.client.send_command_await("start")
+        start = self.controller.send_command_await("start")
         self.menu = start.reply_keyboard
 
     def _extract_values(self, text):
@@ -49,12 +52,16 @@ class DinoParkGame:
             return {}
 
     def update_balance(self):
-        balance = self.menu.press_button_await(r'.*Balance')
-        values = self._extract_values(balance.full_text)
+        balance_menu = self.menu.press_button_await(r'.*Balance')
+        values = self._extract_values(balance_menu.full_text)
 
         self.purchase_balance = values['purchases']
         self.withdrawal_balance = values['withdrawals']
-        self.diamonds = values['storehouse']
+
+        diamonds_menu = self.menu.press_button_await(r'.*Farm')
+        diamonds_values = self._extract_values(diamonds_menu.full_text)
+
+        self.diamonds = diamonds_values['total']
 
         self.logger.debug(
             "Balance updated: +{} for purchases, +{} for withdrawals, +{} diamonds.".format(
@@ -138,12 +145,12 @@ class DinoParkGame:
             self.logger.debug("Already betted in this round")
 
             # Clean up
-            self.client.delete_messages(
-                self.client.peer_id,
+            self.controller.delete_messages(
+                self.controller.peer_id,
                 [bet.messages[0].message_id, bet.action_result.message_id]
             )
             return
-        self.client.send_message_await(str(random.randint(1, 30)))
+        self.controller.send_message_await(str(random.randint(1, 30)))
         self.logger.debug("Bet placed.")
 
 
@@ -156,7 +163,7 @@ if __name__ == '__main__':
     game = DinoParkGame(session_name='my_account', log_level=logging.DEBUG)
     while True:
         try:
-            game.client.clear_chat()
+            game.controller.clear_chat()
             time.sleep(1.5)
             game.buy_dinosaurs()
             game.collect_diamonds()
@@ -168,4 +175,4 @@ if __name__ == '__main__':
         except:
             traceback.print_exc()
 
-    game.client.stop()
+    game.controller.stop()
