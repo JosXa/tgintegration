@@ -31,11 +31,9 @@ clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and 
 
 
 clean-build: ## remove build artifacts
-	rm -fr build/
-	rm -fr dist/
-	rm -fr .eggs/
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -f {} +
+	@python -c "import shutil; shutil.rmtree('build/', ignore_errors=True)"
+	@python -c "import shutil; shutil.rmtree('dist/', ignore_errors=True)"
+	@python -c "import shutil; shutil.rmtree('.eggs/', ignore_errors=True)"
 
 clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
@@ -53,7 +51,7 @@ lint: ## check style with flake8
 
 test: ## run tests quickly with the default Python
 	py.test
-	
+
 
 test-all: ## run tests on every Python version with tox
 	tox

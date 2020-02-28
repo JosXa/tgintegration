@@ -1,94 +1,100 @@
-from typing import Any, Callable, List, Pattern, Set, Union
+import re
+from operator import attrgetter
+from typing import *
 
-from pyrogram.api.types import BotInlineResult, InputGeoPoint, Message
+from pyrogram import Client
+from pyrogram.api.types import BotInlineResult
+from pyrogram.api.types import InputGeoPoint, Message
 from pyrogram.api.types.messages import BotResults
 from pyrogram.client.filters.filter import Filter
-from tgintegration import InteractionClient, Response
+
+from tgintegration import InteractionClient
 
 
 class InlineResult:
+    client: InteractionClient
     result: BotInlineResult
     query_id: int
 
-    _client: InteractionClient
-
-    def __init__(self, client: InteractionClient, result: BotInlineResult, query_id: int):
-        ...
-
-    def send(
-            self,
-            chat_id: Union[int, str],
-            disable_notification: bool = None,
-            reply_to_message_id: int = None
-    ) -> Message:
-        ...
+    def __init__(
+        self, client: 'InteractionClient', result: BotInlineResult, query_id: int
+    ):
+        pass
 
     def send_await(
-            self,
-            chat_id: Union[int, str],
-            filters: Filter = None,
-            num_expected: int = None,
-            disable_notification: bool = None,
-            reply_to_message_id: int = None
-    ) -> Response:
-        ...
+        self,
+        chat_id: Union[int, str],
+        filters: Optional[Filter] = None,
+        num_expected: Optional[int] = None,
+        disable_notification: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        raise_: Optional[bool] = None,
+    ):
+        pass
 
-    def id(self) -> Any: ...
+    @property
+    def id(self) -> Any:
+        pass
 
-    def __str__(self) -> str: ...
+    @property
+    def full_text(self) -> str:
+        pass
 
-    def __hash__(self) -> Any: ...
+    def __str__(self) -> str:
+        pass
 
-    def __eq__(self, other: Any) -> bool: ...
+    def __hash__(self):
+        pass
+
+    def __eq__(self, other) -> bool:
+        pass
 
 
 class InlineResultContainer:
-    bot: Union[int, str]
-    query: str
-    current_offset: str
-    geo_point: Union[InputGeoPoint, None]
-    results: List[BotInlineResult]
-
-    _client: InteractionClient
-    _bot_results: BotResults
-
     def __init__(
-            self,
-            client: InteractionClient,
-            bot: Union[int, str],
-            query: str,
-            bot_results: BotResults,
-            offset: str = ...,
-            geo_point: InputGeoPoint = None
+        self,
+        service: InteractionClient,
+        bot: Union[int, str],
+        query: str,
+        bot_results: BotResults,
+        offset: str = "",
+        geo_point: Optional[InputGeoPoint] = None,
     ):
-        ...
+        pass
 
-    def query_id(self) -> str:
-        ...
+    @property
+    def results(self) -> List[BotInlineResult]:
+        pass
 
-    def gallery(self) -> Any:  # TODO: return type
-        ...
+    @property
+    def query_id(self) -> int:
+        pass
+
+    @property
+    def gallery(self) -> bool:
+        pass
 
     def has_next_page(self) -> bool:
-        ...
+        pass
 
-    def load_next_page(self) -> Union['InlineResultContainer', None]:
-        ...
+    def load_next_page(self) -> Optional["InlineResultContainer"]:
+        pass
 
+    @property
     def can_switch_pm(self) -> bool:
-        ...
+        pass
 
     def switch_pm(self) -> Message:
-        ...
+        pass
 
-    def _match(self, pattern: Pattern, getter: Callable) -> List:
-        ...
+    def _match(self, pattern, getter) -> List:
+        pass
 
     def find_results(
-            self,
-            title_pattern: Pattern = None,
-            description_pattern: Pattern = None,
-            message_pattern: Pattern = None,
-            url_pattern: Pattern = None
+        self,
+        title_pattern=None,
+        description_pattern=None,
+        message_pattern=None,
+        url_pattern=None,
     ) -> Set[InlineResult]:
-        ...
+        pass

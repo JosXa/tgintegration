@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from tgintegration.awaitableaction import AwaitableAction
 from tgintegration.botintegrationclient import BotIntegrationClient
-from tgintegration.containers import (InlineKeyboard, InlineResult, InlineResultContainer,
-                                      ReplyKeyboard)
+from tgintegration.containers.inlineresults import InlineResult, InlineResultContainer
+from tgintegration.containers.keyboard import InlineKeyboard, ReplyKeyboard
 from tgintegration.interactionclient import InteractionClient
 from tgintegration.interactionclientasync import InteractionClientAsync
-from tgintegration.response import (InvalidResponseError, Response)
+from tgintegration.containers.response import (InvalidResponseError, Response)
 
 __author__ = """Joscha Götzer"""
 __email__ = 'joscha.goetzer@gmail.com'

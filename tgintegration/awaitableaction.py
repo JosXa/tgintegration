@@ -1,22 +1,22 @@
-from typing import Callable, List, Dict
+from typing import Callable, List, Dict, Iterable, Optional
 
 from pyrogram import Filters
 
 
 class AwaitableAction:
     """
-    Represents an action to be sent by the client while waiting for a response by the peer.
+    Represents an action to be sent by the service while waiting for a response by the peer.
     """
 
     def __init__(
             self,
             func: Callable,
-            args: List = None,
+            args: Iterable = None,
             kwargs: Dict = None,
             filters: Filters = None,
             num_expected: int = None,
-            max_wait: int = 20,
-            min_wait_consecutive: int = None,
+            max_wait: Optional[float] = 20,
+            min_wait_consecutive: Optional[float] = None,
     ):
         self.func = func
         self.args = args or []

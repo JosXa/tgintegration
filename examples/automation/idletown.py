@@ -8,7 +8,7 @@ import time
 import traceback
 
 from tgintegration import BotIntegrationClient
-from tgintegration.response import Response
+from tgintegration.containers.response import Response
 from typing import Dict
 
 examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

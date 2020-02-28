@@ -9,15 +9,18 @@ from datetime import datetime, timedelta
 
 from pyrogram import Client, Filters, Message, MessageHandler
 from pyrogram.api import types
-from pyrogram.api.errors import FloodWait, RpcMcgetFail
 from pyrogram.api.functions.messages import GetBotCallbackAnswer, GetInlineBotResults
 from pyrogram.api.functions.users import GetUsers
 from pyrogram.api.types import InputGeoPoint
 from pyrogram.session import Session
 
 from .awaitableaction import AwaitableAction
-from .containers import InlineResultContainer
-from .response import InvalidResponseError, Response
+from tgintegration.containers.response import InvalidResponseError, Response
+from typing import *
+from pyrogram.api.types import Message
+from pyrogram.api.types.messages import BotCallbackAnswer
+from tgintegration import InlineResultContainer
+from .awaitableaction import AwaitableAction
 
 # Do not show Pyrogram license
 Session.notice_displayed = True
@@ -32,11 +35,15 @@ class InteractionClientAsync(Client):
         self.global_action_delay = global_action_delay
         self._last_response = None
 
-    async def act_await_response(self, action, raise_=True):
+    async def act_await_response(
+        self, action: AwaitableAction, raise_=True
+    ) -> Response:
 
         if self.global_action_delay and self._last_response:
             # Sleep for as long as the global delay prescribes
-            sleep = self.global_action_delay - (time.time() - self._last_response.started)
+            sleep = self.global_action_delay - (
+                time.time() - self._last_response.started
+            )
             if sleep > 0:
                 time.sleep(sleep)  # not async
 
@@ -47,10 +54,8 @@ class InteractionClientAsync(Client):
             response._add_message(message)
 
         handler, group = self.add_handler(
-            MessageHandler(
-                collect,
-                filters=action.filters
-            ), -1)
+            MessageHandler(collect, filters=action.filters), -1
+        )
 
         try:
             # Start timer
@@ -72,7 +77,8 @@ class InteractionClientAsync(Client):
 
                 if datetime.now() > timeout_end:
                     msg = "Aborting because no response was received after {} seconds.".format(
-                        action.max_wait)
+                        action.max_wait
+                    )
 
                     if raise_:
                         raise InvalidResponseError(msg)
@@ -100,10 +106,12 @@ class InteractionClientAsync(Client):
                                 "seconds.".format(
                                     action.num_expected,
                                     response.num_messages,
-                                    action.max_wait
+                                    action.max_wait,
                                 )
 
-                                if raise_:  # TODO: should this really be toggleable? raise always?
+                                if (
+                                    raise_
+                                ):  # TODO: should this really be toggleable? raise always?
                                     raise InvalidResponseError(msg)
                                 else:
                                     self.logger.debug(msg)
@@ -113,11 +121,12 @@ class InteractionClientAsync(Client):
                         elif response.num_messages > action.num_expected:
                             # More messages than expected
                             msg = "Expected {} messages but received {}.".format(
-                                action.num_expected,
-                                response.num_messages
+                                action.num_expected, response.num_messages
                             )
 
-                            if raise_:  # TODO: should this really be toggleable? raise always?
+                            if (
+                                raise_
+                            ):  # TODO: should this really be toggleable? raise always?
                                 raise InvalidResponseError(msg)
                             else:
                                 self.logger.debug(msg)
@@ -128,9 +137,8 @@ class InteractionClientAsync(Client):
                     else:
                         # User has not provided an expected number of messages
                         if (
-                                now > (response.last_message_timestamp + consecutive_delta)
-                                or
-                                now > timeout_end
+                            now > (response.last_message_timestamp + consecutive_delta)
+                            or now > timeout_end
                         ):
                             self._last_response = response
                             return response
@@ -148,13 +156,13 @@ class InteractionClientAsync(Client):
             self.remove_handler(handler, group)
 
     async def ping_bot(
-            self,
-            bot,
-            override_messages=None,
-            max_wait_response=None,
-            min_wait_consecutive=None,
-            raise_=True
-    ):
+        self,
+        bot: int or str,
+        override_messages: List[str] = None,
+        max_wait_response: float = None,
+        min_wait_consecutive: float = None,
+        raise_: bool = True,
+    ) -> Union[Response, bool]:
         messages = ["/start"]
         if override_messages:
             messages = override_messages
@@ -167,7 +175,9 @@ class InteractionClientAsync(Client):
                     self.send_message(bot, m)
                 except FloodWait as e:
                     if e.x > 5:
-                        self.logger.warning("send_message flood: waiting {} seconds".format(e.x))
+                        self.logger.warning(
+                            "send_message flood: waiting {} seconds".format(e.x)
+                        )
                     time.sleep(e.x)
                     continue
 
@@ -181,19 +191,16 @@ class InteractionClientAsync(Client):
         return await self.act_await_response(action, raise_=raise_)
 
     def get_inline_bot_results(
-            self,
-            bot,
-            query,
-            offset='',
-            latitude=None,
-            longitude=None
-    ):
+        self,
+        bot: int or str,
+        query: str,
+        offset: str = "",
+        latitude: int = None,
+        longitude: int = None,
+    ) -> InlineResultContainer:
         geo_point = None
         if latitude and longitude:
-            geo_point = InputGeoPoint(
-                lat=latitude,
-                long=longitude
-            )
+            geo_point = InputGeoPoint(lat=latitude, long=longitude)
 
         request = self.send(
             GetInlineBotResults(
@@ -201,12 +208,20 @@ class InteractionClientAsync(Client):
                 peer=types.InputPeerSelf(),
                 query=query,
                 offset=offset,
-                geo_point=geo_point
+                geo_point=geo_point,
             )
         )
-        return InlineResultContainer(self, bot, query, request, offset, geo_point=geo_point)
+        return InlineResultContainer(
+            self, bot, query, request, offset, geo_point=geo_point
+        )
 
-    def press_inline_button(self, chat_id, on_message, callback_data, retries=0):
+    def press_inline_button(
+        self,
+        chat_id: int or str,
+        on_message: Union[int, Message],
+        callback_data,
+        retries=0,
+    ) -> BotCallbackAnswer:
         if isinstance(on_message, Message):
             mid = on_message.message_id
         elif isinstance(on_message, int):
@@ -217,7 +232,7 @@ class InteractionClientAsync(Client):
         request = GetBotCallbackAnswer(
             peer=self.resolve_peer(chat_id),
             msg_id=mid,
-            data=bytes(callback_data, 'utf-8')
+            data=bytes(callback_data, "utf-8"),
         )
 
         if retries > 0:
@@ -227,7 +242,9 @@ class InteractionClientAsync(Client):
             self.session._send(request, wait_response=False)
             return True
 
-    def send_command(self, bot, command, params=None):
+    def send_command(
+        self, bot: Union[int, str], command: str, params: List[str] = None
+    ) -> Message:
         """
         Send a slash-command with corresponding parameters.
 
@@ -237,16 +254,18 @@ class InteractionClientAsync(Client):
         Returns:
 
         """
-        text = "/" + command.lstrip('/')
+        text = "/" + command.lstrip("/")
         if params:
-            text += ' '
-            text += ' '.join(params)
+            text += " "
+            text += " ".join(params)
 
         return self.send_message(bot, text)
 
-    def export_minimal_session_b64(self, filename, include_peers=None):
+    def export_minimal_session_b64(
+        self, filename: str, include_peers: List[Union[str, int]] = None
+    ) -> str:
         auth_key = base64.b64encode(self.auth_key).decode()
-        auth_key = [auth_key[i: i + 43] for i in range(0, len(auth_key), 43)]
+        auth_key = [auth_key[i : i + 43] for i in range(0, len(auth_key), 43)]
 
         s = dict(
             dc_id=self.dc_id,
@@ -260,7 +279,9 @@ class InteractionClientAsync(Client):
             if not isinstance(include_peers, list):
                 include_peers = [include_peers]
 
-            peer_details = self.send(GetUsers([self.resolve_peer(x) for x in include_peers]))
+            peer_details = self.send(
+                GetUsers([self.resolve_peer(x) for x in include_peers])
+            )
 
             peers_by_id = {}
             peers_by_username = {}
@@ -273,23 +294,25 @@ class InteractionClientAsync(Client):
                 if peer.phone:
                     peers_by_phone[peer.phone] = peer.id
 
-            s.update(dict(
-                peers_by_id=peers_by_id,
-                peers_by_username=peers_by_username,
-                peers_by_phone=peers_by_phone
-            ))
+            s.update(
+                dict(
+                    peers_by_id=peers_by_id,
+                    peers_by_username=peers_by_username,
+                    peers_by_phone=peers_by_phone,
+                )
+            )
 
-        uglified_json = json.dumps(s, separators=(',', ':'))
-        b64_encoded = base64.b64encode(bytes(uglified_json, 'utf-8')).decode()
+        uglified_json = json.dumps(s, separators=(",", ":"))
+        b64_encoded = base64.b64encode(bytes(uglified_json, "utf-8")).decode()
 
         os.makedirs(self.workdir, exist_ok=True)
 
-        with open(filename, 'w', encoding='utf-8') as f:
+        with open(filename, "w", encoding="utf-8") as f:
             f.write(b64_encoded)
         return b64_encoded
 
     @classmethod
-    def create_session_from_export(cls, encoded_bytes, output_session):
+    def create_session_from_export(cls, encoded_bytes: bytes, output_session: str):
         decoded = base64.b64decode(encoded_bytes).decode()
 
         with open(output_session, "w", encoding="utf-8") as f:
@@ -306,14 +329,14 @@ def __make_awaitable_method(class_, method_name, send_method):
 
     # TODO: functools.wraps
     async def f(
-            self,
-            *args,  # usually the chat_id and a string (e.g. text, command, file_id)
-            filters=None,
-            num_expected=None,
-            max_wait=15,
-            min_wait_consecutive=2,
-            raise_=True,
-            **kwargs
+        self,
+        *args,  # usually the chat_id and a string (e.g. text, command, file_id)
+        filters=None,
+        num_expected=None,
+        max_wait=15,
+        min_wait_consecutive=2,
+        raise_=True,
+        **kwargs
     ):
         action = AwaitableAction(
             func=send_method,
@@ -322,18 +345,22 @@ def __make_awaitable_method(class_, method_name, send_method):
             num_expected=num_expected,
             filters=filters,
             max_wait=max_wait,
-            min_wait_consecutive=min_wait_consecutive
+            min_wait_consecutive=min_wait_consecutive,
         )
         return await self.act_await_response(action, raise_=raise_)
 
-    method_name += '_await'
+    method_name += "_await"
     f.__name__ = method_name
 
     setattr(class_, method_name, f)
 
 
-for name, method in inspect.getmembers(InteractionClientAsync, predicate=inspect.isfunction):
-    if (name.startswith('send_') or name.startswith('forward_')) and not name.endswith('_await'):
+for name, method in inspect.getmembers(
+    InteractionClientAsync, predicate=inspect.isfunction
+):
+    if (name.startswith("send_") or name.startswith("forward_")) and not name.endswith(
+        "_await"
+    ):
         __make_awaitable_method(InteractionClientAsync, name, method)
 
 # endregion
