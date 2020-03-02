@@ -66,3 +66,7 @@ target/
 
 *.session
 test.*
+/.venv/
+/examples/my_account.session-journal
+/tests/.env
+/examples/my_account.session-journal
