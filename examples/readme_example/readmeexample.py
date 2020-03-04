@@ -2,7 +2,6 @@
 Full version of the GitHub README.
 """
 import asyncio
-
 from tgintegration import BotController, InteractionClient
 
 print("Initializing service...")
