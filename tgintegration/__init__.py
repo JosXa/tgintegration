@@ -8,7 +8,7 @@ from tgintegration.containers.response import (InvalidResponseError, Response)
 
 __author__ = """Joscha Götzer"""
 __email__ = 'joscha.goetzer@gmail.com'
-__version__ = '0.2.3'
+__version__ = '0.4.0'
 
 __all__ = [
     "AwaitableAction", "Response", "InteractionClient",

@@ -1,12 +1,11 @@
-import base64
+import asyncio
+from typing import Union, List, Optional, Callable
+from typing_extensions import Final
+
 import inspect
-import json
 import logging
 import time
 from datetime import datetime, timedelta
-from typing import *
-from typing_extensions import Final
-
 from pyrogram import Client, Filters, Message, MessageHandler
 from pyrogram.api import types
 from pyrogram.api.functions.messages import GetBotCallbackAnswer, GetInlineBotResults
@@ -22,10 +21,10 @@ from tgintegration.containers.response import InvalidResponseError, Response
 from .awaitableaction import AwaitableAction
 from .containers.inlineresults import InlineResultContainer
 
-# Do not show Pyrogram license
+# Do not show Pyrogram license (we still ♡ you Dan)
 Session.notice_displayed = True
 
-SLEEP_DURATION: Final = 0.15
+SLEEP_DURATION: Final[float] = 0.15
 
 
 class InteractionClient(Client):
@@ -35,7 +34,7 @@ class InteractionClient(Client):
         self.global_action_delay = global_action_delay
         self._last_response = None
 
-    def act_await_response(
+    async def act_await_response(
         self, action: AwaitableAction, raise_=True
     ) -> Optional[Response]:
         if self.global_action_delay and self._last_response:
@@ -44,11 +43,11 @@ class InteractionClient(Client):
                 time.time() - self._last_response.started
             )
             if sleep > 0:
-                time.sleep(sleep)  # not async
+                await asyncio.sleep(sleep)
 
         response = Response(self, action)
 
-        def collect(_, message):
+        async def collect(_, message):
             # noinspection PyProtectedMember
             response._add_message(message)
 
@@ -57,7 +56,7 @@ class InteractionClient(Client):
         group = -99  # TODO: find new, empty group
         if group not in self.dispatcher.groups:
             self.dispatcher.groups[group] = []
-        handler = MessageHandler(collect, filters=action.filters)
+        handler = MessageHandler(callback=collect, filters=action.filters)
         self.dispatcher.groups[group].append(handler)
 
         try:
@@ -65,7 +64,7 @@ class InteractionClient(Client):
             response.started = time.time()
 
             # Execute the action
-            response.action_result = action.func(*action.args, **action.kwargs)
+            response.action_result = await action.func(*action.args, **action.kwargs)
 
             # Calculate maximum wait time
             timeout_end = datetime.now() + timedelta(seconds=action.max_wait)
@@ -87,7 +86,7 @@ class InteractionClient(Client):
                         self.logger.debug(msg)
                         return response
 
-                time.sleep(SLEEP_DURATION)
+                await asyncio.sleep(SLEEP_DURATION)
 
             # A response was received
             if action.consecutive_wait:
@@ -146,19 +145,19 @@ class InteractionClient(Client):
                             self._last_response = response
                             return response
 
-                    time.sleep(SLEEP_DURATION)
+                    await asyncio.sleep(SLEEP_DURATION)
 
             self._last_response = response
             return response
 
         except RpcMcgetFail as e:
             self.logger.warning(e)
-            time.sleep(60)  # Internal Telegram error
+            await asyncio.sleep(60)  # Internal Telegram error
         finally:
             # Remove the one-off handler for this action
             self.remove_handler(handler, group)
 
-    def ping_bot(
+    async def ping_bot(
         self,
         bot: Union[int, str],
         override_messages: List[str] = None,
@@ -169,18 +168,18 @@ class InteractionClient(Client):
         if override_messages:
             messages = override_messages
 
-        def send_pings():
+        async def send_pings():
             for n, m in enumerate(messages):
                 try:
                     if n >= 1:
-                        time.sleep(1)
-                    self.send_message(bot, m)
+                        await asyncio.sleep(1)
+                    await self.send_message(bot, m)
                 except FloodWait as e:
                     if e.x > 5:
                         self.logger.warning(
                             "send_message flood: waiting {} seconds".format(e.x)
                         )
-                    time.sleep(e.x)
+                    await asyncio.sleep(e.x)
                     continue
 
         action = AwaitableAction(
@@ -190,9 +189,9 @@ class InteractionClient(Client):
             min_wait_consecutive=min_wait_consecutive,
         )
 
-        return self.act_await_response(action)
+        return await self.act_await_response(action)
 
-    def query_inline(
+    async def query_inline(
         self,
         bot: Union[int, str],
         query: str = "",
@@ -204,9 +203,9 @@ class InteractionClient(Client):
         if latitude and longitude:
             geo_point = InputGeoPoint(lat=latitude, long=longitude)
 
-        request = self.send(
+        request = await self.send(
             GetInlineBotResults(
-                bot=self.resolve_peer(bot),
+                bot=await self.resolve_peer(bot),
                 peer=types.InputPeerSelf(),
                 query=query,
                 offset=offset,
@@ -217,7 +216,7 @@ class InteractionClient(Client):
             self, bot, query, request, offset, geo_point=geo_point
         )
 
-    def press_inline_button(
+    async def press_inline_button(
         self,
         chat_id: Union[int, str],
         on_message: Union[int, Message],
@@ -232,19 +231,19 @@ class InteractionClient(Client):
             raise ValueError("Invalid argument `on_message`")
 
         request = GetBotCallbackAnswer(
-            peer=self.resolve_peer(chat_id),
+            peer=await self.resolve_peer(chat_id),
             msg_id=mid,
             data=bytes(callback_data, "utf-8"),
         )
 
         if retries > 0:
-            return self.session.send(request, retries=retries)
+            return await self.session.send(request, retries=retries)
         else:
             # noinspection PyProtectedMember
-            self.session._send(request, wait_response=False)
+            await self.session._send(request, wait_response=False)
             return None
 
-    def send_command(
+    async def send_command(
         self, bot: Union[int, str], command: str, params: List[str] = None
     ) -> Message:
         """
@@ -255,9 +254,9 @@ class InteractionClient(Client):
             text += " "
             text += " ".join(params)
 
-        return self.send_message(bot, text)
+        return await self.send_message(bot, text)
 
-    def send_audio_await(
+    async def send_audio_await(
         self,
         chat_id: Union[int, str],
         audio: str,
@@ -277,7 +276,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_chat_action_await(
+    async def send_chat_action_await(
         self,
         chat_id: Union[int, str],
         action: ChatAction or str,
@@ -290,7 +289,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_contact_await(
+    async def send_contact_await(
         self,
         chat_id: Union[int, str],
         phone_number: str,
@@ -306,7 +305,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_document_await(
+    async def send_document_await(
         self,
         chat_id: Union[int, str],
         document: str,
@@ -323,7 +322,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_location_await(
+    async def send_location_await(
         self,
         chat_id: Union[int, str],
         latitude: float,
@@ -338,7 +337,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_media_group_await(
+    async def send_media_group_await(
         self,
         chat_id: Union[int, str],
         media: list,
@@ -352,7 +351,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_message_await(
+    async def send_message_await(
         self,
         chat_id: Union[int, str],
         text,
@@ -365,7 +364,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_command_await(
+    async def send_command_await(
         self,
         chat_id: Union[int, str],
         command: str,
@@ -377,7 +376,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_photo_await(
+    async def send_photo_await(
         self,
         chat_id: Union[int, str],
         photo: str,
@@ -395,7 +394,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_sticker_await(
+    async def send_sticker_await(
         self,
         chat_id: Union[int, str],
         sticker: str,
@@ -410,7 +409,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_venue_await(
+    async def send_venue_await(
         self,
         chat_id: Union[int, str],
         latitude: float,
@@ -428,7 +427,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_video_await(
+    async def send_video_await(
         self,
         chat_id: Union[int, str],
         video: str,
@@ -450,7 +449,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_video_note_await(
+    async def send_video_note_await(
         self,
         chat_id: Union[int, str],
         video_note: str,
@@ -467,7 +466,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_voice_await(
+    async def send_voice_await(
         self,
         chat_id: Union[int, str],
         voice: str,
@@ -485,7 +484,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    def send_inline_bot_result_await(
+    async def send_inline_bot_result_await(
         self,
         chat_id: Union[int, str],
         query_id: int,
@@ -500,8 +499,7 @@ class InteractionClient(Client):
     ) -> Response:
         ...
 
-    # TODO: document, add to BotController
-    def forward_messages_await(
+    async def forward_messages_await(
         self,
         chat_id: Union[int, str],
         from_chat_id: Union[int, str],
@@ -525,7 +523,7 @@ def __make_awaitable_method(class_, method_name, send_method):
     """
 
     # TODO: functools.wraps
-    def f(
+    async def f(
         self,
         *args,  # usually the chat_id and a string (e.g. text, command, file_id)
         filters=None,
@@ -544,7 +542,7 @@ def __make_awaitable_method(class_, method_name, send_method):
             max_wait=max_wait,
             min_wait_consecutive=min_wait_consecutive,
         )
-        return self.act_await_response(action, raise_=raise_)
+        return await self.act_await_response(action, raise_=raise_)
 
     method_name += "_await"
     f.__name__ = method_name

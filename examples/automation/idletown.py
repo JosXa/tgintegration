@@ -3,15 +3,19 @@ Before running this example, go to @IdleTownBot and set up your account first:
 
 
 """
+import asyncio
+import logging
 import os
-import time
 import traceback
+from typing import Dict
 
 from tgintegration import InteractionClient, BotController
 from tgintegration.containers.response import Response
-from typing import Dict
 
 examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+log = logging.getLogger(__name__)
+log.info("hello")
 
 # This example uses the configuration of `config.ini` (see examples/README)
 client = InteractionClient(
@@ -29,7 +33,6 @@ controller = BotController(
 )
 
 client.load_config()
-controller.start()
 
 
 def ascii_chars(text: str) -> str:
@@ -44,55 +47,56 @@ def get_buttons(response: Response) -> Dict[str, str]:
     return res
 
 
-def main():
+async def main():
+    await controller.start()
     while True:
         try:
             # Setup
-            controller.clear_chat()
-            time.sleep(2)
-            start = controller.send_command_await("start")
+            await controller.clear_chat()
+            await asyncio.sleep(2)
+            start = await controller.send_command_await("start")
 
             # Extract keyboard buttons of /start response
             main_buttons = get_buttons(start)
 
             # Get World Exp if possible
             if 'worldexp' in main_buttons:
-                worldexp = controller.send_message_await(main_buttons['worldexp'])
+                worldexp = await controller.send_message_await(main_buttons['worldexp'])
                 confirm_buttons = get_buttons(
-                    controller.send_message_await(get_buttons(worldexp)['claimx1']))
-                controller.send_message_await(confirm_buttons['yes'])
+                    await controller.send_message_await(get_buttons(worldexp)['claimx1']))
+                await controller.send_message_await(confirm_buttons['yes'])
 
             # Construct buildings
-            build_buttons = get_buttons(controller.send_message_await(main_buttons['buildings']))
+            build_buttons = get_buttons(await controller.send_message_await(main_buttons['buildings']))
 
             for building in ['lumbermill', 'goldmine', 'armory', 'smithy']:
                 response_text = ""
                 while "you don't have enough" not in response_text.lower():
-                    response_text = controller.send_message_await(build_buttons[building]).full_text
+                    response_text = (await controller.send_message_await(build_buttons[building])).full_text
 
             # Upgrade Hero Equipment
-            hero = get_buttons(controller.send_message_await(main_buttons["hero"]))
-            equip_buttons = get_buttons(controller.send_message_await(hero["equipment"]))
+            hero = get_buttons(await controller.send_message_await(main_buttons["hero"]))
+            equip_buttons = get_buttons(await controller.send_message_await(hero["equipment"]))
 
             # For every possible equipment, upgrade it until there are not enough resources left
             for equip in (b for k, b in equip_buttons.items() if 'up' in k):
                 while True:
-                    response_text = controller.send_message_await(equip).full_text
+                    response_text = (await controller.send_message_await(equip)).full_text
                     if "you don't have enough" in response_text.lower():
                         break
 
             # Attack Player
-            battle = get_buttons(controller.send_message_await(main_buttons['battle']))
-            arena = get_buttons(controller.send_message_await(battle['arena']))
-            normal_match = get_buttons(controller.send_message_await(arena['normalmatch']))
+            battle = get_buttons(await controller.send_message_await(main_buttons['battle']))
+            arena = get_buttons(await controller.send_message_await(battle['arena']))
+            normal_match = get_buttons(await controller.send_message_await(arena['normalmatch']))
 
             if 'fight' in normal_match:
-                fight = get_buttons(controller.send_message_await(normal_match['fight']))
+                fight = get_buttons(await controller.send_message_await(normal_match['fight']))
 
             # Attack Boss
-            bosses = get_buttons(controller.send_message_await(battle['bosses']))
+            bosses = get_buttons(await controller.send_message_await(battle['bosses']))
             if 'attackmax' in bosses:
-                controller.send_message_await(bosses['attackmax'])
+                await controller.send_message_await(bosses['attackmax'])
         except KeyboardInterrupt:
             print('Done.')
             break
@@ -100,8 +104,9 @@ def main():
             traceback.print_exc()
             pass
 
-    client.stop()
+    await client.stop()
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.get_event_loop().run_until_complete(main())
+

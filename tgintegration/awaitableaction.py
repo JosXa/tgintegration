@@ -1,16 +1,16 @@
-from typing import Callable, Dict, Iterable, Optional
+from typing import Callable, Dict, Iterable, Optional, Any, Awaitable
 
 from pyrogram.client.filters.filter import Filter
 
 
 class AwaitableAction:
     """
-    Represents an action to be sent by the service while waiting for a response by the peer.
+    Represents an action to be sent by the service while waiting for a response from the peer.
     """
 
     def __init__(
         self,
-        func: Callable,
+        func: Callable[[Any], Awaitable],
         args: Iterable = None,
         kwargs: Dict = None,
         filters: Filter = None,

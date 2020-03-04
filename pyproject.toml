@@ -1,29 +1,37 @@
 [tool.poetry]
 name = "tgintegration"
-version = "0.2.4"
+version = "0.4.0"
 description = "An Integration Test Library for Telegram Messenger Bots on top of Pyrogram."
-authors = ["Joscha Goetzer <joscha.goetzer@gmail.com>"]
+authors = ["Joscha Götzer <joscha.goetzer@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.5.2"
-pyrogram = "^0.16.0"
+python = "==3.*,>=3.6.7"
+pyrogram = { git = "https://github.com/pyrogram/pyrogram", branch = "asyncio" }
+typing-extensions = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
-bumpversion="0.5.3"
-wheel="0.29.0"
-watchdog="0.8.3"
-flake8="2.6.0"
-tox="2.3.1"
-coverage="4.1"
-cryptography="1.7"
-PyYAML="5.1"
-pytest="2.9.2"
-pytest-runner="2.11.1"
-sphinx = "^2.3.0"
-sphinx-autodoc-typehints = "^1.10.3"
-tgcrypto = "^1.2.0"
+bumpversion = "==0.5.3"
+wheel = "==0.29.0"
+watchdog = "==0.8.3"
+flake8 = "==2.6.0"
+tox = "^3.14.5"
+coverage = "==4.1"
+cryptography = "==1.7"
+PyYAML = "==5.1"
+pytest = "^5.3.5"
+pytest-runner = "^5.2"
+sphinx = "==2.*,>=2.3.0"
+sphinx-autodoc-typehints = "==1.*,>=1.10.3"
+tgcrypto = "==1.*,>=1.2.0"
+python-decouple = "^3.3"
+pytest-asyncio = "^0.10.0"
+
+[tool.dephell.main]
+from = {format = "poetry", path = "pyproject.toml"}
+to = {format = "setuppy", path = "setup.py"}
+versioning = "semver"
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=1.0.5"]
 build-backend = "poetry.masonry.api"

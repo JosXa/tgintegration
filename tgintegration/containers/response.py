@@ -10,7 +10,6 @@ from tgintegration.awaitableaction import AwaitableAction
 from tgintegration.containers.keyboard import ReplyKeyboard, InlineKeyboard
 
 
-
 class Response:
     def __init__(self, client: Client, to_action: AwaitableAction):
         self._client = client
@@ -122,6 +121,10 @@ class Response:
             for e in caption_entity_commands:
                 all_commands.add(m.caption[e.offset, len(m.caption) - e.length])
         return all_commands
+
+    async def delete_all_messages(self, revoke: bool = True):
+        peer_id = self._messages[0].chat.id
+        await self._client.delete_messages(peer_id, [x.message_id for x in self._messages], revoke=revoke)
 
     def __eq__(self, other):
         if not isinstance(other, Response):

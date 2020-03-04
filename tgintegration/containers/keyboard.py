@@ -34,10 +34,10 @@ class ReplyKeyboard:
                     return button_text
         raise NoButtonFound(f"No clickable entity found for pattern r'{pattern}'")
 
-    def press_button(self, pattern, quote=False) -> Message:
+    async def press_button(self, pattern, quote=False) -> Message:
         button = self.find_button(pattern)
 
-        return self._client.send_message(
+        return await self._client.send_message(
             self._peer_id,
             button,
             reply_to_message_id=self._message_id if quote else None,
@@ -47,7 +47,7 @@ class ReplyKeyboard:
     def num_buttons(self) -> int:
         return sum(len(row) for row in self.rows)
 
-    def press_button_await(
+    async def press_button_await(
         self, pattern, filters=None, num_expected=None, raise_=True, quote=False
     ) -> "Response":
         button = self.find_button(pattern)
@@ -66,7 +66,7 @@ class ReplyKeyboard:
             filters=filters,
             num_expected=num_expected,
         )
-        return self._client.act_await_response(action, raise_=raise_)
+        return await self._client.act_await_response(action, raise_=raise_)
 
 
 class InlineKeyboard:
@@ -105,17 +105,17 @@ class InlineKeyboard:
             except StopIteration:
                 raise NoButtonFound
 
-    def press_button(self, pattern=None, index=None) -> BotCallbackAnswer:
+    async def press_button(self, pattern=None, index=None) -> BotCallbackAnswer:
 
         button = self.find_button(pattern, index)
 
-        return self._client.press_inline_button(
+        return await self._client.press_inline_button(
             chat_id=self._peer_id,
             on_message=self._message_id,
             callback_data=button.callback_data,
         )
 
-    def press_button_await(
+    async def press_button_await(
         self,
         pattern: Union[Pattern, str] = None,
         index: Optional[int] = None,
@@ -134,7 +134,7 @@ class InlineKeyboard:
             max_wait=max_wait,
             min_wait_consecutive=min_wait_consecutive,
         )
-        return self._client.act_await_response(action, raise_=raise_)
+        return await self._client.act_await_response(action, raise_=raise_)
 
     def __eq__(self, other):
         # TODO: test

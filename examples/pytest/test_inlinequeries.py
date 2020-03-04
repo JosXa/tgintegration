@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-from tgintegration import BotIntegrationClient
+from tgintegration import BotController
 
 
 @pytest.fixture(scope='module')
@@ -10,15 +10,16 @@ def bots():
     return ['@bold', '@BotListBot', '@ElectroEventsBot']
 
 
-def test_search(client: BotIntegrationClient, bots):
+@pytest.mark.asyncio
+async def test_search(controller: BotController, bots):
     for username in bots:
         # First send the username in private chat to get target description of the bot
-        res = client.send_message_await(username, num_expected=1)
+        res = await controller.send_message_await(username, num_expected=1)
         assert not res.empty, "Bot did not yield a response for username {}.".format(username)
         full_expected = res.full_text
 
-        res = client.get_inline_bot_results(
-            client.peer_id,
+        res = await controller.get_inline_bot_results(
+            controller.peer_id,
             username
         )
         results = res.find_results(
@@ -31,11 +32,12 @@ def test_search(client: BotIntegrationClient, bots):
             "Message texts did not match."
 
 
-def test_other(client: BotIntegrationClient):
+@pytest.mark.asyncio
+async def test_other(controller: BotController):
     test = ["contributing", "rules", "examples"]
 
     for t in test:
-        res = client.get_inline_bot_results(client.peer_id, t)
+        res = await controller.get_inline_bot_results(controller.peer_id, t)
         assert res.find_results(
             title_pattern=re.compile(r'.*{}.*'.format(t), re.IGNORECASE)
         ), "{} did not work".format(t)
