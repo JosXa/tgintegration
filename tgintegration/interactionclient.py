@@ -191,7 +191,7 @@ class InteractionClient(Client):
 
         return await self.act_await_response(action)
 
-    async def query_inline(
+    async def inline_query(
         self,
         bot: Union[int, str],
         query: str = "",

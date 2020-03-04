@@ -54,11 +54,11 @@ class BotController(object):
             bot=self.peer_id, override_messages=override_messages
         )
 
-    async def get_inline_results(
+    async def query_inline(
         self, query: str, offset: str = "", latitude: int = None, longitude: int = None
     ) -> InlineResultContainer:
-        return await self.client.get_inline_bot_results(
-            self.peer_id,
+        return await self.client.inline_query(
+            bot=self.peer_id,
             query=query,
             offset=offset,
             latitude=latitude,
