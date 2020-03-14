@@ -19,7 +19,7 @@ controller = BotController(
 )
 
 
-async def main():
+async def run_example():
 
     print("Starting...")
     await controller.start()
@@ -27,22 +27,29 @@ async def main():
     print("Clearing chat to start with a blank screen...")
     await controller.clear_chat()
 
-    print("Send the /start command to the bot_under_test and 'await' exactly three messages...")
-    response = await controller.send_command_await("start", num_expected=3)
+    print(
+        "Send the /start command to the bot_under_test and 'await' exactly three messages..."
+    )
+    async with controller.collect() as collector:
+        await controller.send_command("start")
 
-    assert response.num_messages == 3
-    print("Three messages received.")
-    assert response.messages[0].sticker
-    print("First message is a sticker.")
+        response = await collector.expect(count=3)
 
-    print("Let's examine the buttons in the response...")
-    inline_keyboard = response.inline_keyboards[0]
-    assert len(inline_keyboard.rows[0]) == 3
-    print("There are three buttons in the first row.")
+        assert response.num_messages == 3
+        print("Three messages received.")
+        assert response.messages[0].sticker
+        print("First message is a sticker.")
 
-    # We can also query and press the inline keyboard buttons:
-    print("Click the first button matching the pattern r'.*Examples'")
-    examples = await response.inline_keyboards[0].press_button_await(pattern=r".*Examples")
+        print("Let's examine the buttons in the response...")
+        inline_keyboard = response.inline_keyboards[0]
+        assert len(inline_keyboard.rows[0]) == 3
+        print("There are three buttons in the first row.")
+
+        # We can also query and press the inline keyboard buttons:
+        print("Click the first button matching the pattern r'.*Examples'")
+        examples = await response.inline_keyboards[0].press_button_await(
+            pattern=r".*Examples"
+        )
 
     assert "Examples for contributing to the BotList" in examples.full_text
     # As the bot edits the message, `press_inline_button` automatically listens for `MessageEdited`
@@ -68,7 +75,9 @@ async def main():
     )  # Not waiting for response
 
     # `send_*_await` methods automatically use the `bot_under_test` as peer:
-    res = await controller.send_message_await("Hello from TgIntegration", max_wait=2, raise_=False)
+    res = await controller.send_message_await(
+        "Hello from TgIntegration", max_wait=2, raise_=False
+    )
     # If `raise_` is explicitly set to False, no exception is raised:
     assert res.empty
     # Note that when no response is expected and no validation thereof is necessary, ...
@@ -80,7 +89,7 @@ async def main():
 
     # Custom awaitable Actions
     from tgintegration import AwaitableAction, Response
-    from pyrogram import filters
+    from pyrogram import Filters
 
     peer = "@BotListBot"
 
@@ -90,7 +99,7 @@ async def main():
         kwargs=dict(chat_id=peer, text="🔄 Explore"),
         num_expected=1,
         # Wait for messages only by the peer we're interacting with
-        filters=filters.user(peer) & filters.incoming,
+        filters=Filters.user(peer) & Filters.incoming,
         # Time out and raise after 15 seconds
         max_wait=15,
     )
@@ -101,4 +110,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.get_event_loop().run_until_complete(main())
+    asyncio.get_event_loop().run_until_complete(run_example())

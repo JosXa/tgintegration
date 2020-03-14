@@ -11,9 +11,8 @@ from tgintegration.containers.keyboard import InlineKeyboard, ReplyKeyboard
 
 
 class Response:
-    def __init__(self, client: Client, to_action: AwaitableAction):
+    def __init__(self, client: Client):
         self._client = client
-        self.action = to_action
 
         self.started: Optional[float] = None
         self.action_result: Any = None
