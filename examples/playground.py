@@ -22,9 +22,7 @@ async def main():
     with client.expect(count=1, max_wait=5, filters=Filters.text) as response:
         await client.send_message("@botlistbot", "/start")
         await client.send_message("@botlistbot", "/help")
-        assert response.
 
-for _ in range(5):
 
 
 if __name__ == "__main__":
