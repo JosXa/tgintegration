@@ -168,7 +168,7 @@ messages returned by the peer in reaction to the executed ``AwaitableAction``.
 .. code-block:: python
 
     from tgintegration import AwaitableAction, Response
-    from pyrogram import Filters
+    from pyrogram import filters
 
     peer = '@BotListBot'
 
@@ -180,7 +180,7 @@ messages returned by the peer in reaction to the executed ``AwaitableAction``.
             parse_mode="markdown"
         ),
         # Wait for messages only by the peer we're interacting with
-        filters=Filters.user(peer) & Filters.incoming,
+        filters=filters.user(peer) & filters.incoming,
         # Time out and raise after 15 seconds
         max_wait=15
     )

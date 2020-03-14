@@ -1,26 +1,18 @@
 import asyncio
-from contextlib import contextmanager
-from typing import Union, List, Optional, Callable, Iterator
-
-from pyrogram.client.handlers.handler import Handler
-from typing_extensions import Final
-
 import inspect
-import logging
-import time
-from datetime import datetime, timedelta
-from pyrogram import Client, Filters, Message, MessageHandler
-from pyrogram.api import types
-from pyrogram.api.functions.messages import GetBotCallbackAnswer, GetInlineBotResults
-from pyrogram.api.types import InputGeoPoint
-from pyrogram.api.types import Message
-from pyrogram.api.types.messages import BotCallbackAnswer
-from pyrogram.client.filters.filter import Filter
-from pyrogram.client.methods.messages.send_chat_action import ChatAction
-from pyrogram.errors import RpcMcgetFail, FloodWait
-from pyrogram.session import Session
+from typing import Callable, List, Optional, Union
 
-from tgintegration.containers.response import InvalidResponseError, Response
+from pyrogram.errors import FloodWait
+from pyrogram.filters import Filter, chat
+from pyrogram.methods.messages.send_chat_action import ChatAction
+from pyrogram.raw.base import InputGeoPoint
+from pyrogram.raw.base.messages import BotCallbackAnswer
+from pyrogram.raw.functions.messages import GetBotCallbackAnswer, GetInlineBotResults
+from pyrogram.raw.types import InputPeerSelf
+from pyrogram.session import Session
+from pyrogram.types import Message
+
+from tgintegration.containers.response import Response
 from .awaitableaction import AwaitableAction
 from .containers.inlineresults import InlineResultContainer
 
@@ -50,15 +42,13 @@ class InteractionClient(ResponseCollectorClient):
                     await self.send_message(bot, m)
                 except FloodWait as e:
                     if e.x > 5:
-                        self.logger.warning(
-                            "send_message flood: waiting {} seconds".format(e.x)
-                        )
+                        self.logger.warning("send_message flood: waiting {} seconds".format(e.x))
                     await asyncio.sleep(e.x)
                     continue
 
         action = AwaitableAction(
             send_pings,
-            filters=Filters.chat(bot),
+            filters=chat(bot),
             max_wait=max_wait_response,
             min_wait_consecutive=min_wait_consecutive,
         )
@@ -80,22 +70,16 @@ class InteractionClient(ResponseCollectorClient):
         request = await self.send(
             GetInlineBotResults(
                 bot=await self.resolve_peer(bot),
-                peer=types.InputPeerSelf(),
+                peer=InputPeerSelf(),
                 query=query,
                 offset=offset,
                 geo_point=geo_point,
             )
         )
-        return InlineResultContainer(
-            self, bot, query, request, offset, geo_point=geo_point
-        )
+        return InlineResultContainer(self, bot, query, request, offset, geo_point=geo_point)
 
     async def press_inline_button(
-        self,
-        chat_id: Union[int, str],
-        on_message: Union[int, Message],
-        callback_data,
-        retries=0,
+        self, chat_id: Union[int, str], on_message: Union[int, Message], callback_data, retries=0,
     ) -> Optional[BotCallbackAnswer]:
         if isinstance(on_message, Message):
             mid = on_message.message_id
@@ -105,9 +89,7 @@ class InteractionClient(ResponseCollectorClient):
             raise ValueError("Invalid argument `on_message`")
 
         request = GetBotCallbackAnswer(
-            peer=await self.resolve_peer(chat_id),
-            msg_id=mid,
-            data=bytes(callback_data, "utf-8"),
+            peer=await self.resolve_peer(chat_id), msg_id=mid, data=bytes(callback_data, "utf-8"),
         )
 
         if retries > 0:
@@ -234,7 +216,7 @@ class InteractionClient(ResponseCollectorClient):
         max_wait: float = ...,
         min_wait_consecutive: float = ...,
         raise_: bool = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -405,7 +387,7 @@ def __make_awaitable_method(class_, method_name, send_method):
         max_wait=15,
         min_wait_consecutive=2,
         raise_=True,
-        **kwargs
+        **kwargs,
     ):
         action = AwaitableAction(
             func=send_method,
@@ -425,9 +407,7 @@ def __make_awaitable_method(class_, method_name, send_method):
 
 
 for name, method in inspect.getmembers(InteractionClient, predicate=inspect.isfunction):
-    if (name.startswith("send_") or name.startswith("forward_")) and not name.endswith(
-        "_await"
-    ):
+    if (name.startswith("send_") or name.startswith("forward_")) and not name.endswith("_await"):
         __make_awaitable_method(InteractionClient, name, method)
 
 # endregion

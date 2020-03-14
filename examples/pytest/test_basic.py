@@ -26,9 +26,7 @@ async def test_help(controller: BotController):
     assert len(keyboard.rows[1]) == 1  # 1 button in second row
 
     # Click the inline button that says "Contributing"
-    contributing = await res.inline_keyboards[0].press_button_await(
-        pattern=r".*Contributing"
-    )
+    contributing = await res.inline_keyboards[0].press_button_await(pattern=r".*Contributing")
     assert not contributing.empty, 'Pressing "Contributing" button had no effect.'
     assert "to contribute to the botlist" in contributing.full_text.lower()
 

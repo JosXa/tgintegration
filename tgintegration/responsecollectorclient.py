@@ -1,28 +1,18 @@
 import asyncio
-from contextlib import contextmanager
-from typing import Union, List, Optional, Callable, Iterator
-
-from pyrogram.client.handlers.handler import Handler
-from typing_extensions import Final
-
-import inspect
 import logging
-import time
+from contextlib import contextmanager
 from datetime import datetime, timedelta
-from pyrogram import Client, Filters, Message, MessageHandler
-from pyrogram.api import types
-from pyrogram.api.functions.messages import GetBotCallbackAnswer, GetInlineBotResults
-from pyrogram.api.types import InputGeoPoint
-from pyrogram.api.types import Message
-from pyrogram.api.types.messages import BotCallbackAnswer
-from pyrogram.client.filters.filter import Filter
-from pyrogram.client.methods.messages.send_chat_action import ChatAction
-from pyrogram.errors import RpcMcgetFail, FloodWait
-from pyrogram.session import Session
+from typing import Optional, Iterator
+
+import time
+
+from pyrogram import Client
+from pyrogram.errors import RpcMcgetFail
+from pyrogram.handlers.handler import Handler
+from typing_extensions import Final
 
 from tgintegration.containers.response import InvalidResponseError, Response
 from .awaitableaction import AwaitableAction
-from .containers.inlineresults import InlineResultContainer
 
 SLEEP_DURATION: Final[float] = 0.15
 
@@ -37,9 +27,7 @@ class ResponseCollectorClient(Client):
     async def _wait_global(self):
         if self.global_action_delay and self._last_response:
             # Sleep for as long as the global delay prescribes
-            sleep = self.global_action_delay - (
-                time.time() - self._last_response.started
-            )
+            sleep = self.global_action_delay - (time.time() - self._last_response.started)
             if sleep > 0:
                 await asyncio.sleep(sleep)
 
@@ -57,9 +45,7 @@ class ResponseCollectorClient(Client):
     def collect(self, handler: Handler) -> Iterator[Response]:
         pass  # TODO
 
-    async def act_await_response(
-        self, action: AwaitableAction, raise_=True
-    ) -> Optional[Response]:
+    async def act_await_response(self, action: AwaitableAction, raise_=True) -> Optional[Response]:
 
         await self._wait_global()
 
@@ -129,9 +115,7 @@ class ResponseCollectorClient(Client):
                                     )
                                 )
 
-                                if (
-                                    raise_
-                                ):  # TODO: should this really be toggleable? raise always?
+                                if raise_:  # TODO: should this really be toggleable? raise always?
                                     raise InvalidResponseError(msg)
                                 else:
                                     self.logger.debug(msg)
@@ -144,9 +128,7 @@ class ResponseCollectorClient(Client):
                                 action.num_expected, response.num_messages
                             )
 
-                            if (
-                                raise_
-                            ):  # TODO: should this really be toggleable? raise always?
+                            if raise_:  # TODO: should this really be toggleable? raise always?
                                 raise InvalidResponseError(msg)
                             else:
                                 self.logger.debug(msg)

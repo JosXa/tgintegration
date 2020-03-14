@@ -3,9 +3,11 @@ import re
 import weakref
 from typing import Union, List, Pattern, Optional, TYPE_CHECKING
 
-from pyrogram import Filters, KeyboardButton, Message, Client
-from pyrogram import InlineKeyboardButton
-from pyrogram.api.types.messages import BotCallbackAnswer
+from pyrogram import Client
+from pyrogram.filters import chat, edited, text
+from pyrogram.raw.base.messages import BotCallbackAnswer
+from pyrogram.types import KeyboardButton, Message
+from pyrogram.types import InlineKeyboardButton
 
 from tgintegration import AwaitableAction
 
@@ -24,6 +26,7 @@ class ReplyKeyboard:
         self._client = weakref.proxy(client)
         self._message_id = message_id
         self._peer_id = chat_id
+
         self.rows = button_rows
 
     def find_button(self, pattern) -> Optional[KeyboardButton]:
@@ -38,9 +41,7 @@ class ReplyKeyboard:
         button = self.find_button(pattern)
 
         return await self._client.send_message(
-            self._peer_id,
-            button,
-            reply_to_message_id=self._message_id if quote else None,
+            self._peer_id, button, reply_to_message_id=self._message_id if quote else None,
         )
 
     @property
@@ -53,11 +54,11 @@ class ReplyKeyboard:
         button = self.find_button(pattern)
 
         if filters:
-            filters = filters & Filters.chat(self._peer_id)
+            filters = filters & chat(self._peer_id)
         else:
-            filters = Filters.chat(self._peer_id)
+            filters = chat(self._peer_id)
 
-        filters = filters & (Filters.text | Filters.edited)
+        filters = filters & (text | edited)
 
         action = AwaitableAction(
             func=self._client.send_message,
@@ -84,9 +85,7 @@ class InlineKeyboard:
 
     def find_button(self, pattern=None, index=None) -> Optional[InlineKeyboardButton]:
         if not any((pattern, index)) or all((pattern, index)):
-            raise ValueError(
-                "Exactly one of the `pattern` or `index` arguments must be provided."
-            )
+            raise ValueError("Exactly one of the `pattern` or `index` arguments must be provided.")
 
         if pattern:
             compiled = re.compile(pattern)
@@ -98,9 +97,7 @@ class InlineKeyboard:
         elif index:
             try:
                 return next(
-                    itertools.islice(
-                        itertools.chain.from_iterable(self.rows), index, index + 1
-                    )
+                    itertools.islice(itertools.chain.from_iterable(self.rows), index, index + 1)
                 )
             except StopIteration:
                 raise NoButtonFound
@@ -110,9 +107,7 @@ class InlineKeyboard:
         button = self.find_button(pattern, index)
 
         return await self._client.press_inline_button(
-            chat_id=self._peer_id,
-            on_message=self._message_id,
-            callback_data=button.callback_data,
+            chat_id=self._peer_id, on_message=self._message_id, callback_data=button.callback_data,
         )
 
     async def press_button_await(
@@ -129,7 +124,7 @@ class InlineKeyboard:
         action = AwaitableAction(
             func=self._client.press_inline_button,
             args=(self._peer_id, self._message_id, button.callback_data),
-            filters=Filters.chat(self._peer_id),
+            filters=chat(self._peer_id),
             num_expected=num_expected,
             max_wait=max_wait,
             min_wait_consecutive=min_wait_consecutive,

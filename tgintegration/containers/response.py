@@ -1,13 +1,13 @@
 import time
 from datetime import datetime
 from typing import *
-from typing import Any, List, Set, TypeVar
+from typing import Any, List, Set
 
-from pyrogram import InlineKeyboardMarkup, ReplyKeyboardMarkup, Client
-from pyrogram import Message
+from pyrogram import Client
+from pyrogram.types import InlineKeyboardMarkup, Message, ReplyKeyboardMarkup
 
 from tgintegration.awaitableaction import AwaitableAction
-from tgintegration.containers.keyboard import ReplyKeyboard, InlineKeyboard
+from tgintegration.containers.keyboard import InlineKeyboard, ReplyKeyboard
 
 
 class Response:
@@ -124,7 +124,9 @@ class Response:
 
     async def delete_all_messages(self, revoke: bool = True):
         peer_id = self._messages[0].chat.id
-        await self._client.delete_messages(peer_id, [x.message_id for x in self._messages], revoke=revoke)
+        await self._client.delete_messages(
+            peer_id, [x.message_id for x in self._messages], revoke=revoke
+        )
 
     def __eq__(self, other):
         if not isinstance(other, Response):

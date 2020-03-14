@@ -9,31 +9,37 @@ try:
 except ImportError:
     from distutils.core import setup
 
-readme = ''
+readme = ""
 
 setup(
     long_description=readme,
-    name='tgintegration',
-    version='0.4.0',
-    description='An Integration Test Library for Telegram Messenger Bots on top of Pyrogram.',
-    python_requires='==3.*,>=3.6.7',
-    author='Joscha Götzer',
-    author_email='joscha.goetzer@gmail.com',
-    license='MIT',
-    packages=['tgintegration', 'tgintegration.containers'],
+    name="tgintegration",
+    version="0.4.0",
+    description="An Integration Test Library for Telegram Messenger Bots on top of Pyrogram.",
+    python_requires="==3.*,>=3.6.7",
+    author="JosXa",
+    author_email="joscha.goetzer@gmail.com",
+    license="MIT",
+    packages=["tgintegration", "tgintegration.containers"],
     package_dir={"": "."},
     package_data={},
-    install_requires=['pyrogram', 'typing-extensions==3.*,>=3.7.4'],
-    dependency_links=[
-        'git+https://github.com/pyrogram/pyrogram@asyncio#egg=pyrogram'
-    ],
+    install_requires=["pyrogram", "typing-extensions==3.*,>=3.7.4"],
+    dependency_links=["git+https://github.com/pyrogram/pyrogram@asyncio#egg=pyrogram"],
     extras_require={
         "dev": [
-            "bumpversion==0.5.3", "coverage==4.1", "cryptography==1.7",
-            "flake8==2.6.0", "pytest==2.9.2", "pytest-runner==2.11.1",
-            "pyyaml==5.1", "sphinx==2.*,>=2.3.0",
-            "sphinx-autodoc-typehints==1.*,>=1.10.3", "tgcrypto==1.*,>=1.2.0",
-            "tox==2.3.1", "watchdog==0.8.3", "wheel==0.29.0"
+            "bumpversion==0.5.3",
+            "coverage==4.1",
+            "cryptography==1.7",
+            "flake8==2.6.0",
+            "pytest==2.9.2",
+            "pytest-runner==2.11.1",
+            "pyyaml==5.1",
+            "sphinx==2.*,>=2.3.0",
+            "sphinx-autodoc-typehints==1.*,>=1.10.3",
+            "tgcrypto==1.*,>=1.2.0",
+            "tox==2.3.1",
+            "watchdog==0.8.3",
+            "wheel==0.29.0",
         ]
     },
 )

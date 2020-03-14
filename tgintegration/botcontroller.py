@@ -2,13 +2,12 @@ import inspect
 from typing import Callable, Union, Optional, cast
 from typing import List
 
-from pyrogram import Filters
-from pyrogram.api.functions.messages import DeleteHistory
-from pyrogram.api.functions.users import GetFullUser
-from pyrogram.api.types import BotCommand, BotInfo
-from pyrogram.api.types import PeerUser
-from pyrogram.client.filters.filter import Filter
-from pyrogram.client.methods.messages.send_chat_action import ChatAction
+from pyrogram.filters import Filter, chat, incoming
+from pyrogram.methods.messages.send_chat_action import ChatAction
+from pyrogram.raw.base import BotCommand, BotInfo
+from pyrogram.raw.functions.messages import DeleteHistory
+from pyrogram.raw.functions.users import GetFullUser
+from pyrogram.raw.types import PeerUser
 
 from tgintegration.containers.response import Response
 from .containers.inlineresults import InlineResultContainer
@@ -36,9 +35,9 @@ class BotController(object):
 
     def get_default_filters(self, user_filters: Filter = None) -> Filter:
         if user_filters is None:
-            return Filters.chat(self.peer_id) & Filters.incoming
+            return chat(self.peer_id) & incoming
         else:
-            return user_filters & Filters.chat(self.peer_id) & Filters.incoming
+            return user_filters & chat(self.peer_id) & incoming
 
     async def start(self):
         await self.client.start()
@@ -50,32 +49,22 @@ class BotController(object):
         await self.client.stop()
 
     async def ping(self, override_messages: List[str] = None) -> Response:
-        return await self.client.ping_bot(
-            bot=self.peer_id, override_messages=override_messages
-        )
+        return await self.client.ping_bot(bot=self.peer_id, override_messages=override_messages)
 
     async def query_inline(
         self, query: str, offset: str = "", latitude: int = None, longitude: int = None
     ) -> InlineResultContainer:
         return await self.client.inline_query(
-            bot=self.peer_id,
-            query=query,
-            offset=offset,
-            latitude=latitude,
-            longitude=longitude,
+            bot=self.peer_id, query=query, offset=offset, latitude=latitude, longitude=longitude,
         )
 
     async def _get_command_list(self) -> List[BotCommand]:
         return list(
-            cast(
-                BotInfo, (await self.client.send(GetFullUser(id=self.peer))).bot_info
-            ).commands
+            cast(BotInfo, (await self.client.send(GetFullUser(id=self.peer))).bot_info).commands
         )
 
     async def clear_chat(self) -> None:
-        await self.client.send(
-            DeleteHistory(peer=self.peer, max_id=0, just_clear=False)
-        )
+        await self.client.send(DeleteHistory(peer=self.peer, max_id=0, just_clear=False))
 
     async def send_audio_await(
         self,
@@ -91,7 +80,7 @@ class BotController(object):
         disable_notification: bool = ...,
         reply_to_message_id: int = ...,
         progress: Callable = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -102,7 +91,7 @@ class BotController(object):
         num_expected: int = ...,
         raise_: bool = ...,
         progress: Callable = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -117,7 +106,7 @@ class BotController(object):
         last_name: str = ...,
         disable_notification: bool = ...,
         reply_to_message_id: int = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -132,7 +121,7 @@ class BotController(object):
         disable_notification: bool = ...,
         reply_to_message_id: int = ...,
         progress: Callable = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -145,7 +134,7 @@ class BotController(object):
         raise_: bool = ...,
         disable_notification: bool = ...,
         reply_to_message_id: int = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -157,17 +146,12 @@ class BotController(object):
         raise_: bool = ...,
         disable_notification: bool = ...,
         reply_to_message_id: int = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
     async def send_message_await(
-        self,
-        text,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        **kwargs
+        self, text, filters: Filter = ..., num_expected: int = ..., raise_: bool = ..., **kwargs
     ) -> Response:
         ...
 
@@ -177,7 +161,7 @@ class BotController(object):
         filters: Filter = ...,
         num_expected: int = ...,
         raise_: bool = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -193,7 +177,7 @@ class BotController(object):
         disable_notification: bool = ...,
         reply_to_message_id: int = ...,
         progress: Callable = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -206,7 +190,7 @@ class BotController(object):
         disable_notification: bool = ...,
         reply_to_message_id: int = ...,
         progress: Callable = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -222,7 +206,7 @@ class BotController(object):
         foursquare_id: str = ...,
         disable_notification: bool = ...,
         reply_to_message_id: int = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -242,7 +226,7 @@ class BotController(object):
         disable_notification: bool = ...,
         reply_to_message_id: int = ...,
         progress: Callable = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -257,7 +241,7 @@ class BotController(object):
         disable_notification: bool = ...,
         reply_to_message_id: int = ...,
         progress: Callable = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -273,7 +257,7 @@ class BotController(object):
         disable_notification: bool = ...,
         reply_to_message_id: int = ...,
         progress: Callable = ...,
-        **kwargs
+        **kwargs,
     ) -> Response:
         ...
 
@@ -311,7 +295,7 @@ def __modify_await_arg_defaults(class_, method_name):
             *args,
             filters=self.get_default_filters(filters),
             num_expected=num_expected,
-            **default_args
+            **default_args,
         )
 
     f.__name__ = method_name

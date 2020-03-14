@@ -2,19 +2,16 @@ import re
 from operator import attrgetter
 from typing import *
 
-from pyrogram import Client
-from pyrogram.api.types import BotInlineResult
-from pyrogram.api.types import InputGeoPoint, Message
-from pyrogram.api.types.messages import BotResults
-from pyrogram.client.filters.filter import Filter
+from pyrogram.filters import Filter
+from pyrogram.raw.base import BotInlineResult, InputGeoPoint
+from pyrogram.raw.base.messages import BotResults
+from pyrogram.types import Message
 
 InteractionClient = TypeVar("InteractionClient")
 
 
 class InlineResult:
-    def __init__(
-        self, client: "InteractionClient", result: BotInlineResult, query_id: int
-    ):
+    def __init__(self, client: "InteractionClient", result: BotInlineResult, query_id: int):
         self._client = client
         self.result = result
         self.query_id = query_id
@@ -134,11 +131,7 @@ class InlineResultContainer:
         return results
 
     def find_results(
-        self,
-        title_pattern=None,
-        description_pattern=None,
-        message_pattern=None,
-        url_pattern=None,
+        self, title_pattern=None, description_pattern=None, message_pattern=None, url_pattern=None,
     ) -> Set[InlineResult]:
 
         # TODO:
