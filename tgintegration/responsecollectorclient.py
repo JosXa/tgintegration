@@ -8,6 +8,7 @@ import time
 
 from pyrogram import Client
 from pyrogram.errors import RpcMcgetFail
+from pyrogram.handlers import MessageHandler
 from pyrogram.handlers.handler import Handler
 from typing_extensions import Final
 
