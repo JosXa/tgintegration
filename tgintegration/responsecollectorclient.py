@@ -1,15 +1,52 @@
 import asyncio
+from typing import (
+    Any,
+    AsyncContextManager,
+    Callable,
+    ClassVar,
+    Generic,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
+    AbstractSet,
+    Hashable,
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    MutableSet,
+    Sequence,
+    AsyncIterator,
+    AsyncIterable,
+    Coroutine,
+    Collection,
+    AsyncGenerator,
+    Deque,
+    Dict,
+    List,
+    Set,
+    FrozenSet,
+    NamedTuple,
+    Generator,
+    cast,
+    overload,
+    TYPE_CHECKING,
+)
+from typing_extensions import TypedDict
+
 import logging
 import time
-from contextlib import contextmanager
+from contextlib import asynccontextmanager, contextmanager
 from datetime import datetime, timedelta
 from typing import Optional, Iterator, Tuple, AsyncIterator
 
-from async_generator import asynccontextmanager
-from pyrogram import Client, MessageHandler
-from pyrogram.client.filters.filter import Filter
-from pyrogram.client.handlers.handler import Handler
+from pyrogram import Client
 from pyrogram.errors import RpcMcgetFail
+from pyrogram.filters import Filter
+from pyrogram.handlers.handler import Handler
 from typing_extensions import Final
 
 from tgintegration.containers.response import InvalidResponseError, Response
@@ -34,10 +71,10 @@ class ResponseCollectorClient(Client):
             if sleep > 0:
                 await asyncio.sleep(sleep)
 
-    def _add_handler_nolock(
+    async def _add_handler_nolock(
         self, handler: Handler, group: int = None
     ) -> Tuple[Handler, int]:
-        """Add handler to empty group manually, as the Pyrogram lock seems to never release when trying to use
+        """Add handler to empty group manually, as the Pyrogram _lock seems to never release when trying to use
         .add_handler at runtime."""
         # TODO: find next empty group if group is None
         group = group or -99
@@ -46,10 +83,9 @@ class ResponseCollectorClient(Client):
         self.dispatcher.groups[group].append(handler)
         return handler, group
 
-    def _remove_handler_nolock(self, handler: Handler, group: int) -> None:
+    async def _remove_handler_nolock(self, handler: Handler, group: int) -> None:
         self.dispatcher.groups[group].remove(handler)
 
-    @contextmanager
     def expect(
         self,
         filters: Filter = None,
@@ -57,30 +93,19 @@ class ResponseCollectorClient(Client):
         max_wait: float = None,
         min_wait_consecutive: float = ...,
         raise_: bool = ...,
-    ) -> AsyncIterator[Response]:
+    ) -> Response:
         pass
 
     @asynccontextmanager
-    async def collect(self, action: AwaitableAction) -> Iterator[Response]:
-        response = Response(self)
-
-        async def collect(_, message):
-            # noinspection PyProtectedMember
-            response._add_message(message)
-
-        handler = MessageHandler(callback=collect, filters=action.filters)
-
-        h = self._add_handler_nolock(handler)
-
-        # Start timer
-        response.started = time.time()
-
-        # Execute the action
-        response.action_result = await action.func(*action.args, **action.kwargs)
-
-        yield response
-
-        self._remove_handler_nolock(*h)
+    async def gather(
+        self,
+        peer: Union[int, str],
+        filters: Filter = None,
+        num_expected: int = None,
+        max_wait: Optional[float] = 20,
+        min_wait_consecutive: Optional[float] = None,
+    ) -> AsyncContextManager[Response]:
+        yield Response(self)
 
     async def act_await_response(
         self, action: AwaitableAction, raise_=True
@@ -114,7 +139,7 @@ class ResponseCollectorClient(Client):
 
                 # A response was received
                 if action.consecutive_wait:
-                    # Wait for more consecutive messages from the peer
+                    # Wait for more consecutive messages from the peer_user
                     consecutive_delta = timedelta(seconds=action.consecutive_wait)
 
                     while True:

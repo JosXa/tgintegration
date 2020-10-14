@@ -5,7 +5,7 @@ from pyrogram.filters import Filter
 
 class AwaitableAction:
     """
-    Represents an action to be sent by the service while waiting for a response from the peer.
+    Represents an action to be sent by the service while waiting for a response from the peer_user.
     """
 
     def __init__(
@@ -46,6 +46,6 @@ class AwaitableAction:
             if value > 1 and not self.consecutive_wait:
                 raise ValueError(
                     "If the number of expected messages greater than one, "
-                    "`min_wait_consecutive` must be given."
+                    "`wait_consecutive` must be given."
                 )
         self._num_expected = value

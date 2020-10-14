@@ -57,11 +57,11 @@ class DinoParkGame:
         )
 
         self.controller = BotController(
-            bot_under_test="@DinoParkNextBot", client=client
+            peer="@DinoParkNextBot", client=client
         )
 
     async def start(self):
-        await self.controller.start()
+        await self.controller.initialize()
         await self._update_keyboard()
         await self.update_balance()
 

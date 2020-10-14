@@ -2,6 +2,8 @@
 Full version of the GitHub README.
 """
 import asyncio
+
+import tgintegration.actors
 from tgintegration import BotController, InteractionClient
 
 print("Initializing service...")
@@ -11,9 +13,9 @@ client = InteractionClient(
 )
 
 controller = BotController(
-    bot_under_test="@BotListBot",
+    peer="@BotListBot",
     client=client,
-    max_wait_response=8,  # Maximum timeout for bot responses
+    max_wait_response=8,  # Maximum timeout for peer_user responses
     min_wait_consecutive=2,  # Minimum time to wait for consecutive messages
     raise_no_response=True,  # Raise `InvalidResponseError` when no response received
 )
@@ -22,18 +24,18 @@ controller = BotController(
 async def run_example():
 
     print("Starting...")
-    await controller.start()
+    await controller.initialize()
 
     print("Clearing chat to start with a blank screen...")
     await controller.clear_chat()
 
     print(
-        "Send the /start command to the bot_under_test and 'await' exactly three messages..."
+        "Send the /start command to the peer_user and 'await' exactly three messages..."
     )
-    async with controller.collect() as collector:
+    async with controller.dialog() as collector:
         await controller.send_command("start")
 
-        response = await collector.expect(count=3)
+        response = await tgintegration.actors.collect(count=3)
 
         assert response.num_messages == 3
         print("Three messages received.")
@@ -52,10 +54,10 @@ async def run_example():
         )
 
     assert "Examples for contributing to the BotList" in examples.full_text
-    # As the bot edits the message, `press_inline_button` automatically listens for `MessageEdited`
+    # As the peer_user edits the message, `press_inline_button` automatically listens for `MessageEdited`
     # events and picks up on the edit, returning it as `Response`.
 
-    print("So what happens when we send an invalid query or the bot fails to respond?")
+    print("So what happens when we send an invalid query or the peer_user fails to respond?")
     from tgintegration import InvalidResponseError
 
     try:
@@ -71,10 +73,10 @@ async def run_example():
     #  the `send_*_await` methods, all normal Pyro methods still work:
     print("Calling a normal `send_message` method...")
     await client.send_message(
-        controller.bot_under_test, "Hello from Pyrogram"
+        controller.peer, "Hello from Pyrogram"
     )  # Not waiting for response
 
-    # `send_*_await` methods automatically use the `bot_under_test` as peer:
+    # `send_*_await` methods automatically use the `peer_user` as peer_user:
     res = await controller.send_message_await(
         "Hello from TgIntegration", max_wait=2, raise_=False
     )
@@ -84,8 +86,8 @@ async def run_example():
     await controller.send_photo_await("_assets/photo.jpg", max_wait=0, raise_=False)
     await controller.send_voice_await("_assets/voice.ogg", max_wait=0, raise_=False)
     # ... it makes more sense to use the "unawaitable" methods:
-    await controller.client.send_photo(controller.bot_under_test, "_assets/photo.jpg")
-    await controller.client.send_voice(controller.bot_under_test, "_assets/voice.ogg")
+    await controller.client.send_photo(controller.peer, "_assets/photo.jpg")
+    await controller.client.send_voice(controller.peer, "_assets/voice.ogg")
 
     # Custom awaitable Actions
     from tgintegration import AwaitableAction, Response
@@ -98,7 +100,7 @@ async def run_example():
         func=client.send_message,
         kwargs=dict(chat_id=peer, text="🔄 Explore"),
         num_expected=1,
-        # Wait for messages only by the peer we're interacting with
+        # Wait for messages only by the peer_user we're interacting with
         filters=Filters.user(peer) & Filters.incoming,
         # Time out and raise after 15 seconds
         max_wait=15,

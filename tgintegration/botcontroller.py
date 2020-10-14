@@ -1,311 +1,147 @@
-import inspect
-from typing import Callable, Union, Optional, cast
-from typing import List
+import asyncio
+import logging
+import time
+from contextlib import asynccontextmanager
+from typing import (
+    ContextManager,
+    List,
+    Optional,
+    Union,
+    cast,
+)
 
-from pyrogram.filters import Filter, chat, incoming
-from pyrogram.methods.messages.send_chat_action import ChatAction
-from pyrogram.raw.base import BotCommand, BotInfo
-from pyrogram.raw.functions.messages import DeleteHistory
+from pyrogram import Client, filters
+from pyrogram.filters import Filter
+from pyrogram.handlers.handler import Handler
+from pyrogram.raw.base import BotCommand
+from pyrogram.raw.functions.channels import DeleteHistory
 from pyrogram.raw.functions.users import GetFullUser
-from pyrogram.raw.types import PeerUser
+from pyrogram.raw.types import BotInfo, PeerUser
+from typing_extensions import AsyncContextManager
 
+from tgintegration._handler_utils import add_handler_transient
+from tgintegration.collector import Expectation, TimeoutSettings, collect
 from tgintegration.containers.response import Response
-from .containers.inlineresults import InlineResultContainer
-from .interactionclient import InteractionClient
 
 
-class BotController(object):
+class BotController:
     def __init__(
         self,
-        bot_under_test: Union[int, str],
-        client: InteractionClient,
-        max_wait_response: float = 20.0,
-        min_wait_consecutive: Optional[float] = 2.0,
+        client: Client,
+        peer: Union[int, str],
+        *,
+        max_wait_response: Union[int, float] = 20.0,
+        min_wait_consecutive: Optional[Union[int, float]] = 2.0,
         raise_no_response: bool = True,
+        global_action_delay: Union[int, float] = 0.8,
     ):
-        self.bot_under_test = bot_under_test
         self.client = client
+        self.peer = peer
         self.max_wait_response = max_wait_response
         self.min_wait_consecutive = min_wait_consecutive
         self.raise_no_response = raise_no_response
+        self.global_action_delay = global_action_delay
 
-        self.peer: Optional[PeerUser] = None
+        self.peer_user: Optional[PeerUser] = None
         self.peer_id: Optional[int] = None
         self.command_list: List[BotCommand] = []
 
-    def get_default_filters(self, user_filters: Filter = None) -> Filter:
-        if user_filters is None:
-            return chat(self.peer_id) & incoming
-        else:
-            return user_filters & chat(self.peer_id) & incoming
+        self.logger = logging.getLogger(self.__class__.__name__)
 
-    async def start(self):
-        await self.client.start()
-        self.peer = await self.client.resolve_peer(self.bot_under_test)
-        self.peer_id = self.peer.user_id
+    async def initialize(self, start_client: bool = True):
+        if start_client and not self.client.is_connected:
+            await self.client.start()
+
+        self.peer_user = await self.client.resolve_peer(self.peer)
+        self.peer_id = self.peer_user.user_id
         self.command_list = await self._get_command_list()
 
-    async def stop(self):
-        await self.client.stop()
+    async def _ensure_initialized(self):
+        if not self.peer_id:
+            await self.initialize()
 
-    async def ping(self, override_messages: List[str] = None) -> Response:
-        return await self.client.ping_bot(bot=self.peer_id, override_messages=override_messages)
+    # async def ping_bot(
+    #     self,
+    #     override_messages: List[str] = None,
+    #     max_wait_response: float = None,
+    #     wait_consecutive: float = None,
+    # ) -> Union[Response, bool]:
+    #     messages = ["/start"]
+    #     if override_messages:
+    #         messages = override_messages
+    #
+    #     async def send_pings():
+    #         for n, m in enumerate(messages):
+    #             try:
+    #                 if n >= 1:
+    #                     await asyncio.sleep(1)
+    #                 await self.client.send_message(self.peer, m)
+    #             except FloodWait as e:
+    #                 if e.x > 5:
+    #                     self.logger.warning(
+    #                         "send_message flood: waiting {} seconds".format(e.x)
+    #                     )
+    #                 await asyncio.sleep(e.x)
+    #                 continue
+    #
+    #     action = AwaitableAction(
+    #         send_pings,
+    #         filters=filters.chat(peer_user),
+    #         max_wait=max_wait_response,
+    #         wait_consecutive=wait_consecutive,
+    #     )
+    #
+    #     return await self.act_await_response(action)
 
-    async def query_inline(
-        self, query: str, offset: str = "", latitude: int = None, longitude: int = None
-    ) -> InlineResultContainer:
-        return await self.client.inline_query(
-            bot=self.peer_id, query=query, offset=offset, latitude=latitude, longitude=longitude,
-        )
+    def merge_default_filters(self, user_filters: Filter = None) -> Filter:
+        chat_filter = filters.chat(self.peer_id) & filters.incoming
+        if user_filters is None:
+            return chat_filter
+        else:
+            return user_filters & chat_filter
 
     async def _get_command_list(self) -> List[BotCommand]:
         return list(
-            cast(BotInfo, (await self.client.send(GetFullUser(id=self.peer))).bot_info).commands
+            cast(
+                BotInfo,
+                (await self.client.send(GetFullUser(id=self.peer_user))).bot_info,
+            ).commands
         )
 
     async def clear_chat(self) -> None:
-        await self.client.send(DeleteHistory(peer=self.peer, max_id=0, just_clear=False))
-
-    async def send_audio_await(
-        self,
-        audio: str,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        caption: str = ...,
-        parse_mode: str = ...,
-        duration: int = ...,
-        performer: str = ...,
-        title: str = ...,
-        disable_notification: bool = ...,
-        reply_to_message_id: int = ...,
-        progress: Callable = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_chat_action_await(
-        self,
-        action: Union[ChatAction, str],
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        progress: Callable = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_contact_await(
-        self,
-        chat_id: Union[int, str],
-        phone_number: str,
-        first_name: str,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        last_name: str = ...,
-        disable_notification: bool = ...,
-        reply_to_message_id: int = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_document_await(
-        self,
-        document: str,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        caption: str = ...,
-        parse_mode: str = ...,
-        disable_notification: bool = ...,
-        reply_to_message_id: int = ...,
-        progress: Callable = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_location_await(
-        self,
-        latitude: float,
-        longitude: float,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        disable_notification: bool = ...,
-        reply_to_message_id: int = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_media_group_await(
-        self,
-        media: list,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        disable_notification: bool = ...,
-        reply_to_message_id: int = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_message_await(
-        self, text, filters: Filter = ..., num_expected: int = ..., raise_: bool = ..., **kwargs
-    ) -> Response:
-        ...
-
-    async def send_command_await(
-        self,
-        command: str,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_photo_await(
-        self,
-        photo: str,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        caption: str = ...,
-        parse_mode: str = ...,
-        ttl_seconds: int = ...,
-        disable_notification: bool = ...,
-        reply_to_message_id: int = ...,
-        progress: Callable = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_sticker_await(
-        self,
-        sticker: str,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        disable_notification: bool = ...,
-        reply_to_message_id: int = ...,
-        progress: Callable = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_venue_await(
-        self,
-        latitude: float,
-        longitude: float,
-        title: str,
-        address: str,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        foursquare_id: str = ...,
-        disable_notification: bool = ...,
-        reply_to_message_id: int = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_video_await(
-        self,
-        video: str,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        caption: str = ...,
-        parse_mode: str = ...,
-        duration: int = ...,
-        width: int = ...,
-        height: int = ...,
-        thumb: str = ...,
-        supports_streaming: bool = ...,
-        disable_notification: bool = ...,
-        reply_to_message_id: int = ...,
-        progress: Callable = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_video_note_await(
-        self,
-        video_note: str,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        duration: int = ...,
-        length: int = ...,
-        disable_notification: bool = ...,
-        reply_to_message_id: int = ...,
-        progress: Callable = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def send_voice_await(
-        self,
-        voice: str,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        raise_: bool = ...,
-        caption: str = ...,
-        parse_mode: str = ...,
-        duration: int = ...,
-        disable_notification: bool = ...,
-        reply_to_message_id: int = ...,
-        progress: Callable = ...,
-        **kwargs,
-    ) -> Response:
-        ...
-
-    async def forward_messages_await(
-        self,
-        from_chat_id: Union[int, str],
-        message_ids,
-        filters: Filter = ...,
-        num_expected: int = ...,
-        max_wait: float = ...,
-        min_wait_consecutive: float = ...,
-        raise_: bool = ...,
-        disable_notification: bool = None,
-    ) -> Response:
-        ...
-
-
-# region Dynamic code generation
-
-
-def __modify_await_arg_defaults(class_, method_name):
-    # TODO: functools.wraps
-    async def f(self, *args, filters=None, num_expected=None, raise_=None, **kwargs):
-        default_args = dict(
-            max_wait=self.max_wait_response,
-            min_wait_consecutive=self.min_wait_consecutive,
-            raise_=raise_ if raise_ is not None else self.raise_no_response,
-        )
-        default_args.update(**kwargs)
-
-        client_method = getattr(self.client, method_name)
-
-        return await client_method(
-            self.peer_id,
-            *args,
-            filters=self.get_default_filters(filters),
-            num_expected=num_expected,
-            **default_args,
+        await self.client.send(
+            DeleteHistory(peer=self.peer_user, max_id=0, just_clear=False)
         )
 
-    f.__name__ = method_name
-    setattr(class_, method_name, f)
+    async def _wait_global(self):
+        if self.global_action_delay and self._last_response:
+            # Sleep for as long as the global delay prescribes
+            sleep = self.global_action_delay - (
+                time.time() - self._last_response.started
+            )
+            if sleep > 0:
+                await asyncio.sleep(sleep)
 
+    def add_handler_transient(self, handler: Handler) -> ContextManager[None]:
+        return add_handler_transient(self.client, handler)
 
-for name, _ in inspect.getmembers(BotController, inspect.isfunction):
-    if not name.startswith("send_") and not name.startswith("forward_"):
-        continue
-    if name.endswith("_await"):
-        __modify_await_arg_defaults(BotController, name)
-
-# endregion
+    @asynccontextmanager
+    async def collect(
+        self,
+        filters: Filter = None,
+        count: int = None,
+        *,
+        peer: Union[int, str] = None,
+        max_wait: Union[int, float] = 20,
+        wait_consecutive: Optional[Union[int, float]] = None,
+    ) -> AsyncContextManager[Response]:
+        await self._ensure_initialized()
+        async with collect(
+            self.client,
+            self.merge_default_filters(filters),
+            expectation=Expectation(num_messages=count),
+            timeouts=TimeoutSettings(
+                max_wait=max_wait, wait_consecutive=wait_consecutive
+            ),
+        ) as response:
+            yield response

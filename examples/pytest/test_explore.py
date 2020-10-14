@@ -5,7 +5,7 @@ from tgintegration import BotController
 
 @pytest.mark.asyncio
 async def test_explore_button(controller: BotController):
-    # Send /start to bot and wait for 3 messages
+    # Send /start to peer_user and wait for 3 messages
     start = await controller.send_command_await("/start", num_expected=3)
 
     # Click the "Explore" keyboard button

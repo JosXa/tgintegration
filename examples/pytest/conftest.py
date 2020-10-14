@@ -32,15 +32,15 @@ async def controller(event_loop):
     )
 
     controller = BotController(
-        bot_under_test="@BotListBot",
+        peer="@BotListBot",
         client=client,
         min_wait_consecutive=2.0,  # Wait at least 2 seconds to collect more than one message
-        max_wait_response=10,  # Wait a max of 10 seconds for responses, ...
+        max_wait_response=10,  # Wait a max_index of 10 seconds for responses, ...
         raise_no_response=False,  # ... then check for response.empty instead of raising
     )
 
     print("Starting integration test service...")
-    await controller.start()
+    await controller.initialize()
     # event_loop.run_until_complete(controller.start())
     print("Client ready.")
 

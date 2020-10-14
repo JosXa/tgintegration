@@ -20,7 +20,7 @@ async def test_help(controller: BotController):
 
     # Make some assertions about the response
     assert not res.empty, "Bot did not respond to /help command"
-    assert "reliable and unbiased bot catalog" in res.full_text.lower()
+    assert "reliable and unbiased peer_user catalog" in res.full_text.lower()
     keyboard = res.inline_keyboards[0]
     assert len(keyboard.rows[0]) == 3  # 3 buttons in first row
     assert len(keyboard.rows[1]) == 1  # 1 button in second row
