@@ -9,9 +9,10 @@ from tgintegration.collector import Expectation
 @pytest.mark.parametrize(
     "min_n,max_n,num_msgs,is_sufficient,is_match",
     [
+        # TODO: (0,0,0) ?
         (1, 1, 0, False, False),
         (1, 1, 1, True, True),
-        (1, 1, 2, False, False),
+        (1, 1, 2, True, False),
     ],
 )
 def test_expectation(
