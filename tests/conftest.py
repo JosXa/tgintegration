@@ -2,9 +2,7 @@ import asyncio
 
 import pytest
 from decouple import config
-from pyrogram import Client
-
-from tgintegration.responsecollectorclient import ResponseCollectorClient
+from tgintegration.interactionclient import InteractionClient
 
 
 @pytest.yield_fixture(scope="module")
@@ -16,9 +14,9 @@ def event_loop(request):
 
 
 @pytest.fixture(scope="module")
-async def client() -> ResponseCollectorClient:
+async def client() -> InteractionClient:
     # noinspection PyCallingNonCallable
-    client = ResponseCollectorClient(config("SESSION_STRING"), config_file="config.ini")
+    client = InteractionClient(config("SESSION_STRING"), config_file="config.ini")
     await client.start()
     yield client
     await client.stop()

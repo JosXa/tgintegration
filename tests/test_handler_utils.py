@@ -9,7 +9,13 @@ from tgintegration._handler_utils import find_free_group
 
 @pytest.mark.parametrize(
     "group_indices,expected",
-    [([1, 2, 3], -1000), ([-1000], -1001), ([-999], -1000), ([-999, -1000, -1001], -1002)],
+    [
+        ([1, 2, 3], -1000),
+        ([-1000], -1001),
+        ([-999], -1000),
+        ([-999, -1000, -1001], -1002),
+        ([-1000, -1001, -1003], -1002),
+    ],
 )
 def test_find_free_group(group_indices, expected):
     dp = Mock(Dispatcher)

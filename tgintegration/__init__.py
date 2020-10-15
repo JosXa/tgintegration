@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from tgintegration.awaitableaction import AwaitableAction
 from tgintegration.botcontroller import BotController
-from tgintegration.responsecollectorclient import ResponseCollectorClient
+from tgintegration.interactionclient import InteractionClient
 from tgintegration.containers.inlineresults import InlineResult, InlineResultContainer
 from tgintegration.containers.keyboard import InlineKeyboard, ReplyKeyboard
 from tgintegration.containers.response import (InvalidResponseError, Response)
@@ -14,5 +14,5 @@ __version__ = '0.4.0'
 __all__ = [
     "AwaitableAction", "Response",
     "BotController", "InlineResult", "InlineResultContainer", "InvalidResponseError",
-    "InlineKeyboard", "ReplyKeyboard", "ResponseCollectorClient"
+    "InlineKeyboard", "ReplyKeyboard", "InteractionClient"
 ]

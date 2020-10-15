@@ -9,7 +9,7 @@ import os
 import traceback
 from typing import Dict
 
-from tgintegration import BotController, ResponseCollectorClient
+from tgintegration import BotController, InteractionClient
 from tgintegration.containers.response import Response
 
 examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -17,7 +17,7 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 log = logging.getLogger(__name__)
 
 # This example uses the configuration of `config.ini` (see examples/README)
-client = ResponseCollectorClient(
+client = InteractionClient(
     session_name='my_account',
     global_action_delay=2.3,  # The @IdleTownBot has a spam limit of about 1.9s
     workdir=examples_dir,  # Load configuration from parent folder

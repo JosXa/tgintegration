@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from tgintegration import BotController
-from tgintegration import ResponseCollectorClient
+from tgintegration import InteractionClient
 
 
 logger = logging.getLogger("tgintegration")
@@ -29,9 +29,9 @@ examples_dir = Path(__file__).parent.parent
 
 
 @pytest.fixture(scope="session")
-async def client() -> ResponseCollectorClient:
+async def client() -> InteractionClient:
     # noinspection PyCallingNonCallable
-    client = ResponseCollectorClient(
+    client = InteractionClient(
         "tgintegration_examples",
         config_file=str(examples_dir / "config.ini"),
         workdir=str(examples_dir),

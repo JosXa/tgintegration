@@ -1,13 +1,13 @@
 import asyncio
 from pathlib import Path
 
-from tgintegration import BotController, Response, ResponseCollectorClient
+from tgintegration import BotController, Response, InteractionClient
 
 examples_dir = Path(__file__).parent
 print(examples_dir)
 
 # This example uses the configuration of `config.ini` (see examples/README)
-client = ResponseCollectorClient(
+client = InteractionClient(
     "tgintegration_examples",
     config_file=str(examples_dir / "config.ini"),
     workdir=str(examples_dir),

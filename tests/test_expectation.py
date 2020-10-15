@@ -17,7 +17,7 @@ from tgintegration.collector import Expectation
 def test_expectation(
     min_n:int, max_n:int, num_msgs: int, is_sufficient: bool, is_match: bool
 ):
-    obj = Expectation.from_min_max(min_n, max_n)
+    obj = Expectation(min_messages=min_n, max_messages=max_n)
     msgs = [Mock(Message)] * num_msgs
     assert obj.is_sufficient(msgs) == is_sufficient
     assert obj._is_match(msgs) == is_match
