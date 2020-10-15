@@ -4,8 +4,7 @@
 Contributing
 ============
 
-Contributions are welcome, and they are greatly appreciated! Every
-little bit helps, and credit will always be given.
+Contributions are welcome, and they are greatly appreciated! Every little bit helps, and credit will always be given.
 
 You can contribute in many ways:
 
@@ -111,4 +110,3 @@ Tips
 To run a subset of tests::
 
 $ py.test tests.test_tgintegration
-

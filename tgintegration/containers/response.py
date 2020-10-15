@@ -1,23 +1,22 @@
-import time
 from datetime import datetime
 from typing import *
 from typing import Any, List, Set
 
-from pyrogram import Client
 from pyrogram.types import InlineKeyboardMarkup, Message, ReplyKeyboardMarkup
 
-from tgintegration.awaitableaction import AwaitableAction
+if TYPE_CHECKING:
+    from tgintegration.botcontroller import BotController
 from tgintegration.containers.keyboard import InlineKeyboard, ReplyKeyboard
+from tgintegration.update_recorder import MessageRecorder
 
 
 class Response:
-    def __init__(self, client: Client, to_action: AwaitableAction):
-        self._client = client
-        self.action = to_action
+    def __init__(self, controller: "BotController", recorder: MessageRecorder):
+        self._controller = controller
+        self._recorder = recorder
 
         self.started: Optional[float] = None
         self.action_result: Any = None
-        self._messages: List[Message] = []
 
         # cached properties
         self.__reply_keyboard: Optional[ReplyKeyboard] = None
@@ -25,23 +24,19 @@ class Response:
 
     @property
     def messages(self) -> List[Message]:
-        return self._messages
-
-    def _add_message(self, message: Message):
-        message.exact_timestamp = time.time()
-        self._messages.append(message)
+        return self._recorder.messages
 
     @property
     def empty(self) -> bool:
-        return not self._messages
+        return not self.messages
 
     @property
     def num_messages(self) -> int:
-        return len(self._messages)
+        return len(self.messages)
 
     @property
     def full_text(self) -> str:
-        return "\n".join(x.text for x in self._messages if x.text) or ""
+        return "\n".join(x.text for x in self.messages if x.text) or ""
 
     @property
     def reply_keyboard(self) -> Optional[ReplyKeyboard]:
@@ -61,7 +56,7 @@ class Response:
             return None  # No message with a keyboard found
 
         reply_keyboard = ReplyKeyboard(
-            client=self._client,
+            controller=self._controller,
             chat_id=last_kb_msg.chat.id,
             message_id=last_kb_msg.message_id,
             button_rows=last_kb_msg.reply_markup.keyboard,
@@ -76,18 +71,16 @@ class Response:
         if self.empty:
             return None
 
-        inline_keyboards = []
-
-        for message in self.messages:
-            if isinstance(message.reply_markup, InlineKeyboardMarkup):
-                inline_keyboards.append(
-                    InlineKeyboard(
-                        client=self._client,
-                        chat_id=message.chat.id,
-                        message_id=message.message_id,
-                        button_rows=message.reply_markup.inline_keyboard,
-                    )
-                )
+        inline_keyboards = [
+            InlineKeyboard(
+                controller=self._controller,
+                chat_id=message.chat.id,
+                message_id=message.message_id,
+                button_rows=message.reply_markup.inline_keyboard,
+            )
+            for message in self.messages
+            if isinstance(message.reply_markup, InlineKeyboardMarkup)
+        ]
 
         self.__inline_keyboards = inline_keyboards
         return inline_keyboards
@@ -95,7 +88,7 @@ class Response:
     @property
     def keyboard_buttons(self) -> Set[str]:
         all_buttons = set()
-        for m in self._messages:
+        for m in self.messages:
             markup = m.reply_markup
             if markup and hasattr(markup, "keyboard"):
                 for row in markup.keyboard:
@@ -108,12 +101,12 @@ class Response:
         if self.empty:
             return None
         # TODO: Dan should fix this
-        return datetime.fromtimestamp(self._messages[-1].date)
+        return datetime.fromtimestamp(self.messages[-1].date)
 
     @property
     def commands(self) -> Set[str]:
         all_commands = set()
-        for m in self._messages:
+        for m in self.messages:
             entity_commands = [x for x in m.entities if x.type == "bot_command"]
             for e in entity_commands:
                 all_commands.add(m.text[e.offset, len(m.text) - e.length])
@@ -123,9 +116,9 @@ class Response:
         return all_commands
 
     async def delete_all_messages(self, revoke: bool = True):
-        peer_id = self._messages[0].chat.id
-        await self._client.delete_messages(
-            peer_id, [x.message_id for x in self._messages], revoke=revoke
+        peer_id = self.messages[0].chat.id
+        await self._controller.client.delete_messages(
+            peer_id, [x.message_id for x in self.messages], revoke=revoke
         )
 
     def __eq__(self, other):
@@ -139,12 +132,12 @@ class Response:
         )
 
     def __getitem__(self, item):
-        return self._messages[item]
+        return self.messages[item]
 
     def __str__(self):
         if self.empty:
             return "Empty response"
-        return "\nthen\n".join(['"{}"'.format(m.text) for m in self._messages])
+        return "\nthen\n".join(['"{}"'.format(m.text) for m in self.messages])
 
 
 class InvalidResponseError(Exception):

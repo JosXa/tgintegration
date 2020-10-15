@@ -56,12 +56,10 @@ class DinoParkGame:
             config_file=os.path.join(examples_dir, "config.ini"),
         )
 
-        self.controller = BotController(
-            bot_under_test="@DinoParkNextBot", client=client
-        )
+        self.controller = BotController(peer="@DinoParkNextBot", client=client)
 
     async def start(self):
-        await self.controller.start()
+        await self.controller.initialize()
         await self._update_keyboard()
         await self.update_balance()
 
@@ -77,13 +75,13 @@ class DinoParkGame:
             return {}
 
     async def update_balance(self):
-        balance_menu = await self.menu.press_button_await(r".*Balance")
+        balance_menu = await self.menu.click(r".*Balance")
         values = self._extract_values(balance_menu.full_text)
 
         self.purchase_balance = values["purchases"]
         self.withdrawal_balance = values["withdrawals"]
 
-        diamonds_menu = await self.menu.press_button_await(r".*Farm")
+        diamonds_menu = await self.menu.click(r".*Farm")
         diamonds_values = self._extract_values(diamonds_menu.full_text)
 
         self.diamonds = diamonds_values["total"]
@@ -95,10 +93,8 @@ class DinoParkGame:
         )
 
     async def collect_diamonds(self):
-        farm = await self.menu.press_button_await(".*Farm")
-        collected = await farm.inline_keyboards[0].press_button_await(
-            ".*Collect diamonds"
-        )
+        farm = await self.menu.click(".*Farm")
+        collected = await farm.inline_keyboards[0].click(".*Collect diamonds")
 
         num_collected = self._extract_values(collected.full_text).get("collected", 0)
         self.diamonds += num_collected
@@ -109,19 +105,17 @@ class DinoParkGame:
         )
 
     async def sell_diamonds(self):
-        market = await self.menu.press_button_await(r".*Marketplace")
+        market = await self.menu.click(r".*Marketplace")
         if not market.inline_keyboards:
             self.logger.debug("No selling available at the moment.")
             return
 
-        await market.inline_keyboards[0].press_button_await(r"Sell diamonds.*")
+        await market.inline_keyboards[0].click(r"Sell diamonds.*")
         await self.update_balance()
 
     async def buy_dinosaurs(self):
-        dinosaurs_menu = (
-            await self.menu.press_button_await(r".*Dinosaurs")
-        ).inline_keyboards[0]
-        dinos = await dinosaurs_menu.press_button_await(r".*Buy dinosaurs")
+        dinosaurs_menu = (await self.menu.click(r".*Dinosaurs")).inline_keyboards[0]
+        dinos = await dinosaurs_menu.click(r".*Buy dinosaurs")
 
         dino_costs: List[Tuple[int, int]] = []  # (KeyboardIndex, Cost)
         for n, msg in enumerate(dinos.messages):
@@ -141,9 +135,7 @@ class DinoParkGame:
 
             dino_msg_index, dino_cost = most_expensive_affordable
 
-            bought = await dinos.inline_keyboards[dino_msg_index].press_button_await(
-                r".*Buy"
-            )
+            bought = await dinos.inline_keyboards[dino_msg_index].click(r".*Buy")
 
             self.purchase_balance -= dino_cost
             self.logger.info(
@@ -151,11 +143,11 @@ class DinoParkGame:
             )
 
     async def play_lucky_number(self):
-        lucky_number = await (
-            await self.menu.press_button_await(r".*Games")
-        ).reply_keyboard.press_button_await(r".*Lucky number")
+        lucky_number = await (await self.menu.click(r".*Games")).reply_keyboard.click(
+            r".*Lucky number"
+        )
 
-        bet = await lucky_number.reply_keyboard.press_button_await(r".*Place your bet")
+        bet = await lucky_number.reply_keyboard.click(r".*Place your bet")
 
         if "only place one bet per" in bet.full_text.lower():
             await bet.delete_all_messages()
@@ -164,9 +156,9 @@ class DinoParkGame:
         self.logger.debug("Bet placed.")
 
     async def get_bonus(self):
-        bonus = await (
-            await self.menu.press_button_await(r".*Games")
-        ).reply_keyboard.press_button_await(r".*Bonus.*")
+        bonus = await (await self.menu.click(r".*Games")).reply_keyboard.click(
+            r".*Bonus.*"
+        )
         if "already claimed" in bonus.full_text.lower():
             # Clean up
             await bonus.delete_all_messages()

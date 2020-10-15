@@ -1,91 +1,88 @@
 import itertools
 import re
 import weakref
-from typing import Union, List, Pattern, Optional, TYPE_CHECKING
+from typing import List, Optional, Pattern, TYPE_CHECKING, Union
 
-from pyrogram import Client
-from pyrogram.filters import chat, edited, text
-from pyrogram.raw.base.messages import BotCallbackAnswer
-from pyrogram.types import KeyboardButton, Message
-from pyrogram.types import InlineKeyboardButton
-
-from tgintegration import AwaitableAction
+from pyrogram import filters as f
+from pyrogram.raw.types.messages import BotCallbackAnswer
+from pyrogram.types import InlineKeyboardButton, KeyboardButton, Message
 
 if TYPE_CHECKING:
-    from tgintegration import Response
+    from tgintegration import BotController, Response
 
 
 class ReplyKeyboard:
     def __init__(
         self,
-        client: Client,
+        controller: "BotController",
         chat_id: Union[int, str],
         message_id: int,
         button_rows: List[List[KeyboardButton]],
     ):
-        self._client = weakref.proxy(client)
+        self._controller: BotController = weakref.proxy(controller)
         self._message_id = message_id
         self._peer_id = chat_id
-
         self.rows = button_rows
 
-    def find_button(self, pattern) -> Optional[KeyboardButton]:
+    def find_button(self, pattern) -> KeyboardButton:
         compiled = re.compile(pattern)
         for row in self.rows:
-            for button_text in row:
-                if compiled.match(button_text):
-                    return button_text
+            for button in row:
+                # TODO: Investigate why sometimes it's a button and other times a string
+                if compiled.match(button.text if hasattr(button, "text") else button):
+                    return button
         raise NoButtonFound(f"No clickable entity found for pattern r'{pattern}'")
 
-    async def press_button(self, pattern, quote=False) -> Message:
+    async def _click_nowait(self, pattern, quote=False) -> Message:
         button = self.find_button(pattern)
 
-        return await self._client.send_message(
-            self._peer_id, button, reply_to_message_id=self._message_id if quote else None,
+        return await self._controller.client.send_message(
+            self._peer_id,
+            button.text,
+            reply_to_message_id=self._message_id if quote else None,
         )
 
     @property
     def num_buttons(self) -> int:
         return sum(len(row) for row in self.rows)
 
-    async def press_button_await(
+    async def click(
         self, pattern, filters=None, num_expected=None, raise_=True, quote=False
     ) -> "Response":
         button = self.find_button(pattern)
 
-        if filters:
-            filters = filters & chat(self._peer_id)
-        else:
-            filters = chat(self._peer_id)
+        filters = (
+            filters & f.chat(self._peer_id) if filters else f.chat(self._peer_id)
+        ) & (f.text | f.edited)
 
-        filters = filters & (text | edited)
+        async with self._controller.collect(filters=filters) as res:
+            await self._controller.client.send_message(
+                self._controller.peer,
+                button.text if hasattr(button, "text") else button,
+                reply_to_message_id=self._message_id if quote else None,
+            )
 
-        action = AwaitableAction(
-            func=self._client.send_message,
-            args=(self._peer_id, button),
-            kwargs=dict(reply_to_message_id=self._message_id if quote else None),
-            filters=filters,
-            num_expected=num_expected,
-        )
-        return await self._client.act_await_response(action, raise_=raise_)
+        return res
 
 
 class InlineKeyboard:
     def __init__(
         self,
-        client: Client,
+        controller: "BotController",
         chat_id: Union[int, str],
         message_id: int,
         button_rows: List[List[InlineKeyboardButton]],
     ):
-        self._client = weakref.proxy(client)
+        self._controller = weakref.proxy(controller)
         self._message_id = message_id
         self._peer_id = chat_id
         self.rows = button_rows
 
     def find_button(self, pattern=None, index=None) -> Optional[InlineKeyboardButton]:
         if not any((pattern, index)) or all((pattern, index)):
-            raise ValueError("Exactly one of the `pattern` or `index` arguments must be provided.")
+            raise ValueError(
+                "Exactly one of the `pattern` or `index` arguments must be provided."
+            )
 
         if pattern:
             compiled = re.compile(pattern)
@@ -97,39 +94,43 @@ class InlineKeyboard:
         elif index:
             try:
                 return next(
-                    itertools.islice(itertools.chain.from_iterable(self.rows), index, index + 1)
+                    itertools.islice(
+                        itertools.chain.from_iterable(self.rows), index, index + 1
+                    )
                 )
             except StopIteration:
                 raise NoButtonFound
 
-    async def press_button(self, pattern=None, index=None) -> BotCallbackAnswer:
+    async def _click_nowait(self, pattern=None, index=None) -> BotCallbackAnswer:
 
         button = self.find_button(pattern, index)
 
-        return await self._client.press_inline_button(
-            chat_id=self._peer_id, on_message=self._message_id, callback_data=button.callback_data,
+        return await self._controller.client.request_callback_answer(
+            chat_id=self._peer_id,
+            message_id=self._message_id,
+            callback_data=button.callback_data,
         )
 
-    async def press_button_await(
+    async def click(
         self,
         pattern: Union[Pattern, str] = None,
         index: Optional[int] = None,
-        num_expected: Optional[int] = None,
+        # TODO: Think about what to do with parameters
+        num_expected: Optional[int] = 1,
         max_wait: float = 8,
         min_wait_consecutive: float = 1.5,
         raise_: Optional[bool] = True,
-    ):
+    ) -> "Response":
         button = self.find_button(pattern, index)
 
-        action = AwaitableAction(
-            func=self._client.press_inline_button,
-            args=(self._peer_id, self._message_id, button.callback_data),
-            filters=chat(self._peer_id),
-            num_expected=num_expected,
-            max_wait=max_wait,
-            min_wait_consecutive=min_wait_consecutive,
-        )
-        return await self._client.act_await_response(action, raise_=raise_)
+        async with self._controller.collect(filters=f.chat(self._peer_id)) as res:
+            await self._controller.client.request_callback_answer(
+                chat_id=self._peer_id,
+                message_id=self._message_id,
+                callback_data=button.callback_data,
+            )
+
+        return res
 
     def __eq__(self, other):
         # TODO: test

@@ -1,19 +1,37 @@
+"""
+Before running this example, go to @IdleTownBot and set up your account first:
+
+
+"""
 import asyncio
 import logging
 import os
 import traceback
 from typing import Dict
-from typing import Optional
 
-from tgintegration import InteractionClient, BotController
+from tgintegration import BotController, InteractionClient
 from tgintegration.containers.response import Response
-
-MAX_RUNS: Optional[int] = None
-SESSION_NAME: str = "my_account"
 
 examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 log = logging.getLogger(__name__)
+
+# This example uses the configuration of `config.ini` (see examples/README)
+client = InteractionClient(
+    session_name="my_account",
+    global_action_delay=2.3,  # The @IdleTownBot has a spam limit of about 1.9s
+    workdir=examples_dir,  # Load configuration from parent folder
+    config_file=os.path.join(examples_dir, "config.ini"),
+)
+
+controller = BotController(
+    peer="@IdleTownBot",
+    client=client,
+    max_wait_response=15,  # Maximum time in seconds to wait for a response from the peer_user
+    min_wait_consecutive=None,  # Do not wait for more than one message
+)
+
+client.load_config()
 
 
 def ascii_chars(text: str) -> str:
@@ -29,25 +47,8 @@ def get_buttons(response: Response) -> Dict[str, str]:
 
 
 async def main():
-    # This example uses the configuration of `config.ini` (see examples/README)
-    client = InteractionClient(
-        session_name=SESSION_NAME,
-        global_action_delay=2.3,  # The @IdleTownBot has a spam limit of about 1.9s
-        workdir=examples_dir,  # Load configuration from parent folder
-        config_file=os.path.join(examples_dir, "config.ini"),
-    )
-
-    controller = BotController(
-        bot_under_test="@IdleTownBot",
-        client=client,
-        max_wait_response=15,  # Maximum time in seconds to wait for a response from the bot
-        min_wait_consecutive=None,  # Do not wait for more than one message
-    )
-
-    client.load_config()
-
-    await controller.start()
-    for _ in range(MAX_RUNS or 999999):
+    await controller.initialize()
+    while True:
         try:
             # Setup
             await controller.clear_chat()

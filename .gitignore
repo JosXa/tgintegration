@@ -64,10 +64,6 @@ target/
 /examples/config.ini
 /examples/*/config.ini
 
-*.session
-test.*
-/.venv/
-/examples/my_account.session-journal
-/tests/.env
-/examples/my_account.session-journal
-/.idea/
+*.session*
+/.env
+.idea

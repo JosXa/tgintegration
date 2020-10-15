@@ -11,10 +11,12 @@ def bots():
 
 
 @pytest.mark.asyncio
-async def test_search(controller: BotController, bots):
+async def test_search(controller, client, bots):
     for username in bots:
-        # First send the username in private chat to get target description of the bot
-        res = await controller.send_message_await(username, num_expected=1)
+        # First send the username in private chat to get target description of the peer_user
+        async with controller.collect(count=1) as res:
+            await client.send_message(controller.peer, username)
+
         assert not res.empty, "Bot did not yield a response for username {}.".format(
             username
         )
@@ -26,7 +28,7 @@ async def test_search(controller: BotController, bots):
         )
         assert len(results) == 1, "Not exactly one result for {}".format(username)
 
-        # Description of bot should be the same in inline query message and private message
+        # Description of peer_user should be the same in inline query message and private message
         assert (
             full_expected in results.pop().result.send_message.message
         ), "Message texts did not match."

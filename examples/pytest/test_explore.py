@@ -5,11 +5,12 @@ from tgintegration import BotController
 
 @pytest.mark.asyncio
 async def test_explore_button(controller: BotController):
-    # Send /start to bot and wait for 3 messages
-    start = await controller.send_command_await("/start", num_expected=3)
+    # Send /start to peer_user and wait for 3 messages
+    async with controller.collect(count=3) as start:
+        await controller.send_command("/start")
 
     # Click the "Explore" keyboard button
-    explore = await start.reply_keyboard.press_button_await(pattern=r'.*Explore')
+    explore = await start.reply_keyboard.click(pattern=r".*Explore")
 
     assert not explore.empty, 'Pressing the "Explore" button had no effect.'
     assert explore.inline_keyboards, 'The "Explore" message had no inline keyboard.'
@@ -22,6 +23,6 @@ async def test_explore_button(controller: BotController):
             break  # ok
 
         # Pressing an inline button also makes the BotController listen for edit events.
-        explore = await explore.inline_keyboards[0].press_button_await(index=2)
+        explore = await explore.inline_keyboards[0].click(index=2)
         assert not explore.empty, 'Pressing the "Explore" button had no effect.'
         count -= 1
