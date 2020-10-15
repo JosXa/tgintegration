@@ -1,6 +1,6 @@
 # https://pre-commit.com/
-default_language_version:
-    python: python3.8
+#default_language_version:
+#    python: python3.8
 repos:
 -   repo: https://gitlab.com/PyCQA/flake8
     rev: 3.8.3
