@@ -67,3 +67,5 @@ target/
 *.session*
 /.env
 .idea
+
+.mypy_cache

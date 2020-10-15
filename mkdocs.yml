@@ -1,0 +1,36 @@
+site_name: TgIntegration Documentation
+repo_url: https://github.com/JosXa/tgintegration
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    # https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/
+    primary: light blue
+    accent: purple
+  features:
+    - navigation.instant
+    - navigation.expand
+    - navigation.tabs
+
+nav:
+  - Overview: 'index.md'
+  - Docs:
+    - Setup:
+      - Prerequisites: 'prerequisites.md'
+      - Installation: 'installation.md'
+      - Configuration: 'configuration.md'
+    - Getting Started: 'getting-started.md'
+  - API Reference: mkapi/api/tgintegration
+
+markdown_extensions:
+  - meta
+  - pymdownx.tasklist
+  - pymdownx.inlinehilite
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+plugins:
+  - search
+  - mkapi:
+      src_dirs: ["tgintegration"]
