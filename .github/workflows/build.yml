@@ -5,17 +5,16 @@ name: Build tgintegration
 
 on:
     push:
-        branches: [ master, dev, develop, async, async-develop ]
+        branches: [ master, develop ]
     pull_request:
-        branches: [ master, dev, develop, async, async-develop ]
+        branches: [ master, develop ]
 
 jobs:
     build:
-
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                python-version: [3.6, 3.7, 3.8]
+                python-version: [3.6, 3.7, 3.8, 3.9]
 
         steps:
             -   uses: actions/checkout@v2
@@ -23,11 +22,10 @@ jobs:
                 uses: actions/setup-python@v1
                 with:
                     python-version: ${{ matrix.python-version }}
-            -   name: Install dependencies
-                run: |
-                    python -m pip install --upgrade pip
-                    pip install poetry
-                    poetry install
+            -   name: "Install Poetry"
+                uses: Gr1N/setup-poetry@v3
+                with:
+                    poetry-version: 1.0
             -   name: Lint with flake8
                 run: |
                     pip install flake8
@@ -35,6 +33,19 @@ jobs:
                     flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
                     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
                     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+            -   name: Poetry install
+                run: poetry install
+            -   name: Show outdated packages
+                run: poetry show --outdated
+                continue-on-error: true
+            -   name: Test with pytest
+                run: poetry run pytest tests/ --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov=tgintegration --cov-report=xml --cov-report=html
+            -   name: Upload pytest test results
+                uses: actions/upload-artifact@v2
+                with:
+                    name: pytest-results-${{ matrix.python-version }}
+                    path: junit/test-results-${{ matrix.python-version }}.xml
+                if: ${{ always() }}
             -   name: Run examples once
                 env:
                     API_ID: ${{ secrets.API_ID }}
@@ -42,7 +53,3 @@ jobs:
                     SESSION_STRING: ${{ secrets.SESSION_STRING }}
                 run: |
                     poetry run python tests/run_examples.py
-            -   name: Test with pytest
-                run: |
-                    pip install pytest
-                    pytest
