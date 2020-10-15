@@ -11,10 +11,12 @@ def bots():
 
 
 @pytest.mark.asyncio
-async def test_search(controller: BotController, bots):
+async def test_search(controller, client, bots):
     for username in bots:
         # First send the username in private chat to get target description of the peer_user
-        res = await controller.send_message_await(username, num_expected=1)
+        async with controller.collect(count=1) as res:
+            await client.send_message(controller.peer, username)
+
         assert not res.empty, "Bot did not yield a response for username {}.".format(
             username
         )

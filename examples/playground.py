@@ -1,29 +1,24 @@
 import asyncio
+from pathlib import Path
 
-from pyrogram import Filters
+from tgintegration import BotController, Response, ResponseCollectorClient
 
-import tgintegration.actors
-from tgintegration import BotController, InteractionClient, Response
+examples_dir = Path(__file__).parent
+print(examples_dir)
 
 # This example uses the configuration of `config.ini` (see examples/README)
-client = InteractionClient(
-    session_name="tgintegration_examples"  # Arbitrary file path to the Pyrogram session file
+client = ResponseCollectorClient(
+    "tgintegration_examples",
+    config_file=str(examples_dir / "config.ini"),
+    workdir=str(examples_dir),
 )
+
 
 controller = BotController(peer="@BotListBot", client=client)
 
 
 async def main():
-    with client.start_dialog(filters=Filters.text) as collection:
-        await client.send_message("@botlistbot", "/start")
-        await client.send_message("@botlistbot", "/help")
-        response: Response = tgintegration.actors.collect(count=1, max_wait=5)
-        assert response.full_text == "something something"
-
-    with tgintegration.actors.collect(count=1, max_wait=5, filters=Filters.text) as response:
-        await client.send_message("@botlistbot", "/start")
-        await client.send_message("@botlistbot", "/help")
-
+    await controller.initialize()
 
 
 if __name__ == "__main__":

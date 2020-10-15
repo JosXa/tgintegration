@@ -49,7 +49,7 @@ async def run_example():
 
         # We can also query and press the inline keyboard buttons:
         print("Click the first button matching the pattern r'.*Examples'")
-        examples = await response.inline_keyboards[0].press_button_await(
+        examples = await response.inline_keyboards[0].click(
             pattern=r".*Examples"
         )
 
@@ -62,14 +62,14 @@ async def run_example():
 
     try:
         # The following instruction will raise an `InvalidResponseError` after
-        # `service.max_wait_response` seconds. This is because we passed `raise_no_response = True`
+        # `service.max_wait` seconds. This is because we passed `raise_no_response = True`
         # in the service initialization.
         print("Expecting undefined command to raise InvalidResponseError...")
         await controller.send_command_await("ayylmao", raise_=True)
     except InvalidResponseError:
         print("Raised.")  # Ok
 
-    # The `InteractionClient` is based off a regular Pyrogram client, meaning that, in addition to
+    # The `InteractionClient` is based off a regular Pyrogram controller, meaning that, in addition to
     #  the `send_*_await` methods, all normal Pyro methods still work:
     print("Calling a normal `send_message` method...")
     await client.send_message(
@@ -80,7 +80,7 @@ async def run_example():
     res = await controller.send_message_await(
         "Hello from TgIntegration", max_wait=2, raise_=False
     )
-    # If `raise_` is explicitly set to False, no exception is raised:
+    # If `raise_on_timeout` is explicitly set to False, no exception is raised:
     assert res.empty
     # Note that when no response is expected and no validation thereof is necessary, ...
     await controller.send_photo_await("_assets/photo.jpg", max_wait=0, raise_=False)

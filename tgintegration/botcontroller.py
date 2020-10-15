@@ -11,16 +11,18 @@ from typing import (
 )
 
 from pyrogram import Client, filters
+from pyrogram.errors import FloodWait
 from pyrogram.filters import Filter
 from pyrogram.handlers.handler import Handler
 from pyrogram.raw.base import BotCommand
 from pyrogram.raw.functions.channels import DeleteHistory
 from pyrogram.raw.functions.users import GetFullUser
-from pyrogram.raw.types import BotInfo, PeerUser
+from pyrogram.raw.types import BotInfo
+from pyrogram.types import Message, User
 from typing_extensions import AsyncContextManager
 
 from tgintegration._handler_utils import add_handler_transient
-from tgintegration.collector import Expectation, TimeoutSettings, collect
+from tgintegration.collector import Expectation, NotSet, TimeoutSettings, collect
 from tgintegration.containers.response import Response
 
 
@@ -42,7 +44,7 @@ class BotController:
         self.raise_no_response = raise_no_response
         self.global_action_delay = global_action_delay
 
-        self.peer_user: Optional[PeerUser] = None
+        self.peer_user: Optional[User] = None
         self.peer_id: Optional[int] = None
         self.command_list: List[BotCommand] = []
 
@@ -52,49 +54,18 @@ class BotController:
         if start_client and not self.client.is_connected:
             await self.client.start()
 
-        self.peer_user = await self.client.resolve_peer(self.peer)
-        self.peer_id = self.peer_user.user_id
+        self.peer_user = await self.client.get_users(self.peer)
+        self.peer_id = self.peer_user.id
         self.command_list = await self._get_command_list()
 
     async def _ensure_initialized(self):
         if not self.peer_id:
             await self.initialize()
 
-    # async def ping_bot(
-    #     self,
-    #     override_messages: List[str] = None,
-    #     max_wait_response: float = None,
-    #     wait_consecutive: float = None,
-    # ) -> Union[Response, bool]:
-    #     messages = ["/start"]
-    #     if override_messages:
-    #         messages = override_messages
-    #
-    #     async def send_pings():
-    #         for n, m in enumerate(messages):
-    #             try:
-    #                 if n >= 1:
-    #                     await asyncio.sleep(1)
-    #                 await self.client.send_message(self.peer, m)
-    #             except FloodWait as e:
-    #                 if e.x > 5:
-    #                     self.logger.warning(
-    #                         "send_message flood: waiting {} seconds".format(e.x)
-    #                     )
-    #                 await asyncio.sleep(e.x)
-    #                 continue
-    #
-    #     action = AwaitableAction(
-    #         send_pings,
-    #         filters=filters.chat(peer_user),
-    #         max_wait=max_wait_response,
-    #         wait_consecutive=wait_consecutive,
-    #     )
-    #
-    #     return await self.act_await_response(action)
-
-    def merge_default_filters(self, user_filters: Filter = None) -> Filter:
-        chat_filter = filters.chat(self.peer_id) & filters.incoming
+    def merge_default_filters(
+        self, user_filters: Filter = None, override_peer: Union[int, str] = None
+    ) -> Filter:
+        chat_filter = filters.chat(override_peer or self.peer_id) & filters.incoming
         if user_filters is None:
             return chat_filter
         else:
@@ -104,7 +75,11 @@ class BotController:
         return list(
             cast(
                 BotInfo,
-                (await self.client.send(GetFullUser(id=self.peer_user))).bot_info,
+                (
+                    await self.client.send(
+                        GetFullUser(id=await self.client.resolve_peer(self.peer_id))
+                    )
+                ).bot_info,
             ).commands
         )
 
@@ -132,16 +107,79 @@ class BotController:
         count: int = None,
         *,
         peer: Union[int, str] = None,
-        max_wait: Union[int, float] = 20,
+        max_wait: Union[int, float] = 15,
         wait_consecutive: Optional[Union[int, float]] = None,
     ) -> AsyncContextManager[Response]:
         await self._ensure_initialized()
         async with collect(
-            self.client,
-            self.merge_default_filters(filters),
-            expectation=Expectation(num_messages=count),
+            self,
+            self.merge_default_filters(filters, peer),
+            expectation=Expectation(min_messages=count or NotSet, max_messages=count or NotSet),
             timeouts=TimeoutSettings(
                 max_wait=max_wait, wait_consecutive=wait_consecutive
             ),
         ) as response:
             yield response
+
+    async def ping_bot(
+        self,
+        override_messages: List[str] = None,
+        override_filters: Filter = None,
+        *,
+        peer: Union[int, str] = None,
+        max_wait: Union[int, float] = 15,
+        wait_consecutive: Optional[Union[int, float]] = None,
+    ) -> Response:
+        await self._ensure_initialized()
+        peer = peer or self.peer_id
+
+        messages = ["/start"]
+        if override_messages:
+            messages = override_messages
+
+        async def send_pings():
+            for n, m in enumerate(messages):
+                try:
+                    if n >= 1:
+                        await asyncio.sleep(1)
+                    await self.send_command(m, peer=peer)
+                except FloodWait as e:
+                    if e.x > 5:
+                        self.logger.warning(
+                            "send_message flood: waiting {} seconds".format(e.x)
+                        )
+                    await asyncio.sleep(e.x)
+                    continue
+
+        async with collect(
+            self,
+            self.merge_default_filters(override_filters, peer),
+            expectation=Expectation(min_messages=1),
+            timeouts=TimeoutSettings(
+                max_wait=max_wait, wait_consecutive=wait_consecutive
+            ),
+        ) as response:
+            await send_pings()
+
+        return response
+
+    async def send_command(
+        self,
+        command: str,
+        args: List[str] = None,
+        peer: Union[int, str] = None,
+        add_bot_name: bool = True,
+    ) -> Message:
+        """
+        Send a slash-command with corresponding parameters.
+        """
+        text = "/" + command.lstrip("/")
+
+        if add_bot_name and self.peer_user.username:
+            text += f"@{self.peer_user.username}"
+
+        if args:
+            text += " "
+            text += " ".join(args)
+
+        return await self.client.send_message(peer or self.peer_id, text)

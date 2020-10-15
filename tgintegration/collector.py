@@ -1,16 +1,17 @@
 import asyncio
 import logging
-from contextlib import AbstractAsyncContextManager, asynccontextmanager
+from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import AsyncContextManager, Callable, Generator, List, Optional
+from typing import AsyncContextManager, List, Optional, TYPE_CHECKING, Union
 
-from pyrogram import Client
 from pyrogram.errors import RpcMcgetFail
 from pyrogram.filters import Filter
 from pyrogram.handlers import MessageHandler
 from pyrogram.types import Message
 
+if TYPE_CHECKING:
+    from tgintegration.botcontroller import BotController
 from tgintegration._handler_utils import add_handler_transient
 from tgintegration.containers.response import InvalidResponseError, Response
 from tgintegration.update_recorder import MessageRecorder
@@ -20,54 +21,76 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class TimeoutSettings:
-    max_wait: float = 10,
+    max_wait: float = 10
+    """
+    The maximum duration in seconds to wait for a response from the peer.
+    """
+
     wait_consecutive: Optional[float] = None
-    raise_: bool = False
+    """
+    The minimum duration in seconds to wait for another consecutive message from the peer after receiving a message.
+    This can cause the total duration to exceed the `max_wait` time.
+    """
+
+    raise_on_timeout: bool = False
+    """
+    Whether to raise an exception when a timeout occurs or to fail with a log message.
+    """
+
+
+class NotSet(object):
+    pass  # TODO: Use a better object for this
 
 
 @dataclass
 class Expectation:
-    num_messages: Optional[int] = None
+    min_messages: Union[int, NotSet] = NotSet
+    max_messages: Union[int, NotSet] = NotSet
 
-    def to_predicate(self) -> Callable[[List[Message]], bool]:
-        def fn(updates: List[Message]):
-            return len(updates) == self.num_messages
+    def is_sufficient(self, messages: List[Message]) -> bool:
+        n = len(messages)
+        if self.min_messages is NotSet:
+            return n >= 1
+        return n >= self.min_messages
 
-        return fn
+    def _is_match(self, messages: List[Message]) -> bool:
+        n = len(messages)
+        return (self.min_messages is NotSet or n >= self.min_messages) and (
+            self.max_messages is NotSet or n <= self.max_messages
+        )
 
+    def verify(self, messages: List[Message], timeouts: TimeoutSettings) -> None:
+        if self._is_match(messages):
+            return
 
-# class Collector(AbstractAsyncContextManager):
-#     def __init__(self,
-#                  client: Client,
-#                  filters: Filter = None,
-#                  expectation: Expectation = None,
-#                  timeouts: TimeoutSettings = None
-#                  ):
-#         self.client = client
-#         self.filters = filters
-#         self.expectation = expectation or Expectation()
-#         self.timeouts = timeouts or TimeoutSettings()
-#         self.recorder = MessageRecorder()
-#         self.response: Optional[Response] = None
-#
-#     async def __aenter__(self):
-#         handler = MessageHandler(self.recorder.record_message, filters=self.filters)
-#
-#         with add_handler_transient(self.client, handler):
-#             self.response = Response(self.client, self.recorder)
-#             self.response._messages = self.recorder.messages
-#             return self.response
-#
-#     async def __aexit__(self, exc_type, exc_value, traceback):
-#         pass
+        n = len(messages)
+
+        if n < self.min_messages:
+            raise_or_log(
+                timeouts,
+                "Expected {} messages but only received {} after waiting {} seconds.",
+                self.min_messages,
+                n,
+                timeouts.max_wait,
+            )
+            return
+
+        if n > self.max_messages:
+            raise_or_log(
+                timeouts,
+                "Expected only {} messages but received {}.",
+                self.max_messages,
+                n,
+            )
+            return
 
 
 @asynccontextmanager
 async def collect(
-    client: Client,
+    controller: "BotController",
     filters: Filter = None,
     expectation: Expectation = None,
-    timeouts: TimeoutSettings = None
+    timeouts: TimeoutSettings = None,
 ) -> AsyncContextManager[Response]:
     expectation = expectation or Expectation()
     timeouts = timeouts or TimeoutSettings()
@@ -75,59 +98,65 @@ async def collect(
     recorder = MessageRecorder()
     handler = MessageHandler(recorder.record_message, filters=filters)
 
-    with add_handler_transient(client, handler):
-        response = Response(client, recorder)
-        response._messages = recorder.messages
-        yield response
+    async with add_handler_transient(controller.client, handler):
+        response = Response(controller, recorder)
 
-        # User interaction done
+        logger.debug("Collector set up. Executing user-defined interaction...")
+        yield response  # Start user-defined interaction
+        logger.debug("interaction complete.")
+
+        num_received = 0
+        last_received_timestamp = (
+            None  # TODO: work with the message's timestamp instead of utcnow()
+        )
         timeout_end = datetime.utcnow() + timedelta(seconds=timeouts.max_wait)
 
         try:
-            # Wait for the first reply
-            await asyncio.wait_for(recorder.any_received.wait(), timeout=timeouts.max_wait)
-
-            # A response has been received
-            if timeouts.wait_consecutive is not None:
-                # Wait for more consecutive messages from the peer_user
-                consecutive_delta = timedelta(seconds=timeouts.wait_consecutive)
+            seconds_remaining = (timeout_end - datetime.utcnow()).total_seconds()
 
             while True:
-                now = datetime.utcnow()
+                if seconds_remaining > 0:
+                    # Wait until we receive any message or time out
+                    logger.debug(f"Waiting for message #{num_received + 1}")
+                    await asyncio.wait_for(
+                        recorder.wait_until(
+                            lambda msgs: expectation.is_sufficient(msgs)
+                            or len(msgs) > num_received
+                        ),
+                        timeout=seconds_remaining,
+                    )
 
-                if expectation.num_messages:
-                    if response.num_messages < expectation.num_messages:
-                        # Less messages than expected (so far)
-                        if now > timeout_end:
-                            # Timed out
+                num_received = len(recorder.messages)  # TODO: this is ugly
 
-                            raise_or_log(
-                                timeouts,
-                                "Expected {} messages but only received {} after waiting {} seconds.",
-                                expectation.num_messages,
-                                response.num_messages,
-                                timeouts.max_wait
-                            )
-                            return
+                if timeouts.wait_consecutive:
+                    # Always wait for at least `wait_consecutive` seconds for another message
+                    try:
+                        logger.debug(
+                            f"Checking for consecutive message to #{num_received}..."
+                        )
+                        await asyncio.wait_for(
+                            recorder.wait_until(lambda msgs: len(msgs) > num_received),
+                            # The consecutive end may go over the max wait timeout, which is a design decision.
+                            timeout=timeouts.wait_consecutive,
+                        )
+                        logger.debug("received 1.")
+                    except TimeoutError:
+                        logger.debug("none received.")
 
-                    else:
-                        if response.num_messages > expectation.num_messages:
-                            # More messages than expected
-                            raise_or_log(timeouts, "Expected {} messages but received {}.",
-                                         expectation.num_messages, response.num_messages)
-                        return
-                else:
-                    # User has not provided an expected number of messages
-                    if (
-                        now
-                        > (response.last_message_timestamp + consecutive_delta)
-                        or now > timeout_end
-                    ):
-                        return
+                num_received = len(recorder.messages)  # TODO: this is ugly
 
-                await asyncio.sleep(SLEEP_DURATION)
+                is_sufficient = expectation.is_sufficient(recorder.messages)
+                if is_sufficient:
+                    expectation.verify(recorder.messages, timeouts)
+                    return
 
-            return
+                seconds_remaining = (timeout_end - datetime.utcnow()).total_seconds()
+
+                assert seconds_remaining is not None
+
+                if seconds_remaining <= 0:
+                    expectation.verify(recorder.messages, timeouts)
+                    return
 
         except RpcMcgetFail as e:
             logger.warning(e)
@@ -137,7 +166,7 @@ async def collect(
 
 
 def raise_or_log(timeouts: TimeoutSettings, msg: str, *fmt) -> None:
-    if timeouts.raise_:
+    if timeouts.raise_on_timeout:
         if fmt:
             raise InvalidResponseError(msg.format(*fmt))
         else:

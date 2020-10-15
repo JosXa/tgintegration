@@ -9,15 +9,20 @@ pytestmark = pytest.mark.asyncio
 
 @pytest.fixture(scope="function")
 def controller(client):
-    return BotController(client=client, peer="@BotListBot", max_wait_response=10.0, min_wait_consecutive=0.8)
+    return BotController(
+        client=client,
+        peer="@BotListBot",
+        max_wait_response=10.0,
+        min_wait_consecutive=0.8,
+    )
 
 
 async def test_new_syntax(controller, client):
-    async with controller.collect(count=3, max_wait=10) as start_response:
+    async with controller.collect(count=3, max_wait=40) as start_response:
+        assert client.dispatcher.groups[-1000]
         await client.send_message(controller.peer, "/start")
 
     assert start_response.num_messages == 3
-
 
     # async with controller.dialog() as dialog:
     #     response = dialog.send_command("/start")
@@ -38,3 +43,5 @@ async def test_new_syntax(controller, client):
     # with controller.collect(count=1, max_wait=5, filters=filters.text) as response:
     #     await controller.send_message("@botlistbot", "/start")
     #     await controller.send_message("@botlistbot", "/help")
+
+

@@ -68,7 +68,7 @@ class MessageRecorder:
                 if pred(self.messages):
                     ev.set()
 
-    async def wait_for(self, predicate: Callable[[List[Message]], bool]):
+    async def wait_until(self, predicate: Callable[[List[Message]], bool]):
 
         async with self._lock:
             if predicate(self.messages):
@@ -81,3 +81,4 @@ class MessageRecorder:
 
     def stop(self):
         self._is_completed = True
+

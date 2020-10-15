@@ -1,18 +1,18 @@
-import time
 from datetime import datetime
 from typing import *
 from typing import Any, List, Set
 
-from pyrogram import Client
 from pyrogram.types import InlineKeyboardMarkup, Message, ReplyKeyboardMarkup
 
+if TYPE_CHECKING:
+    from tgintegration.botcontroller import BotController
 from tgintegration.containers.keyboard import InlineKeyboard, ReplyKeyboard
 from tgintegration.update_recorder import MessageRecorder
 
 
 class Response:
-    def __init__(self, client: Client, recorder: MessageRecorder):
-        self._client = client
+    def __init__(self, controller: "BotController", recorder: MessageRecorder):
+        self._controller = controller
         self._recorder = recorder
 
         self.started: Optional[float] = None
@@ -56,7 +56,7 @@ class Response:
             return None  # No message with a keyboard found
 
         reply_keyboard = ReplyKeyboard(
-            client=self._client,
+            controller=self._controller,
             chat_id=last_kb_msg.chat.id,
             message_id=last_kb_msg.message_id,
             button_rows=last_kb_msg.reply_markup.keyboard,
@@ -71,18 +71,16 @@ class Response:
         if self.empty:
             return None
 
-        inline_keyboards = []
-
-        for message in self.messages:
-            if isinstance(message.reply_markup, InlineKeyboardMarkup):
-                inline_keyboards.append(
-                    InlineKeyboard(
-                        client=self._client,
-                        chat_id=message.chat.id,
-                        message_id=message.message_id,
-                        button_rows=message.reply_markup.inline_keyboard,
-                    )
-                )
+        inline_keyboards = [
+            InlineKeyboard(
+                controller=self._controller,
+                chat_id=message.chat.id,
+                message_id=message.message_id,
+                button_rows=message.reply_markup.inline_keyboard,
+            )
+            for message in self.messages
+            if isinstance(message.reply_markup, InlineKeyboardMarkup)
+        ]
 
         self.__inline_keyboards = inline_keyboards
         return inline_keyboards
@@ -119,7 +117,9 @@ class Response:
 
     async def delete_all_messages(self, revoke: bool = True):
         peer_id = self.messages[0].chat.id
-        await self._client.delete_messages(peer_id, [x.message_id for x in self.messages], revoke=revoke)
+        await self._controller.client.delete_messages(
+            peer_id, [x.message_id for x in self.messages], revoke=revoke
+        )
 
     def __eq__(self, other):
         if not isinstance(other, Response):
