@@ -1,20 +1,13 @@
-import asyncio
-import time
 from contextlib import asynccontextmanager
-from datetime import datetime, timedelta
-from typing import AsyncIterator, Optional
+from typing import AsyncIterator
 
 from pyrogram import Client
-from pyrogram.errors import RpcMcgetFail
 from pyrogram.filters import Filter
 from pyrogram.handlers import MessageHandler
 
-from tgintegration.containers.response import InvalidResponseError, Response
-from . import AwaitableAction
-from ._handler_utils import add_handler_transient
-from .actors import TimeoutSettings
-from .responsecollectorclient import SLEEP_DURATION
-from .update_recorder import MessageRecorder
+from tgintegration._handler_utils import add_handler_transient
+from tgintegration.collector import TimeoutSettings
+from tgintegration.update_recorder import MessageRecorder
 
 
 class Dialog:
@@ -23,7 +16,7 @@ class Dialog:
 
 
 @asynccontextmanager
-def start_dialog(
+async def start_dialog(
     client: Client, filters: Filter = None, timeouts: TimeoutSettings = None
 ) -> AsyncIterator[Dialog]:
     timeouts = timeouts or TimeoutSettings()
@@ -31,6 +24,6 @@ def start_dialog(
     recorder = MessageRecorder()
     handler = MessageHandler(recorder.record_message, filters=filters)
 
-    with add_handler_transient(client, handler):
+    async with add_handler_transient(client, handler):
         dialog = Dialog(recorder)
         yield dialog

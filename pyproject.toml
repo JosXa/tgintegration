@@ -1,36 +1,39 @@
 [tool.poetry]
 name = "tgintegration"
-version = "0.4.0"
+version = "1.0.0"
 description = "An Integration Test Library for Telegram Messenger Bots on top of Pyrogram."
 authors = ["Joscha Götzer <joscha.goetzer@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "==3.*,>=3.6.7"
+python = "==3.*,>=3.6"
 typing-extensions = "^3.7.4"
 pyrogram = "^1.0.7"
 
 [tool.poetry.dev-dependencies]
 bumpversion = "==0.5.3"
-wheel = "==0.29.0"
-watchdog = "==0.8.3"
-flake8 = "==2.6.0"
-tox = "^3.14.5"
-coverage = "==4.1"
-PyYAML = "==5.1"
-pytest = "*"
-pytest-runner = "*"
-sphinx = "==2.*,>=2.3.0"
-sphinx-autodoc-typehints = "==1.*,>=1.10.3"
+coverage = "*"
 tgcrypto = "==1.*,>=1.2.0"
 python-decouple = "^3.3"
+pytest = "*"
+pytest-runner = "*"
 pytest-asyncio = "*"
-
-[tool.dephell.main]
-from = {format = "poetry", path = "pyproject.toml"}
-to = {format = "setuppy", path = "setup.py"}
-versioning = "semver"
+mkdocs-material = { version = "^6.0.2", python = "^3.7" }
+mkapi = { version = "^1.0.13", python = "^3.7" }
+poethepoet = "^0.9.0"
 
 [build-system]
 requires = ["poetry>=1.0.5"]
 build-backend = "poetry.masonry.api"
+
+[tool.poe.tasks]
+# Usage: `pip install poe`, then `poe [task]`
+test = "pytest"
+pre-stage = "git stage .pre-commit-config.yaml"
+pre-install = "pre-commit install"
+pre-commit = "pre-commit run"
+pre = ["pre-commit-stage", "pre-commit"]
+docs-build = "mkdocs build"
+docs-serve = "mkdocs serve"
+docs-open = { script = "scripts.open_browser:open_docs" }
+docs = ["docs-serve"]

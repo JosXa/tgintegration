@@ -1,46 +1,46 @@
-name: Build tgintegration
+name: Build
 
 on:
-    push:
-        branches: [ master, develop ]
-    pull_request:
-        branches: [ master, develop ]
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                python-version: [ 3.6, 3.7, 3.8 ]
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ 3.6, 3.7, 3.8 ]
 
-        steps:
-            -   uses: actions/checkout@v2
-            -   name: Set up Python ${{ matrix.python-version }}
-                uses: actions/setup-python@v1
-                with:
-                    python-version: ${{ matrix.python-version }}
-            -   name: "Install Poetry"
-                uses: Gr1N/setup-poetry@v3
-                with:
-                    poetry-version: 1.0
-            -   name: Poetry install
-                run: poetry install
-            -   name: Show outdated packages
-                run: poetry show --outdated
-                continue-on-error: true
-            -   uses: pre-commit/action@v2.0.0
-            -   name: Test with pytest
-                run: poetry run pytest tests/ --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov=tgintegration --cov-report=xml --cov-report=html
-            -   name: Upload pytest test results
-                uses: actions/upload-artifact@v2
-                with:
-                    name: pytest-results-${{ matrix.python-version }}
-                    path: junit/test-results-${{ matrix.python-version }}.xml
-                if: ${{ always() }}
-            -   name: Run examples once
-                env:
-                    API_ID: ${{ secrets.API_ID }}
-                    API_HASH: ${{ secrets.API_HASH }}
-                    SESSION_STRING: ${{ secrets.SESSION_STRING }}
-                run: |
-                    poetry run python tests/run_examples.py
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: "Install Poetry"
+        uses: Gr1N/setup-poetry@v3
+        with:
+          poetry-version: 1.0
+      - name: Poetry install
+        run: poetry install
+      - name: Show outdated packages
+        run: poetry show --outdated
+        continue-on-error: true
+      - uses: pre-commit/action@v2.0.0
+      - name: Test with pytest
+        run: poetry run pytest tests/ --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov=tgintegration --cov-report=xml --cov-report=html
+      - name: Upload pytest test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: pytest-results-${{ matrix.python-version }}
+          path: junit/test-results-${{ matrix.python-version }}.xml
+        if: ${{ always() }}
+      - name: Run examples once
+        env:
+          API_ID: ${{ secrets.API_ID }}
+          API_HASH: ${{ secrets.API_HASH }}
+          SESSION_STRING: ${{ secrets.SESSION_STRING }}
+        run: |
+          poetry run python tests/run_examples.py
