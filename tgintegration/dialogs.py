@@ -22,12 +22,9 @@ class Dialog:
         self.recorder = recorder
 
 
-
 @asynccontextmanager
 def start_dialog(
-    client: Client,
-    filters: Filter = None,
-    timeouts: TimeoutSettings = None
+    client: Client, filters: Filter = None, timeouts: TimeoutSettings = None
 ) -> AsyncIterator[Dialog]:
     timeouts = timeouts or TimeoutSettings()
 
@@ -37,6 +34,3 @@ def start_dialog(
     with add_handler_transient(client, handler):
         dialog = Dialog(recorder)
         yield dialog
-
-
-

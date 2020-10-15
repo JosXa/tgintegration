@@ -10,14 +10,16 @@ def switch_parse_pyi_files():
 
     def import_module(modname, warningiserror=False):
         module = original_import_module(modname, warningiserror)
-        if hasattr(module, '__file__') and os.path.isfile('{}i'.format(module.__file__)):
+        if hasattr(module, "__file__") and os.path.isfile(
+            "{}i".format(module.__file__)
+        ):
             # merge external spec into the imported module
             from importlib._bootstrap import spec_from_loader
             from importlib._bootstrap_external import SourceFileLoader
             from importlib._bootstrap import module_from_spec
+
             spec = spec_from_loader(
-                modname,
-                SourceFileLoader(modname, '{}i'.format(module.__file__))
+                modname, SourceFileLoader(modname, "{}i".format(module.__file__))
             )
             # print(spec.loader.get_code(modname).co_names)
             module = module_from_spec(spec)

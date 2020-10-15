@@ -81,4 +81,3 @@ class MessageRecorder:
 
     def stop(self):
         self._is_completed = True
-

@@ -114,7 +114,9 @@ class BotController:
         async with collect(
             self,
             self.merge_default_filters(filters, peer),
-            expectation=Expectation(min_messages=count or NotSet, max_messages=count or NotSet),
+            expectation=Expectation(
+                min_messages=count or NotSet, max_messages=count or NotSet
+            ),
             timeouts=TimeoutSettings(
                 max_wait=max_wait, wait_consecutive=wait_consecutive
             ),

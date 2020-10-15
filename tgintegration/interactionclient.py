@@ -22,5 +22,3 @@ class InteractionClient(Client):
             )
             if sleep > 0:
                 await asyncio.sleep(sleep)
-
-

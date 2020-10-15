@@ -16,7 +16,7 @@ from tgintegration.collector import Expectation
     ],
 )
 def test_expectation(
-    min_n:int, max_n:int, num_msgs: int, is_sufficient: bool, is_match: bool
+    min_n: int, max_n: int, num_msgs: int, is_sufficient: bool, is_match: bool
 ):
     obj = Expectation(min_messages=min_n, max_messages=max_n)
     msgs = [Mock(Message)] * num_msgs

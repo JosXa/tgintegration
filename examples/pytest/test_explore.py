@@ -10,7 +10,7 @@ async def test_explore_button(controller: BotController):
         await controller.send_command("/start")
 
     # Click the "Explore" keyboard button
-    explore = await start.reply_keyboard.click(pattern=r'.*Explore')
+    explore = await start.reply_keyboard.click(pattern=r".*Explore")
 
     assert not explore.empty, 'Pressing the "Explore" button had no effect.'
     assert explore.inline_keyboards, 'The "Explore" message had no inline keyboard.'

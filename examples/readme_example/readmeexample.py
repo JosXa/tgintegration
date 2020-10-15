@@ -49,15 +49,15 @@ async def run_example():
 
         # We can also query and press the inline keyboard buttons:
         print("Click the first button matching the pattern r'.*Examples'")
-        examples = await response.inline_keyboards[0].click(
-            pattern=r".*Examples"
-        )
+        examples = await response.inline_keyboards[0].click(pattern=r".*Examples")
 
     assert "Examples for contributing to the BotList" in examples.full_text
     # As the peer_user edits the message, `press_inline_button` automatically listens for `MessageEdited`
     # events and picks up on the edit, returning it as `Response`.
 
-    print("So what happens when we send an invalid query or the peer_user fails to respond?")
+    print(
+        "So what happens when we send an invalid query or the peer_user fails to respond?"
+    )
     from tgintegration import InvalidResponseError
 
     try:
