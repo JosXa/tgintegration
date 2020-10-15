@@ -13,6 +13,9 @@ theme:
     - navigation.expand
     - navigation.tabs
 
+extra_css:
+  - styles/mkapi-overrides.css
+
 nav:
   - Overview: 'index.md'
   - Docs:
@@ -21,7 +24,7 @@ nav:
       - Installation: 'installation.md'
       - Configuration: 'configuration.md'
     - Getting Started: 'getting-started.md'
-  - API Reference: mkapi/api/tgintegration
+  - API: mkapi/api/tgintegration
 
 markdown_extensions:
   - meta

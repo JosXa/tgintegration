@@ -29,8 +29,8 @@ build-backend = "poetry.masonry.api"
 [tool.poe.tasks]
 # Usage: `pip install poe`, then `poe [task]`
 test = "pytest"
-pre-commit-stage = "git stage .pre-commit-config.yaml"
-pre-commit-install = "pre-commit install"
+pre-stage = "git stage .pre-commit-config.yaml"
+pre-install = "pre-commit install"
 pre-commit = "pre-commit run"
 pre = ["pre-commit-stage", "pre-commit"]
 docs-build = "mkdocs build"

@@ -1,9 +1,17 @@
+"""
+Collector stuff
+"""
 import asyncio
 import logging
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from datetime import datetime, timedelta
-from typing import AsyncContextManager, List, Optional, TYPE_CHECKING, Union
+from datetime import datetime
+from datetime import timedelta
+from typing import AsyncContextManager
+from typing import List
+from typing import Optional
+from typing import TYPE_CHECKING
+from typing import Union
 
 from pyrogram.errors import RpcMcgetFail
 from pyrogram.filters import Filter
@@ -21,6 +29,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class TimeoutSettings:
+
     max_wait: float = 10
     """
     The maximum duration in seconds to wait for a response from the peer.
@@ -28,8 +37,8 @@ class TimeoutSettings:
 
     wait_consecutive: Optional[float] = None
     """
-    The minimum duration in seconds to wait for another consecutive message from the peer after receiving a message.
-    This can cause the total duration to exceed the `max_wait` time.
+    The minimum duration in seconds to wait for another consecutive message from the peer after
+    receiving a message. This can cause the total duration to exceed the `max_wait` time.
     """
 
     raise_on_timeout: bool = False
@@ -48,6 +57,28 @@ class Expectation:
     max_messages: Union[int, NotSet] = NotSet
 
     def is_sufficient(self, messages: List[Message]) -> bool:
+        """Returns $x + y$.
+
+        Args:
+            x: The first parameter.
+            y: The second parameter. Default={default}.
+
+        Returns:
+            Added value.
+
+        Examples:
+            Examples should be written in doctest format.
+
+            >>> add(1, 2)
+            3
+
+        !!! note
+            You can use the [Admonition extension of
+            MkDocs](https://squidfunk.github.io/mkdocs-material/extensions/admonition/).
+
+        Note:
+            `Note` section is converted into the Admonition.
+        """
         n = len(messages)
         if self.min_messages is NotSet:
             return n >= 1
@@ -136,7 +167,8 @@ async def collect(
                         )
                         await asyncio.wait_for(
                             recorder.wait_until(lambda msgs: len(msgs) > num_received),
-                            # The consecutive end may go over the max wait timeout, which is a design decision.
+                            # The consecutive end may go over the max wait timeout,
+                            # which is a design decision.
                             timeout=timeouts.wait_consecutive,
                         )
                         logger.debug("received 1.")
