@@ -1,6 +1,6 @@
 site_name: TgIntegration Documentation
-site_url: https://JosXa.github.io/TgIntegration/
-repo_url: https://github.com/JosXa/TgIntegration
+site_url: https://josxa.github.io/tgintegration
+repo_url: https://github.com/JosXa/tgintegration
 theme:
   name: material
   logo: 'assets/tgintegration-logo.png'
