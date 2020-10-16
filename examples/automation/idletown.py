@@ -1,7 +1,5 @@
 """
 Before running this example, go to @IdleTownBot and set up your account first:
-
-
 """
 import asyncio
 import logging
@@ -9,7 +7,8 @@ import os
 import traceback
 from typing import Dict
 
-from tgintegration import BotController, InteractionClient
+from tgintegration import BotController
+from tgintegration import InteractionClient
 from tgintegration.containers.response import Response
 
 examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -107,9 +106,7 @@ async def main():
             )
 
             if "fight" in normal_match:
-                fight = get_buttons(
-                    await controller.send_message_await(normal_match["fight"])
-                )
+                get_buttons(await controller.send_message_await(normal_match["fight"]))
 
             # Attack Boss
             bosses = get_buttons(await controller.send_message_await(battle["bosses"]))
@@ -118,9 +115,8 @@ async def main():
         except KeyboardInterrupt:
             print("Done.")
             break
-        except:
+        except BaseException:
             traceback.print_exc()
-            pass
 
     await client.stop()
 

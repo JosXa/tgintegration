@@ -1,20 +1,28 @@
 site_name: TgIntegration Documentation
-repo_url: https://github.com/JosXa/tgintegration
+site_url: https://JosXa.github.io/TgIntegration/
+repo_url: https://github.com/JosXa/TgIntegration
 theme:
   name: material
+  logo: 'assets/tgintegration-logo.png'
+  favicon: 'assets/favicon.png'
   icon:
     repo: fontawesome/brands/github
   palette:
     # https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/
-    primary: light blue
-    accent: purple
+    primary: indigo
+    accent: indigo
   features:
     - navigation.instant
     - navigation.expand
     - navigation.tabs
 
+extra:
+  # Only for insiders
+  generator: false
+
 extra_css:
   - styles/mkapi-overrides.css
+  - styles/mkdocstrings-overrides.css
 
 nav:
   - Overview: 'index.md'
@@ -24,7 +32,8 @@ nav:
       - Installation: 'installation.md'
       - Configuration: 'configuration.md'
     - Getting Started: 'getting-started.md'
-  - API: mkapi/api/tgintegration
+  - 'API Reference (mkapi)': mkapi/api/tgintegration
+  - 'API Reference (mkdocstrings)': 'api.md'
 
 markdown_extensions:
   - meta
@@ -32,8 +41,15 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.highlight
   - pymdownx.superfences
+  - admonition
+  - codehilite
 
 plugins:
   - search
+  # TODO: Decision pending between mkapi and mkdocstrings
   - mkapi:
       src_dirs: ["tgintegration"]
+  - mkdocstrings:
+      default_handler: python
+      watch:
+        - tgintegration

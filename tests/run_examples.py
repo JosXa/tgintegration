@@ -4,7 +4,8 @@ import sys
 from decouple import config
 
 from cicd import generate_configini_from_gh_secrets
-from examples.automation import dinoparkbot, idletown
+from examples.automation import dinoparkbot
+from examples.automation import idletown
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

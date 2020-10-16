@@ -2,7 +2,6 @@
 """
 The root package of `tgintegration`.
 """
-from tgintegration.awaitableaction import AwaitableAction
 from tgintegration.botcontroller import BotController
 from tgintegration.containers.inlineresults import InlineResult
 from tgintegration.containers.inlineresults import InlineResultContainer
@@ -18,7 +17,6 @@ __email__ = "joscha.goetzer@gmail.com"
 __version__ = "0.4.0"
 
 __all__ = [
-    "AwaitableAction",
     "Response",
     "BotController",
     "InlineResult",

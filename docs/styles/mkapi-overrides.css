@@ -1,14 +1,13 @@
-/*
 .mkapi-node {
-  font-size: 0.85em;
+  font-size: 0.7rem;
 }
 
 .mkapi-node a.mkapi-src-link, a.mkapi-docs-link {
-  font-size: 0.8em;
+  font-size: 0.64rem;
 }
 
 .mkapi-node .mkapi-object.code h3.mkapi-object-body {
-  font-size: 1.2em;
+  font-size: 0.7rem;
 }
 
 .mkapi-node .mkapi-section-name .mkapi-section-name-body {
@@ -62,5 +61,3 @@ span {
 .mkapi-object.plain .mkapi-object-kind {
   font-weight: normal;
 }
-
-*/

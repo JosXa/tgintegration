@@ -1,6 +1,5 @@
 from collections import OrderedDict
-from contextlib import asynccontextmanager, contextmanager
-from typing import AsyncIterator
+from contextlib import asynccontextmanager
 
 from pyrogram import Client
 from pyrogram.dispatcher import Dispatcher

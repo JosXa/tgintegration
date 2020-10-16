@@ -1,6 +1,3 @@
-"""
-Collector stuff
-"""
 import asyncio
 import logging
 from contextlib import asynccontextmanager
@@ -57,28 +54,6 @@ class Expectation:
     max_messages: Union[int, NotSet] = NotSet
 
     def is_sufficient(self, messages: List[Message]) -> bool:
-        """Returns $x + y$.
-
-        Args:
-            x: The first parameter.
-            y: The second parameter. Default={default}.
-
-        Returns:
-            Added value.
-
-        Examples:
-            Examples should be written in doctest format.
-
-            >>> add(1, 2)
-            3
-
-        !!! note
-            You can use the [Admonition extension of
-            MkDocs](https://squidfunk.github.io/mkdocs-material/extensions/admonition/).
-
-        Note:
-            `Note` section is converted into the Admonition.
-        """
         n = len(messages)
         if self.min_messages is NotSet:
             return n >= 1
@@ -97,7 +72,7 @@ class Expectation:
         n = len(messages)
 
         if n < self.min_messages:
-            raise_or_log(
+            _raise_or_log(
                 timeouts,
                 "Expected {} messages but only received {} after waiting {} seconds.",
                 self.min_messages,
@@ -107,7 +82,7 @@ class Expectation:
             return
 
         if n > self.max_messages:
-            raise_or_log(
+            _raise_or_log(
                 timeouts,
                 "Expected only {} messages but received {}.",
                 self.max_messages,
@@ -137,9 +112,9 @@ async def collect(
         logger.debug("interaction complete.")
 
         num_received = 0
-        last_received_timestamp = (
-            None  # TODO: work with the message's timestamp instead of utcnow()
-        )
+        # last_received_timestamp = (
+        #     None  # TODO: work with the message's timestamp instead of utcnow()
+        # )
         timeout_end = datetime.utcnow() + timedelta(seconds=timeouts.max_wait)
 
         try:
@@ -197,7 +172,7 @@ async def collect(
             recorder.stop()
 
 
-def raise_or_log(timeouts: TimeoutSettings, msg: str, *fmt) -> None:
+def _raise_or_log(timeouts: TimeoutSettings, msg: str, *fmt) -> None:
     if timeouts.raise_on_timeout:
         if fmt:
             raise InvalidResponseError(msg.format(*fmt))

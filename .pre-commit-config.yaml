@@ -2,11 +2,10 @@
 #default_language_version:
 #    python: python3.8
 repos:
-  - repo: https://gitlab.com/PyCQA/flake8
-    rev: 3.8.3
-    hooks:
-      - id: flake8
-        args: [ "--count", "--select=E9,F63,F7", "--show-source", "--statistics", "--max-complexity=10", "--max-line-length=127" ]
+  #  - repo: https://gitlab.com/PyCQA/flake8
+  #    rev: 3.8.3
+  #    hooks:
+  #      - id: flake8
   - repo: https://github.com/psf/black
     rev: 20.8b1
     hooks:
@@ -19,13 +18,18 @@ repos:
     rev: v1.9.0
     hooks:
       - id: reorder-python-imports
+  - repo: git@github.com:humitos/mirrors-autoflake.git
+    rev: v1.1
+    hooks:
+      - id: autoflake
+        args: [ '--in-place', '--remove-all-unused-imports' ]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.4.0
     hooks:
       - id: check-added-large-files
       - id: check-docstring-first
       - id: debug-statements
-      #      - id: end-of-file-fixer
+      - id: flake8
       - id: trailing-whitespace
       - id: check-ast
       - id: check-builtin-literals

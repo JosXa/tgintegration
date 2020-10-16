@@ -1,7 +1,8 @@
 import asyncio
 from pathlib import Path
 
-from tgintegration import BotController, Response, InteractionClient
+from tgintegration import BotController
+from tgintegration import InteractionClient
 
 examples_dir = Path(__file__).parent
 print(examples_dir)

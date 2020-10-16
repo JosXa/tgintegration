@@ -1,46 +1,11 @@
 import asyncio
 import logging
 import time
+from typing import Callable
+from typing import List
+from typing import Tuple
 
-from pyrogram.types import Message, Update
-from typing import (
-    Any,
-    Awaitable,
-    Callable,
-    ClassVar,
-    Generic,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-    AbstractSet,
-    Hashable,
-    Iterable,
-    Iterator,
-    Mapping,
-    MutableMapping,
-    MutableSequence,
-    MutableSet,
-    Sequence,
-    AsyncIterator,
-    AsyncIterable,
-    Coroutine,
-    Collection,
-    AsyncGenerator,
-    Deque,
-    Dict,
-    List,
-    Set,
-    FrozenSet,
-    NamedTuple,
-    Generator,
-    cast,
-    overload,
-    TYPE_CHECKING,
-)
-from typing_extensions import TypedDict
-
+from pyrogram.types import Message
 
 logger = logging.getLogger(__name__)
 

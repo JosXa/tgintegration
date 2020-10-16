@@ -1,16 +1,18 @@
+"""
+Controller
+"""
 import asyncio
 import logging
 import time
 from contextlib import asynccontextmanager
-from typing import (
-    ContextManager,
-    List,
-    Optional,
-    Union,
-    cast,
-)
+from typing import cast
+from typing import ContextManager
+from typing import List
+from typing import Optional
+from typing import Union
 
-from pyrogram import Client, filters
+from pyrogram import Client
+from pyrogram import filters
 from pyrogram.errors import FloodWait
 from pyrogram.filters import Filter
 from pyrogram.handlers.handler import Handler
@@ -18,15 +20,25 @@ from pyrogram.raw.base import BotCommand
 from pyrogram.raw.functions.channels import DeleteHistory
 from pyrogram.raw.functions.users import GetFullUser
 from pyrogram.raw.types import BotInfo
-from pyrogram.types import Message, User
+from pyrogram.types import Message
+from pyrogram.types import User
 from typing_extensions import AsyncContextManager
 
 from tgintegration._handler_utils import add_handler_transient
-from tgintegration.collector import Expectation, NotSet, TimeoutSettings, collect
+from tgintegration.collector import collect
+from tgintegration.collector import Expectation
+from tgintegration.collector import NotSet
+from tgintegration.collector import TimeoutSettings
 from tgintegration.containers.response import Response
 
 
 class BotController:
+    """
+
+
+    can be used for both users and regular clients.
+    """
+
     def __init__(
         self,
         client: Client,
@@ -37,6 +49,16 @@ class BotController:
         raise_no_response: bool = True,
         global_action_delay: Union[int, float] = 0.8,
     ):
+        """
+        Creates a new BotController.
+        Args:
+            client ():
+            peer ():
+            max_wait_response ():
+            min_wait_consecutive ():
+            raise_no_response ():
+            global_action_delay ():
+        """
         self.client = client
         self.peer = peer
         self.max_wait_response = max_wait_response
@@ -50,7 +72,16 @@ class BotController:
 
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    async def initialize(self, start_client: bool = True):
+    async def initialize(self, start_client: bool = True) -> None:
+        """
+        Initializes the assigned
+
+        Args:
+            start_client ():
+
+        Returns:
+
+        """
         if start_client and not self.client.is_connected:
             await self.client.start()
 

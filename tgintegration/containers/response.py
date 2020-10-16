@@ -1,8 +1,13 @@
 from datetime import datetime
-from typing import *
-from typing import Any, List, Set
+from typing import Any
+from typing import List
+from typing import Optional
+from typing import Set
+from typing import TYPE_CHECKING
 
-from pyrogram.types import InlineKeyboardMarkup, Message, ReplyKeyboardMarkup
+from pyrogram.types import InlineKeyboardMarkup
+from pyrogram.types import Message
+from pyrogram.types import ReplyKeyboardMarkup
 
 if TYPE_CHECKING:
     from tgintegration.botcontroller import BotController
@@ -100,7 +105,7 @@ class Response:
     def last_message_timestamp(self) -> Optional[datetime]:
         if self.empty:
             return None
-        # TODO: Dan should fix this
+        # XXX: Dan should really make this more user friendly...
         return datetime.fromtimestamp(self.messages[-1].date)
 
     @property

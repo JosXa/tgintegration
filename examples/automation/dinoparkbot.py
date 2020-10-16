@@ -4,9 +4,13 @@ import os
 import random
 import re
 import traceback
-from typing import Optional, Tuple, List
+from typing import List
+from typing import Optional
+from typing import Tuple
 
-from tgintegration import InteractionClient, BotController, ReplyKeyboard
+from tgintegration import BotController
+from tgintegration import InteractionClient
+from tgintegration import ReplyKeyboard
 
 MAX_RUNS: Optional[int] = None
 SESSION_NAME: str = "my_account"
@@ -28,7 +32,7 @@ async def main():
             await game.controller.clear_chat()
         except KeyboardInterrupt:
             break
-        except:
+        except BaseException:
             traceback.print_exc()
 
     await game.controller.client.stop()

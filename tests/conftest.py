@@ -2,7 +2,13 @@ import asyncio
 
 import pytest
 from decouple import config
+
 from tgintegration.interactionclient import InteractionClient
+
+
+# region TODO: These fixtures are currently unused until we have some basic integration tests.
+#              The idea would be to spin up a bot client and a user client that talk to each other in a
+#              controlled fashion.
 
 
 @pytest.yield_fixture(scope="module")
@@ -20,3 +26,6 @@ async def client() -> InteractionClient:
     await client.start()
     yield client
     await client.stop()
+
+
+# endregion

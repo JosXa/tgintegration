@@ -1,11 +1,16 @@
 import itertools
 import re
-import weakref
-from typing import List, Optional, Pattern, TYPE_CHECKING, Union
+from typing import List
+from typing import Optional
+from typing import Pattern
+from typing import TYPE_CHECKING
+from typing import Union
 
 from pyrogram import filters as f
 from pyrogram.raw.types.messages import BotCallbackAnswer
-from pyrogram.types import InlineKeyboardButton, KeyboardButton, Message
+from pyrogram.types import InlineKeyboardButton
+from pyrogram.types import KeyboardButton
+from pyrogram.types import Message
 
 if TYPE_CHECKING:
     from tgintegration import BotController, Response
@@ -19,7 +24,7 @@ class ReplyKeyboard:
         message_id: int,
         button_rows: List[List[KeyboardButton]],
     ):
-        self._controller: BotController = weakref.proxy(controller)
+        self._controller: BotController = controller
         self._message_id = message_id
         self._peer_id = chat_id
         self.rows = button_rows
@@ -73,7 +78,7 @@ class InlineKeyboard:
         message_id: int,
         button_rows: List[List[InlineKeyboardButton]],
     ):
-        self._controller = weakref.proxy(controller)
+        self._controller = controller
         self._message_id = message_id
         self._peer_id = chat_id
         self.rows = button_rows

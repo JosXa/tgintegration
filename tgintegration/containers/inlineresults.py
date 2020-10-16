@@ -1,9 +1,15 @@
 import re
 from operator import attrgetter
-from typing import *
+from typing import Any
+from typing import List
+from typing import Optional
+from typing import Set
+from typing import TypeVar
+from typing import Union
 
 from pyrogram.filters import Filter
-from pyrogram.raw.types import BotInlineResult, InputGeoPoint
+from pyrogram.raw.types import BotInlineResult
+from pyrogram.raw.types import InputGeoPoint
 from pyrogram.raw.types.messages import BotResults
 from pyrogram.types import Message
 
@@ -114,7 +120,7 @@ class InlineResultContainer:
 
     @property
     def can_switch_pm(self) -> bool:
-        return self._bot_results.switch_pm
+        return bool(self._bot_results.switch_pm)
 
     def switch_pm(self) -> Message:
         if not self.can_switch_pm:
