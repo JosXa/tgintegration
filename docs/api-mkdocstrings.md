@@ -1,0 +1,3 @@
+# mkdocstrings
+
+::: tgintegration.botcontroller

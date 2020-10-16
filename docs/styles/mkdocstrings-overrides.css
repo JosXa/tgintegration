@@ -1,3 +1,7 @@
 .md-typeset__table table {
     font-size: 30px;
 }
+
+.doc-heading {
+    font-size: 0.9rem;
+}

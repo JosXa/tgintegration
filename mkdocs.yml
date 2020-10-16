@@ -32,8 +32,10 @@ nav:
       - Installation: 'installation.md'
       - Configuration: 'configuration.md'
     - Getting Started: 'getting-started.md'
-  - 'API Reference (mkapi)': mkapi/api/tgintegration
-  - 'API Reference (mkdocstrings)': 'api.md'
+  - 'API Reference': mkapi/api/tgintegration|upper
+  - Doc plugin comparison:
+    - Mkdocstrings reference: 'api-mkdocstrings.md'
+    - Mkapi reference: 'api-mkapi.md'
 
 markdown_extensions:
   - meta

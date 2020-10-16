@@ -26,8 +26,8 @@ client = InteractionClient(
 controller = BotController(
     peer="@IdleTownBot",
     client=client,
-    max_wait_response=15,  # Maximum time in seconds to wait for a response from the peer_user
-    min_wait_consecutive=None,  # Do not wait for more than one message
+    max_wait=15,  # Maximum time in seconds to wait for a response from the peer_user
+    wait_consecutive=None,  # Do not wait for more than one message
 )
 
 client.load_config()

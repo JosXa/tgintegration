@@ -15,8 +15,8 @@ client = InteractionClient(
 controller = BotController(
     peer="@BotListBot",
     client=client,
-    max_wait_response=8,  # Maximum timeout for peer_user responses
-    min_wait_consecutive=2,  # Minimum time to wait for consecutive messages
+    max_wait=8,  # Maximum timeout for peer_user responses
+    wait_consecutive=2,  # Minimum time to wait for consecutive messages
     raise_no_response=True,  # Raise `InvalidResponseError` when no response received
 )
 

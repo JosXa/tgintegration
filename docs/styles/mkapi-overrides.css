@@ -1,13 +1,19 @@
+/* http://127.0.0.1:8000/css/mkapi-common.css */
+
 .mkapi-node {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
 }
 
 .mkapi-node a.mkapi-src-link, a.mkapi-docs-link {
   font-size: 0.64rem;
 }
 
-.mkapi-node .mkapi-object.code h3.mkapi-object-body {
-  font-size: 0.7rem;
+.mkapi-object.code .mkapi-object-body {
+  font-size: inherit;
+}
+
+.mkapi-node .mkapi-object.code mkapi-object-body {
+  font-size: 0.8rem;
 }
 
 .mkapi-node .mkapi-section-name .mkapi-section-name-body {
@@ -18,12 +24,8 @@
   font-size: 1em;
 }
 
-code {
-  font-size: 1em;
-}
-
-span {
-  font-size: 1em;
+div.mkapi-section-body.examples pre code {
+  font-size: inherit;
 }
 
 .highlight {

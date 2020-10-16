@@ -46,8 +46,8 @@ async def controller(client):
     c = BotController(
         client=client,
         peer="@BotListBot",
-        max_wait_response=10.0,
-        min_wait_consecutive=0.8,
+        max_wait=10.0,
+        wait_consecutive=0.8,
     )
     await c.initialize(start_client=False)
     yield c

@@ -6,7 +6,6 @@ import logging
 import time
 from contextlib import asynccontextmanager
 from typing import cast
-from typing import ContextManager
 from typing import List
 from typing import Optional
 from typing import Union
@@ -34,9 +33,10 @@ from tgintegration.containers.response import Response
 
 class BotController:
     """
-
-
-    can be used for both users and regular clients.
+    This class is the entry point for all interactions with either regular bots or userbots in `TgIntegration`.
+    It expected a Pyrogram `Client` (typically a **user client**) which serves as the controll**ing** account for a
+    specific `peer` account, which can be seen as the "bot under test" or "conversation partner".
+    In addition, the controller holds a number of settings to control the timeouts for all these interactions.
     """
 
     def __init__(
@@ -44,25 +44,27 @@ class BotController:
         client: Client,
         peer: Union[int, str],
         *,
-        max_wait_response: Union[int, float] = 20.0,
-        min_wait_consecutive: Optional[Union[int, float]] = 2.0,
+        max_wait: Union[int, float] = 20.0,
+        wait_consecutive: Optional[Union[int, float]] = 2.0,
         raise_no_response: bool = True,
         global_action_delay: Union[int, float] = 0.8,
     ):
         """
-        Creates a new BotController.
+        Creates a new `BotController`.
+
         Args:
-            client ():
-            peer ():
-            max_wait_response ():
-            min_wait_consecutive ():
-            raise_no_response ():
-            global_action_delay ():
+            client: A Pyrogram user client that acts as the controll*ing* account.
+            peer: The bot under test or conversation partner.
+            max_wait: Maximum time in seconds for the `peer` to produce the expected response.
+            wait_consecutive: Additional time in seconds to wait for _additional_ messages upon receiving a response
+                (even when `max_wait` is exceeded).
+            raise_no_response: Whether to raise an exception on timeout/invalid response or to log silently.
+            global_action_delay: TODO: Not yet implemented
         """
         self.client = client
         self.peer = peer
-        self.max_wait_response = max_wait_response
-        self.min_wait_consecutive = min_wait_consecutive
+        self.max_wait_response = max_wait
+        self.min_wait_consecutive = wait_consecutive
         self.raise_no_response = raise_no_response
         self.global_action_delay = global_action_delay
 
@@ -73,14 +75,17 @@ class BotController:
         self.logger = logging.getLogger(self.__class__.__name__)
 
     async def initialize(self, start_client: bool = True) -> None:
+        # noinspection PyUnresolvedReferences
         """
-        Initializes the assigned
+        Fetches and caches information about the given `peer` and optionally starts the assigned `client`.
+        This method will automatically be called when coroutines of this class are invoked, but you can call it
+        manually to override defaults (namely whether to `start_client`).
 
         Args:
-            start_client ():
+            start_client: Set to `False` if the client should not be started as part of initialization.
 
-        Returns:
-
+        !!! note
+            It is unlikely that you will need to call this manually.
         """
         if start_client and not self.client.is_connected:
             await self.client.start()
@@ -93,7 +98,7 @@ class BotController:
         if not self.peer_id:
             await self.initialize()
 
-    def merge_default_filters(
+    def _merge_default_filters(
         self, user_filters: Filter = None, override_peer: Union[int, str] = None
     ) -> Filter:
         chat_filter = filters.chat(override_peer or self.peer_id) & filters.incoming
@@ -115,6 +120,12 @@ class BotController:
         )
 
     async def clear_chat(self) -> None:
+        """
+        Deletes all messages in the conversation with the assigned `peer`.
+
+        !!! warning
+            Be careful as this will completely drop your mutual message history.
+        """
         await self.client.send(
             DeleteHistory(peer=self.peer_user, max_id=0, just_clear=False)
         )
@@ -128,8 +139,31 @@ class BotController:
             if sleep > 0:
                 await asyncio.sleep(sleep)
 
-    def add_handler_transient(self, handler: Handler) -> ContextManager[None]:
-        return add_handler_transient(self.client, handler)
+    @asynccontextmanager
+    async def add_handler_transient(
+        self, handler: Handler
+    ) -> AsyncContextManager[None]:
+        """
+        Registers a one-time/ad-hoc Pyrogram `Handler` that is only valid during the context manager body.
+
+        Args:
+            handler: A Pyrogram `Handler` (typically a `MessageHandler`).
+
+        Yields:
+            `None`
+
+        Examples:
+            ``` python
+            async def some_callback(client, message):
+                print(message)
+
+            async def main():
+                async with controller.add_handler_transient(MessageHandler(some_callback, filters.text)):
+                    await controller.send_command("start")
+            ```
+        """
+        async with add_handler_transient(self.client, handler):
+            yield
 
     @asynccontextmanager
     async def collect(
@@ -144,7 +178,7 @@ class BotController:
         await self._ensure_initialized()
         async with collect(
             self,
-            self.merge_default_filters(filters, peer),
+            self._merge_default_filters(filters, peer),
             expectation=Expectation(
                 min_messages=count or NotSet, max_messages=count or NotSet
             ),
@@ -186,7 +220,7 @@ class BotController:
 
         async with collect(
             self,
-            self.merge_default_filters(override_filters, peer),
+            self._merge_default_filters(override_filters, peer),
             expectation=Expectation(min_messages=1),
             timeouts=TimeoutSettings(
                 max_wait=max_wait, wait_consecutive=wait_consecutive
