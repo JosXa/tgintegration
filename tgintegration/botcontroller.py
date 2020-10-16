@@ -34,8 +34,8 @@ from tgintegration.containers.response import Response
 class BotController:
     """
     This class is the entry point for all interactions with either regular bots or userbots in `TgIntegration`.
-    It expects a Pyrogram `Client` (typically a **user client**) which serves as the controll**ing** account for a
-    specific `peer` account, which can be seen as the "bot under test" or "conversation partner".
+    It expects a Pyrogram `Client` (typically a **user client**) that serves as the controll**ing** account for a
+    specific `peer` - which can be seen as the "bot under test" or "conversation partner".
     In addition, the controller holds a number of settings to control the timeouts for all these interactions.
     """
 
