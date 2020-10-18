@@ -6,7 +6,7 @@ authors = ["Joscha Götzer <joscha.goetzer@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "==3.*,>=3.6"
+python = "==3.*,>=3.7"
 typing-extensions = "^3.7.4"
 pyrogram = "^1.0.7"
 
