@@ -31,7 +31,6 @@ async def client() -> Client:
     client = Client(
         "tgintegration_examples",
         config_file=str(examples_dir / "config.ini"),
-        workdir=str(examples_dir),
     )
     await client.start()
     yield client
