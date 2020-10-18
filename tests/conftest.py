@@ -2,9 +2,7 @@ import asyncio
 
 import pytest
 from decouple import config
-
-from tgintegration.interactionclient import InteractionClient
-
+from pyrogram import Client
 
 # region TODO: These fixtures are currently unused until we have some basic integration tests.
 #              The idea would be to spin up a bot client and a user client that talk to each other in a
@@ -20,9 +18,9 @@ def event_loop(request):
 
 
 @pytest.fixture(scope="module")
-async def client() -> InteractionClient:
+async def client() -> Client:
     # noinspection PyCallingNonCallable
-    client = InteractionClient(config("SESSION_STRING"), config_file="config.ini")
+    client = Client(config("SESSION_STRING"), config_file="config.ini")
     await client.start()
     yield client
     await client.stop()

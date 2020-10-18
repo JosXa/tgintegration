@@ -3,8 +3,9 @@ Controller
 """
 import asyncio
 import logging
-import time
 from contextlib import asynccontextmanager
+from time import time
+from typing import AsyncGenerator
 from typing import cast
 from typing import List
 from typing import Optional
@@ -16,19 +17,24 @@ from pyrogram.errors import FloodWait
 from pyrogram.filters import Filter
 from pyrogram.handlers.handler import Handler
 from pyrogram.raw.base import BotCommand
-from pyrogram.raw.functions.channels import DeleteHistory
+from pyrogram.raw.functions.messages import DeleteHistory
 from pyrogram.raw.functions.users import GetFullUser
 from pyrogram.raw.types import BotInfo
+from pyrogram.raw.types import InputPeerUser
+from pyrogram.raw.types.messages import BotResults
 from pyrogram.types import Message
 from pyrogram.types import User
 from typing_extensions import AsyncContextManager
 
-from tgintegration._handler_utils import add_handler_transient
 from tgintegration.collector import collect
 from tgintegration.collector import Expectation
 from tgintegration.collector import NotSet
 from tgintegration.collector import TimeoutSettings
+from tgintegration.containers.inlineresults import InlineResult
+from tgintegration.containers.inlineresults import InlineResultContainer
 from tgintegration.containers.response import Response
+from tgintegration.handler_utils import add_handler_transient
+from tgintegration.utils.frame_utils import get_caller_function_name
 
 
 class BotController:
@@ -68,10 +74,12 @@ class BotController:
         self.raise_no_response = raise_no_response
         self.global_action_delay = global_action_delay
 
+        self._input_peer: Optional[InputPeerUser] = None
         self.peer_user: Optional[User] = None
         self.peer_id: Optional[int] = None
         self.command_list: List[BotCommand] = []
 
+        self._last_response_ts: Optional[time] = None
         self.logger = logging.getLogger(self.__class__.__name__)
 
     async def initialize(self, start_client: bool = True) -> None:
@@ -90,13 +98,20 @@ class BotController:
         if start_client and not self.client.is_connected:
             await self.client.start()
 
+        self._input_peer = await self.client.resolve_peer(self.peer)
         self.peer_user = await self.client.get_users(self.peer)
         self.peer_id = self.peer_user.id
         self.command_list = await self._get_command_list()
 
-    async def _ensure_initialized(self):
+    async def _ensure_preconditions(self, *, bots_only: bool = False):
         if not self.peer_id:
             await self.initialize()
+
+        if bots_only and not self.peer_user.is_bot:
+            caller = get_caller_function_name()
+            raise ValueError(
+                f"This controller is assigned to a user peer, but '{caller}' can only be used with a bot."
+            )
 
     def _merge_default_filters(
         self, user_filters: Filter = None, override_peer: Union[int, str] = None
@@ -126,15 +141,16 @@ class BotController:
         !!! warning
             Be careful as this will completely drop your mutual message history.
         """
+        await self._ensure_preconditions()
         await self.client.send(
-            DeleteHistory(peer=self.peer_user, max_id=0, just_clear=False)
+            DeleteHistory(peer=self._input_peer, max_id=0, just_clear=False)
         )
 
     async def _wait_global(self):
-        if self.global_action_delay and self._last_response:
+        if self.global_action_delay and self._last_response_ts:
             # Sleep for as long as the global delay prescribes
             sleep = self.global_action_delay - (
-                time.time() - self._last_response.started
+                time.time() - self._last_response_ts.started
             )
             if sleep > 0:
                 await asyncio.sleep(sleep)
@@ -160,6 +176,7 @@ class BotController:
             async def main():
                 async with controller.add_handler_transient(MessageHandler(some_callback, filters.text)):
                     await controller.send_command("start")
+                    await asyncio.sleep(3)  # Wait 3 seconds for a reply
             ```
         """
         async with add_handler_transient(self.client, handler):
@@ -175,7 +192,9 @@ class BotController:
         max_wait: Union[int, float] = 15,
         wait_consecutive: Optional[Union[int, float]] = None,
     ) -> AsyncContextManager[Response]:
-        await self._ensure_initialized()
+        await self._ensure_preconditions()
+        await self._wait_if_necessary()
+
         async with collect(
             self,
             self._merge_default_filters(filters, peer),
@@ -188,6 +207,20 @@ class BotController:
         ) as response:
             yield response
 
+        self._last_response_ts = response.last_message_timestamp
+
+    async def _wait_if_necessary(self):
+        if not self.global_action_delay or not self._last_response_ts:
+            return
+
+        wait_for = (self.global_action_delay + self._last_response_ts) - time()
+        if wait_for > 0:
+            # noinspection PyUnboundLocalVariable
+            self.logger.debug(
+                f"Waiting {wait_for} seconds due to global action delay..."
+            )
+            await asyncio.sleep(wait_for)
+
     async def ping_bot(
         self,
         override_messages: List[str] = None,
@@ -197,7 +230,7 @@ class BotController:
         max_wait: Union[int, float] = 15,
         wait_consecutive: Optional[Union[int, float]] = None,
     ) -> Response:
-        await self._ensure_initialized()
+        await self._ensure_preconditions()
         peer = peer or self.peer_id
 
         messages = ["/start"]
@@ -250,3 +283,92 @@ class BotController:
             text += " ".join(args)
 
         return await self.client.send_message(peer or self.peer_id, text)
+
+    async def _iter_bot_results(
+        self,
+        bot_results: BotResults,
+        query: str,
+        latitude: float = None,
+        longitude: float = None,
+        limit: int = 200,
+        current_offset: str = "",
+    ) -> AsyncGenerator[InlineResult, None]:
+        num_returned: int = 0
+        while True:
+            while num_returned <= limit:
+                for result in bot_results.results:
+                    yield InlineResult(self, result, bot_results.query_id)
+
+                num_returned += 1
+
+            if not bot_results.next_offset or current_offset == bot_results.next_offset:
+                break  # no more results
+
+            bot_results = await self.client.get_inline_bot_results(
+                self.peer_id,
+                query,
+                offset=current_offset,
+                latitude=latitude,
+                longitude=longitude,
+            )
+
+    async def query_inline(
+        self,
+        query: str,
+        latitude: float = None,
+        longitude: float = None,
+        limit: int = 200,
+    ) -> InlineResultContainer:
+        """
+        Requests inline results from the `peer` (which needs to be a bot).
+
+        Args:
+            query: The query text.
+            latitude: Latitude of a geo point.
+            longitude: Longitude of a geo point.
+            limit: When result pages get iterated automatically, specifies the maximum number of results to return
+                from the bot.
+
+        Returns:
+            A container for convenient access to the inline results.
+        """
+        await self._ensure_preconditions(bots_only=True)
+
+        if limit <= 0:
+            raise ValueError("Cannot get 0 or less results.")
+
+        start_offset = ""
+        first_batch: BotResults = await self.client.get_inline_bot_results(
+            self.peer_id,
+            query,
+            offset=start_offset,
+            latitude=latitude,
+            longitude=longitude,
+        )
+
+        gallery = first_batch.gallery
+        switch_pm = first_batch.switch_pm
+        users = first_batch.users
+
+        results = [
+            x
+            async for x in self._iter_bot_results(
+                first_batch,
+                query,
+                latitude=latitude,
+                longitude=longitude,
+                limit=limit,
+                current_offset=start_offset,
+            )
+        ]
+
+        return InlineResultContainer(
+            self,
+            query,
+            latitude=latitude,
+            longitude=longitude,
+            results=results,
+            gallery=gallery,
+            switch_pm=switch_pm,
+            users=users,
+        )

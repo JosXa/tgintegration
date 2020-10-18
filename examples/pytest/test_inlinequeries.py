@@ -23,14 +23,16 @@ async def test_search(controller, client, bots):
         full_expected = res.full_text
 
         res = await controller.query_inline(username)
-        results = res.find_results(
-            title_pattern=re.compile(r"{}\b.*".format(username), re.IGNORECASE)
+        results = list(
+            res.find_results(
+                title_pattern=re.compile(r"{}\b.*".format(username), re.IGNORECASE)
+            )
         )
         assert len(results) == 1, "Not exactly one result for {}".format(username)
 
         # Description of peer_user should be the same in inline query message and private message
         assert (
-            full_expected in results.pop().result.send_message.message
+            full_expected in results[0].result.send_message.message
         ), "Message texts did not match."
 
 

@@ -3,13 +3,12 @@
 The root package of `tgintegration`.
 """
 from tgintegration.botcontroller import BotController
-from tgintegration.containers.inlineresults import InlineResult
-from tgintegration.containers.inlineresults import InlineResultContainer
-from tgintegration.containers.keyboard import InlineKeyboard
-from tgintegration.containers.keyboard import ReplyKeyboard
-from tgintegration.containers.response import InvalidResponseError
-from tgintegration.containers.response import Response
-from tgintegration.interactionclient import InteractionClient
+from tgintegration.containers import InlineKeyboard
+from tgintegration.containers import InlineResult
+from tgintegration.containers import InlineResultContainer
+from tgintegration.containers import InvalidResponseError
+from tgintegration.containers import ReplyKeyboard
+from tgintegration.containers import Response
 
 
 __author__ = """Joscha Götzer"""
@@ -24,5 +23,4 @@ __all__ = [
     "InvalidResponseError",
     "InlineKeyboard",
     "ReplyKeyboard",
-    "InteractionClient",
 ]

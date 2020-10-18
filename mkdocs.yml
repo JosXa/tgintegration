@@ -3,7 +3,7 @@ site_url: https://josxa.github.io/tgintegration
 repo_url: https://github.com/JosXa/tgintegration
 theme:
   name: material
-  logo: 'assets/tgintegration-logo.png'
+#  logo: 'assets/tgintegration-logo.png'
   favicon: 'assets/favicon.png'
   icon:
     repo: fontawesome/brands/github

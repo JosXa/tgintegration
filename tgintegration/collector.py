@@ -15,9 +15,10 @@ from pyrogram.filters import Filter
 from pyrogram.handlers import MessageHandler
 from pyrogram.types import Message
 
+from tgintegration.handler_utils import add_handler_transient
+
 if TYPE_CHECKING:
     from tgintegration.botcontroller import BotController
-from tgintegration._handler_utils import add_handler_transient
 from tgintegration.containers.response import InvalidResponseError, Response
 from tgintegration.update_recorder import MessageRecorder
 
@@ -45,7 +46,7 @@ class TimeoutSettings:
 
 
 class NotSet(object):
-    pass  # TODO: Use a better object for this
+    pass  # Sentinel
 
 
 @dataclass

@@ -1,4 +1,5 @@
 from datetime import datetime
+from time import time
 from typing import Any
 from typing import List
 from typing import Optional
@@ -102,11 +103,16 @@ class Response:
         return all_buttons
 
     @property
-    def last_message_timestamp(self) -> Optional[datetime]:
+    def last_message_datetime(self) -> Optional[datetime]:
         if self.empty:
             return None
-        # XXX: Dan should really make this more user friendly...
         return datetime.fromtimestamp(self.messages[-1].date)
+
+    @property
+    def last_message_timestamp(self) -> Optional[time]:
+        if self.empty:
+            return None
+        return self.messages[-1].date
 
     @property
     def commands(self) -> Set[str]:

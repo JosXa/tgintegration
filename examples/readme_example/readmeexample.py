@@ -6,7 +6,7 @@ import asyncio
 from tgintegration import BotController
 from tgintegration import InteractionClient
 
-print("Initializing service...")
+print("Initializing client...")
 # This example uses the configuration of `config.ini` (see examples/README)
 client = InteractionClient(
     session_name="tgintegration_examples"  # Arbitrary file path to the Pyrogram session file
@@ -22,10 +22,6 @@ controller = BotController(
 
 
 async def run_example():
-
-    print("Starting...")
-    await controller.initialize()
-
     print("Clearing chat to start with a blank screen...")
     await controller.clear_chat()
 
@@ -60,8 +56,8 @@ async def run_example():
 
     try:
         # The following instruction will raise an `InvalidResponseError` after
-        # `service.max_wait` seconds. This is because we passed `raise_no_response = True`
-        # in the service initialization.
+        # `client.max_wait` seconds. This is because we passed `raise_no_response = True`
+        # in the client initialization.
         print("Expecting undefined command to raise InvalidResponseError...")
         await controller.send_command_await("ayylmao", raise_=True)
     except InvalidResponseError:
@@ -105,7 +101,7 @@ async def run_example():
     )
 
     print("Executing `AwaitableAction`...")
-    response = await client.act_await_response(action)  # type: Response
+    await client.act_await_response(action)  # type: Response
     print("Done.")
 
 

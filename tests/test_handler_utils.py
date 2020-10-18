@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pytest
 from pyrogram.dispatcher import Dispatcher
 
-from tgintegration._handler_utils import find_free_group
+from tgintegration.handler_utils import find_free_group
 
 
 @pytest.mark.parametrize(

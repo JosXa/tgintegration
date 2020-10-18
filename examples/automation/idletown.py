@@ -7,30 +7,37 @@ import os
 import traceback
 from typing import Dict
 
+from pyrogram import Client
+from pyrogram import filters as f
+
 from tgintegration import BotController
-from tgintegration import InteractionClient
 from tgintegration.containers.response import Response
 
 examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SESSION_NAME: str = "my_account"
+
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 log = logging.getLogger(__name__)
 
+
 # This example uses the configuration of `config.ini` (see examples/README)
-client = InteractionClient(
-    session_name="my_account",
-    global_action_delay=2.3,  # The @IdleTownBot has a spam limit of about 1.9s
-    workdir=examples_dir,  # Load configuration from parent folder
-    config_file=os.path.join(examples_dir, "config.ini"),
-)
+def create_client(session_name: str = SESSION_NAME) -> Client:
+    client = Client(
+        session_name=session_name,
+        config_file=os.path.join(examples_dir, "config.ini"),
+    )
+    client.load_config()
+    return client
 
-controller = BotController(
-    peer="@IdleTownBot",
-    client=client,
-    max_wait=15,  # Maximum time in seconds to wait for a response from the peer_user
-    wait_consecutive=None,  # Do not wait for more than one message
-)
 
-client.load_config()
+def create_game_controller(client: Client = None) -> BotController:
+    return BotController(
+        peer="@IdleTownBot",
+        client=client or create_client(),
+        global_action_delay=2.0,  # The @IdleTownBot has a spam limit of about 1.9s
+        max_wait=8,  # Maximum time in seconds to wait for a response from the bot
+        wait_consecutive=None,  # Do not wait for more than one message
+    )
 
 
 def ascii_chars(text: str) -> str:
@@ -41,84 +48,91 @@ def get_buttons(response: Response) -> Dict[str, str]:
     """
     Helper function to create a dictionary for easy access to keyboard buttons
     """
-    res = {ascii_chars(b).lower(): b for b in response.keyboard_buttons}
-    return res
+    return {ascii_chars(b).lower(): b for b in response.keyboard_buttons}
+
+
+async def perform_full_run(controller: BotController, max_upgrades_per_type: int = 5):
+    # Setup
+    await controller.clear_chat()
+    await asyncio.sleep(2)
+
+    async def restart() -> Response:
+        async with controller.collect(f.text) as start:
+            await controller.send_command("restart", add_bot_name=False)
+        return start
+
+    # Extract keyboard buttons of /start response
+    main_menu = get_buttons(await restart())
+
+    async def click_button(menu: Dict[str, str], key: str) -> Dict[str, str]:
+        async with controller.collect() as response:
+            await controller.client.send_message(controller.peer_id, menu[key])
+
+        return get_buttons(response)
+
+    # Get World Exp if possible
+    if "worldexp" in main_menu:
+
+        worldexp_menu = await click_button(main_menu, "worldexp")
+        confirm_menu = await click_button(worldexp_menu, "claimx1")
+        await click_button(confirm_menu, "yes")
+
+    # Construct buildings
+    build_menu = await click_button(main_menu, "buildings")
+
+    for building in ["lumbermill", "goldmine", "armory", "smithy"]:
+        num_upgraded = 0
+        while num_upgraded < max_upgrades_per_type:
+            async with controller.collect() as build_response:
+                await controller.client.send_message(
+                    controller.peer_id, build_menu[building]
+                )
+
+            if "you don't have enough" in build_response.full_text.lower():
+                break
+            num_upgraded += 1
+
+    # Upgrade Hero Equipment
+    hero_menu = await click_button(main_menu, "hero")
+    equip_menu = await click_button(hero_menu, "equipment")
+
+    # For every possible equipment, upgrade it until there are not enough resources left
+    for equip_button in (k for k in equip_menu.keys() if k.startswith("up")):
+        num_upgraded = 0
+        while num_upgraded < max_upgrades_per_type:
+            async with controller.collect() as upgrade_response:
+                await controller.client.send_message(
+                    controller.peer_id, equip_menu[equip_button]
+                )
+            if "you don't have enough" in upgrade_response.full_text.lower():
+                break
+            num_upgraded += 1
+
+    # Attack Player
+    battle_menu = await click_button(main_menu, "battle")
+    arena_menu = await click_button(battle_menu, "arena")
+    normal_match_menu = await click_button(arena_menu, "normalmatch")
+
+    if "fight" in normal_match_menu:
+        await click_button(normal_match_menu, "fight")
+
+    # Attack Boss
+    bosses_menu = await click_button(battle_menu, "bosses")
+    if "attackmax" in bosses_menu:
+        await click_button(bosses_menu, "attackmax")
 
 
 async def main():
-    await controller.initialize()
+    controller = create_game_controller()
+
     while True:
         try:
-            # Setup
-            await controller.clear_chat()
-            await asyncio.sleep(2)
-            start = await controller.send_command_await("start")
-
-            # Extract keyboard buttons of /start response
-            main_buttons = get_buttons(start)
-
-            # Get World Exp if possible
-            if "worldexp" in main_buttons:
-                worldexp = await controller.send_message_await(main_buttons["worldexp"])
-                confirm_buttons = get_buttons(
-                    await controller.send_message_await(
-                        get_buttons(worldexp)["claimx1"]
-                    )
-                )
-                await controller.send_message_await(confirm_buttons["yes"])
-
-            # Construct buildings
-            build_buttons = get_buttons(
-                await controller.send_message_await(main_buttons["buildings"])
-            )
-
-            for building in ["lumbermill", "goldmine", "armory", "smithy"]:
-                response_text = ""
-                while "you don't have enough" not in response_text.lower():
-                    response_text = (
-                        await controller.send_message_await(build_buttons[building])
-                    ).full_text
-
-            # Upgrade Hero Equipment
-            hero = get_buttons(
-                await controller.send_message_await(main_buttons["hero"])
-            )
-            equip_buttons = get_buttons(
-                await controller.send_message_await(hero["equipment"])
-            )
-
-            # For every possible equipment, upgrade it until there are not enough resources left
-            for equip in (b for k, b in equip_buttons.items() if "up" in k):
-                while True:
-                    response_text = (
-                        await controller.send_message_await(equip)
-                    ).full_text
-                    if "you don't have enough" in response_text.lower():
-                        break
-
-            # Attack Player
-            battle = get_buttons(
-                await controller.send_message_await(main_buttons["battle"])
-            )
-            arena = get_buttons(await controller.send_message_await(battle["arena"]))
-            normal_match = get_buttons(
-                await controller.send_message_await(arena["normalmatch"])
-            )
-
-            if "fight" in normal_match:
-                get_buttons(await controller.send_message_await(normal_match["fight"]))
-
-            # Attack Boss
-            bosses = get_buttons(await controller.send_message_await(battle["bosses"]))
-            if "attackmax" in bosses:
-                await controller.send_message_await(bosses["attackmax"])
+            await perform_full_run(controller)
         except KeyboardInterrupt:
             print("Done.")
             break
         except BaseException:
             traceback.print_exc()
-
-    await client.stop()
 
 
 if __name__ == "__main__":

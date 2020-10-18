@@ -3,17 +3,14 @@ import logging
 from pathlib import Path
 
 import pytest
+from pyrogram import Client
 
 from tgintegration import BotController
-from tgintegration import InteractionClient
 
 
 logger = logging.getLogger("tgintegration")
 logger.setLevel(logging.DEBUG)
-
 logging.basicConfig(level=logging.DEBUG)
-
-
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 
@@ -29,9 +26,9 @@ examples_dir = Path(__file__).parent.parent
 
 
 @pytest.fixture(scope="session")
-async def client() -> InteractionClient:
+async def client() -> Client:
     # noinspection PyCallingNonCallable
-    client = InteractionClient(
+    client = Client(
         "tgintegration_examples",
         config_file=str(examples_dir / "config.ini"),
         workdir=str(examples_dir),
