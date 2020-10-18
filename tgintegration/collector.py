@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from contextlib import asynccontextmanager
+from dataclasses import dataclass
 from datetime import datetime
 from datetime import timedelta
 from typing import AsyncContextManager
@@ -9,7 +10,6 @@ from typing import Optional
 from typing import TYPE_CHECKING
 from typing import Union
 
-from dataclasses import dataclass
 from pyrogram.errors import RpcMcgetFail
 from pyrogram.filters import Filter
 from pyrogram.handlers import MessageHandler
@@ -27,7 +27,6 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class TimeoutSettings:
-
     max_wait: float = 10
     """
     The maximum duration in seconds to wait for a response from the peer.
