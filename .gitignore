@@ -70,3 +70,5 @@ target/
 
 .mypy_cache
 /site/
+
+test-results*
