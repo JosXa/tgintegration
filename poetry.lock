@@ -89,7 +89,6 @@ description = "Clean single-source support for Python 3 and 2"
 category = "dev"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-marker = "python_version >= \"3.7\" and python_version < \"4.0\""
 
 [[package]]
 name = "importlib-metadata"
@@ -136,7 +135,7 @@ description = "Lightweight pipelining: using Python functions as pipeline jobs."
 category = "dev"
 optional = false
 python-versions = ">=3.6"
-marker = "python_version >= \"3.7\" and python_version < \"4.0\""
+marker = "python_version >= \"3.7\" and python_version < \"4.0\" or python_version > \"2.7\""
 
 [[package]]
 name = "livereload"
@@ -196,7 +195,6 @@ description = "Safely add untrusted strings to HTML/XML markup."
 category = "dev"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
-marker = "python_version >= \"3.7\" and python_version < \"4.0\""
 
 [[package]]
 name = "mkapi"
@@ -233,7 +231,7 @@ extras = ["languages"]
 
 [[package]]
 name = "mkdocs-material"
-version = "6.0.2"
+version = "6.1.0"
 description = "A Material Design theme for MkDocs"
 category = "dev"
 optional = false
@@ -295,7 +293,7 @@ description = "Natural Language Toolkit"
 category = "dev"
 optional = false
 python-versions = "*"
-marker = "python_version >= \"3.7\" and python_version < \"4.0\""
+marker = "python_version >= \"3.7\" and python_version < \"4.0\" or python_version > \"2.7\""
 
 [package.extras]
 all = ["requests", "numpy", "python-crfsuite", "scikit-learn", "twython", "pyparsing", "scipy", "matplotlib", "gensim"]
@@ -465,6 +463,21 @@ testing = ["async-generator (>=1.3)", "coverage", "hypothesis (>=5.7.1)"]
 pytest = ">=5.4.0"
 
 [[package]]
+name = "pytest-cov"
+version = "2.10.1"
+description = "Pytest plugin for measuring coverage."
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[package.extras]
+testing = ["fields", "hunter", "process-tests (2.0.2)", "six", "pytest-xdist", "virtualenv"]
+
+[package.dependencies]
+coverage = ">=4.4"
+pytest = ">=4.6"
+
+[[package]]
 name = "pytest-runner"
 version = "5.2"
 description = "Invoke py.test as distutils command with dependency resolution"
@@ -510,7 +523,7 @@ description = "Alternative regular expression module, to replace re."
 category = "dev"
 optional = false
 python-versions = "*"
-marker = "python_version >= \"3.7\" and python_version < \"4.0\""
+marker = "python_version >= \"3.7\" and python_version < \"4.0\" or python_version > \"2.7\""
 
 [[package]]
 name = "six"
@@ -568,7 +581,7 @@ description = "Fast, Extensible Progress Meter"
 category = "dev"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*"
-marker = "python_version >= \"3.7\" and python_version < \"4.0\""
+marker = "python_version >= \"3.7\" and python_version < \"4.0\" or python_version > \"2.7\""
 
 [package.extras]
 dev = ["py-make (>=0.1.0)", "twine", "argopt", "pydoc-markdown"]
@@ -583,12 +596,12 @@ python-versions = "*"
 
 [[package]]
 name = "zipp"
-version = "3.3.0"
+version = "3.3.1"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 category = "dev"
 optional = false
 python-versions = ">=3.6"
-marker = "python_version >= \"3.7\" and python_version < \"3.8\" or python_version < \"3.8\" or python_version >= \"3.7\" and python_version < \"3.8\" and (python_version >= \"3.7\" and python_version < \"3.8\" or python_version < \"3.8\")"
+marker = "python_version >= \"3.7\" and python_version < \"3.8\" or python_version < \"3.8\""
 
 [package.extras]
 docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
@@ -596,7 +609,7 @@ testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pyt
 
 [metadata]
 python-versions = "==3.*,>=3.6"
-content-hash = "2534c5fdf2ddd0fcac09fee1480b28f110071acc18417d0a58a058bd0054ed5a"
+content-hash = "0c2a918b90522ab1c4136cd19b5f8133fd468ca366e784da227bbbdc273b9be5"
 
 [metadata.files]
 async-lru = [
@@ -735,8 +748,8 @@ mkdocs = [
     {file = "mkdocs-1.1.2.tar.gz", hash = "sha256:f0b61e5402b99d7789efa032c7a74c90a20220a9c81749da06dbfbcbd52ffb39"},
 ]
 mkdocs-material = [
-    {file = "mkdocs-material-6.0.2.tar.gz", hash = "sha256:1adcb2d1b76b200e26c54b68784a0b3c4cf9bf21efe1c43edf5c59e514b30ef6"},
-    {file = "mkdocs_material-6.0.2-py2.py3-none-any.whl", hash = "sha256:67334845400089e87370661bd0b885ba0cc995920ef1d11259d72300a6b9893f"},
+    {file = "mkdocs-material-6.1.0.tar.gz", hash = "sha256:a4bfd736898e6bfeb2c0d00ab448f464a389fb6a7dd2a30a90343756fd8aec83"},
+    {file = "mkdocs_material-6.1.0-py2.py3-none-any.whl", hash = "sha256:81095982fc4d634ee4b16abb91fa7b2e1f50ab7e39df67aafa8f5d4fd7b28e24"},
 ]
 mkdocs-material-extensions = [
     {file = "mkdocs-material-extensions-1.0.1.tar.gz", hash = "sha256:6947fb7f5e4291e3c61405bad3539d81e0b3cd62ae0d66ced018128af509c68f"},
@@ -804,6 +817,10 @@ pytest = [
 pytest-asyncio = [
     {file = "pytest-asyncio-0.14.0.tar.gz", hash = "sha256:9882c0c6b24429449f5f969a5158b528f39bde47dc32e85b9f0403965017e700"},
     {file = "pytest_asyncio-0.14.0-py3-none-any.whl", hash = "sha256:2eae1e34f6c68fc0a9dc12d4bea190483843ff4708d24277c41568d6b6044f1d"},
+]
+pytest-cov = [
+    {file = "pytest-cov-2.10.1.tar.gz", hash = "sha256:47bd0ce14056fdd79f93e1713f88fad7bdcc583dcd7783da86ef2f085a0bb88e"},
+    {file = "pytest_cov-2.10.1-py2.py3-none-any.whl", hash = "sha256:45ec2d5182f89a81fc3eb29e3d1ed3113b9e9a873bcddb2a71faaab066110191"},
 ]
 pytest-runner = [
     {file = "pytest-runner-5.2.tar.gz", hash = "sha256:96c7e73ead7b93e388c5d614770d2bae6526efd997757d3543fe17b557a0942b"},
@@ -925,6 +942,6 @@ typing-extensions = [
     {file = "typing_extensions-3.7.4.3.tar.gz", hash = "sha256:99d4073b617d30288f569d3f13d2bd7548c3a7e4c8de87db09a9d29bb3a4a60c"},
 ]
 zipp = [
-    {file = "zipp-3.3.0-py3-none-any.whl", hash = "sha256:eed8ec0b8d1416b2ca33516a37a08892442f3954dee131e92cfd92d8fe3e7066"},
-    {file = "zipp-3.3.0.tar.gz", hash = "sha256:64ad89efee774d1897a58607895d80789c59778ea02185dd846ac38394a8642b"},
+    {file = "zipp-3.3.1-py3-none-any.whl", hash = "sha256:16522f69653f0d67be90e8baa4a46d66389145b734345d68a257da53df670903"},
+    {file = "zipp-3.3.1.tar.gz", hash = "sha256:c1532a8030c32fd52ff6a288d855fe7adef5823ba1d26a29a68fd6314aa72baa"},
 ]

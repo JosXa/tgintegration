@@ -23,6 +23,7 @@ mkapi = { version = "^1.0.13", python = "^3.7" }
 poethepoet = "^0.9.0"
 mkdocstrings = "^0.13.6"
 mkdocs-toc-sidebar-plugin = "^0.1.0"
+pytest-cov = "^2.10.1"
 
 [build-system]
 requires = ["poetry>=1.0.5"]
