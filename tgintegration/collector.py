@@ -168,6 +168,12 @@ async def collect(
         except RpcMcgetFail as e:
             logger.warning(e)
             await asyncio.sleep(60)  # Internal Telegram error
+        except asyncio.exceptions.TimeoutError as te:
+            if timeouts.raise_on_timeout:
+                raise te
+            else:
+                # TODO: better warning message
+                logger.warning("Peer did not reply.")
         finally:
             recorder.stop()
 

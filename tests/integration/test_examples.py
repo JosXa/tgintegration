@@ -5,7 +5,7 @@ from decouple import config
 
 
 pytestmark = pytest.mark.asyncio
-examples_dir = Path(__file__).parent.parent / "examples"
+examples_dir = Path(__file__).parent.parent.parent / "examples"
 
 
 # region Fixtures

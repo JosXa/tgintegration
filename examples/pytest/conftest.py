@@ -7,6 +7,7 @@ from pyrogram import Client
 
 from tgintegration import BotController
 
+examples_dir = Path(__file__).parent.parent
 
 logger = logging.getLogger("tgintegration")
 logger.setLevel(logging.DEBUG)
@@ -22,14 +23,12 @@ def event_loop(request):
     loop.close()
 
 
-examples_dir = Path(__file__).parent.parent
-
-
 @pytest.fixture(scope="session")
 async def client() -> Client:
     # noinspection PyCallingNonCallable
     client = Client(
         "tgintegration_examples",
+        workdir=examples_dir,
         config_file=str(examples_dir / "config.ini"),
     )
     await client.start()

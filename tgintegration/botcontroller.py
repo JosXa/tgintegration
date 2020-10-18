@@ -101,7 +101,9 @@ class BotController:
         self._input_peer = await self.client.resolve_peer(self.peer)
         self.peer_user = await self.client.get_users(self.peer)
         self.peer_id = self.peer_user.id
-        self.command_list = await self._get_command_list()
+
+        if self.peer_user.is_bot:
+            self.command_list = await self._get_command_list()
 
     async def _ensure_preconditions(self, *, bots_only: bool = False):
         if not self.peer_id:

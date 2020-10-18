@@ -24,6 +24,7 @@ examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def create_client(session_name: str) -> Client:
     return Client(
         session_name=session_name,
+        workdir=examples_dir,
         config_file=os.path.join(examples_dir, "config.ini"),
     )
 

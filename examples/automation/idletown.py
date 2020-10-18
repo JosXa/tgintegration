@@ -24,6 +24,7 @@ log = logging.getLogger(__name__)
 def create_client(session_name: str = SESSION_NAME) -> Client:
     client = Client(
         session_name=session_name,
+        workdir=examples_dir,
         config_file=os.path.join(examples_dir, "config.ini"),
     )
     client.load_config()
