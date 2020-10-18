@@ -3,6 +3,7 @@ import logging
 from pathlib import Path
 
 import pytest
+from decouple import config
 from pyrogram import Client
 
 from tgintegration import BotController
@@ -27,7 +28,7 @@ def event_loop(request):
 async def client() -> Client:
     # noinspection PyCallingNonCallable
     client = Client(
-        "tgintegration_examples",
+        config("SESSION_STRING", default=None) or "tgintegration_examples",
         workdir=examples_dir,
         config_file=str(examples_dir / "config.ini"),
     )
