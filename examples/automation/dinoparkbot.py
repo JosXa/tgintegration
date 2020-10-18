@@ -17,7 +17,7 @@ from tgintegration import ReplyKeyboard
 # This example uses the configuration of `config.ini` (see examples/README)
 
 MAX_RUNS: int = -1  # No limit
-SESSION_NAME: str = "my_account"
+SESSION_NAME: str = "tgintegration_examples"
 examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 

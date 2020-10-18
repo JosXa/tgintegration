@@ -14,7 +14,7 @@ from tgintegration import BotController
 from tgintegration.containers.response import Response
 
 examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SESSION_NAME: str = "my_account"
+SESSION_NAME: str = "tgintegration_examples"
 
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 log = logging.getLogger(__name__)
@@ -124,6 +124,7 @@ async def perform_full_run(controller: BotController, max_upgrades_per_type: int
 
 async def main():
     controller = create_game_controller()
+    await controller.initialize()
 
     while True:
         try:
