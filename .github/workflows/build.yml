@@ -35,6 +35,7 @@ jobs:
         run: poetry show --outdated
         continue-on-error: true
       - uses: pre-commit/action@v2.0.0
+        if: ${{ matrix.python-version == '3.8' }}
       - name: Test with pytest
         env:
           API_ID: ${{ secrets.API_ID }}
