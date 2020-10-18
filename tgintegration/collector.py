@@ -1,7 +1,6 @@
 import asyncio
 import logging
 from contextlib import asynccontextmanager
-from dataclasses import dataclass
 from datetime import datetime
 from datetime import timedelta
 from typing import AsyncContextManager
@@ -10,6 +9,7 @@ from typing import Optional
 from typing import TYPE_CHECKING
 from typing import Union
 
+from dataclasses import dataclass
 from pyrogram.errors import RpcMcgetFail
 from pyrogram.filters import Filter
 from pyrogram.handlers import MessageHandler
