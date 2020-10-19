@@ -25,6 +25,6 @@ jobs:
         with:
           poetry-version: 1.0
       - name: Poetry install
-        run: poetry install
+        run: poetry install --no-dev
       - name: Poetry publish
         run: poetry publish --build -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_PASSWORD }}
