@@ -3,7 +3,6 @@ TgIntegration
 
 Integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
 based on [Pyrogram](https://github.com/pyrogram/pyrogram).
-
 **Test your bot in realtime scenarios!**
 
 - 📖 [Documentation](https://josxa.github.io/tgintegration/)
