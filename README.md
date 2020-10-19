@@ -1,7 +1,7 @@
 TgIntegration
 =============
 
-An Integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
+An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
 based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br />**Test your bot in realtime scenarios!**
 
@@ -18,6 +18,8 @@ Features
 - 👤 Log into a Telegram user account and interact with bots or other users
 - ✅ Write **realtime integration tests** to ensure that your bot works as expected! ▶️ [Pytest examples](https://github.com/JosXa/tgintegration/tree/master/examples/pytest)
 - ⚡️ **Automate any interaction** on Telegram! ▶️ [Automation examples](https://github.com/JosXa/tgintegration/tree/master/examples/automation)
+- 🛡 Fully typed for safety and **autocompletion** with your favorite IDE
+- 🐍 Built for modern Python (3.7+) with high test coverage
 
 
 Requirements
