@@ -4,10 +4,12 @@ TgIntegration
 Integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
 based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 
-**Test your bots in realtime scenarios!**
+**Test your bot in realtime scenarios!**
 
-- 📖 [_tgintegration_ Documentation](https://josxa.github.io/tgintegration/)
+- 📖 [Documentation](https://josxa.github.io/tgintegration/)
+- 👥 [Telegram Chat](https://t.me/TgIntegration)
 - 📄 Free software: [MIT License](https://tldrlegal.com/license/mit-license)
+
 
 Features
 --------
@@ -15,6 +17,7 @@ Features
 - 👤 Log into a Telegram user account and interact with bots or other users
 - ✅ Write **realtime integration tests** to ensure that your bot works as expected
 - ⚡️ **Automate any interaction** on Telegram!
+
 
 Installation
 ------------
@@ -25,6 +28,7 @@ All hail pip!
 $ pip install tgintegration --upgrade
 ```
 
+
 Requirements
 ------------
 
@@ -32,6 +36,7 @@ Requirements
 
 - Python **3.7** or higher.
 - A [Telegram API key](https://docs.pyrogram.ml/start/ProjectSetup#api-keys).
+
 
 Quick Start Guide
 -----------------
