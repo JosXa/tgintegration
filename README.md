@@ -34,6 +34,7 @@ Requirements
 
 - Python **3.7** or higher.
 - A [Telegram API key](https://docs.pyrogram.ml/start/ProjectSetup#api-keys).
+- A user account (seeing things happen in your own account is great for getting started)
 
 
 Quick Start Guide
