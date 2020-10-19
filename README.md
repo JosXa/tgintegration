@@ -1,13 +1,7 @@
 TgIntegration
 =============
 
-![image](https://img.shields.io/pypi/v/tgintegration.svg%0A%20:target:%20https://pypi.python.org/pypi/tgintegration)
-
-![image](https://img.shields.io/travis/JosXa/tgintegration.svg%0A%20:target:%20https://travis-ci.org/JosXa/tgintegration)
-
-![image](https://readthedocs.org/projects/tgintegration/badge/?version=latest%0A%20:target:%20https://tgintegration.readthedocs.io/en/latest/?badge=latest%0A%20%20%20%20%20:alt:%20Documentation%20Status)
-
-![image](https://pyup.io/repos/github/JosXa/tgintegration/shield.svg%0A%20:target:%20https://pyup.io/repos/github/JosXa/tgintegration/%0A%20%20:alt:%20Updates)
+<!-- TODO: Add a bunch of shields. --/>
 
 Integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
 based on [Pyrogram](https://github.com/pyrogram/pyrogram).
