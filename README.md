@@ -155,7 +155,7 @@ and _tgintegration_ also uses pytest for its own test suite.
 
 ### unittest
 
-I haven't tried out the builtin `unittest` library in combination with _tgintegration_ yet, 
+I haven't tried out the builtin `unittest` library in combination with _tgintegration_ yet,
 but theoretically I don't see any problems with it.
 If you do decide to try it, it would be awesome if you could tell me about your
 experience and whether anything could be improved 🙂
