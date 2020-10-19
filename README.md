@@ -10,7 +10,7 @@ based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 - 📄 Free software: [MIT License](https://tldrlegal.com/license/mit-license)
 
 
-[Features](#features) • [Installation](#installation) • [Requirements](#requirements) • [Quick Start Guide](#quick-start-guide) • [Integrating with test frameworks](#integrating-with-test-frameworks)
+[Features](#features) • [Installation](#installation) • [Requirements](#requirements) • [Quick Start Guide](#quick-start-guide) • [Integrating with Test Frameworks](#integrating-with-test-frameworks)
 
 Features
 --------
@@ -135,7 +135,7 @@ assert response.is_empty
 ```
 
 
-Integrating with test frameworks
+Integrating with Test Frameworks
 --------------------------------
 
 ## [pytest](https://docs.pytest.org/en/stable/index.html)
