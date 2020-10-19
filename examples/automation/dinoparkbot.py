@@ -1,3 +1,8 @@
+"""
+A tgintegration script that automatically farms for you in @DinoParkNextBot.
+
+This example uses a `config.ini` file for configuration (see examples/README)!
+"""
 import asyncio
 import logging
 import random
@@ -13,8 +18,6 @@ from pyrogram import filters as f
 
 from tgintegration import BotController
 from tgintegration import ReplyKeyboard
-
-# This example uses the configuration of `config.ini` (see examples/README)
 
 MAX_RUNS: int = -1  # No limit
 SESSION_NAME: str = "tgintegration_examples"
