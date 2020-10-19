@@ -1,0 +1,30 @@
+name: Publish
+
+on:
+  release:
+    types: [ created ]
+  repository_dispatch:
+    types: [ publish_pypi ]
+  workflow_dispatch:
+
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: "Install Poetry"
+        uses: Gr1N/setup-poetry@v3
+        with:
+          poetry-version: 1.0
+      - name: Poetry install
+        run: poetry install
+      - name: Poetry publish
+        run: poetry publish --build -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_PASSWORD }}
