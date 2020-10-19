@@ -10,20 +10,14 @@ based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 - 📄 Free software: [MIT License](https://tldrlegal.com/license/mit-license)
 
 
+[Features](#features) • [Installation](#installation) • [Requirements](#requirements) • [Quick Start Guide](#quick-start-guide) • [Integrating with test frameworks](#integrating-with-test-frameworks)
+
 Features
 --------
 
 - 👤 Log into a Telegram user account and interact with bots or other users
 - ✅ Write **realtime integration tests** to ensure that your bot works as expected! ▶️ [Pytest examples](https://github.com/JosXa/tgintegration/tree/master/examples/pytest)
 - ⚡️ **Automate any interaction** on Telegram! ▶️ [Automation examples](https://github.com/JosXa/tgintegration/tree/master/examples/automation)
-
-
-Installation
-------------
-
-All hail pip!
-
-$ `pip install tgintegration --upgrade`
 
 
 Requirements
@@ -34,6 +28,14 @@ Requirements
 - Python **3.7** or higher.
 - A [Telegram API key](https://docs.pyrogram.ml/start/ProjectSetup#api-keys).
 - A user session (seeing things happen in your own account is great for getting started)
+
+
+Installation
+------------
+
+All hail pip!
+
+$ `pip install tgintegration --upgrade`
 
 
 Quick Start Guide
