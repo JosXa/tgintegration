@@ -14,8 +14,8 @@ Features
 --------
 
 - 👤 Log into a Telegram user account and interact with bots or other users
-- ✅ Write **realtime integration tests** to ensure that your bot works as expected ([see pytest examples](https://github.com/JosXa/tgintegration/tree/master/examples/pytest))
-- ⚡️ **Automate any interaction** on Telegram ([see automation examples](https://github.com/JosXa/tgintegration/tree/master/examples/automation))!
+- ✅ Write **realtime integration tests** to ensure that your bot works as expected!  👉 [Pytest examples](https://github.com/JosXa/tgintegration/tree/master/examples/pytest)
+- ⚡️ **Automate any interaction** on Telegram!  👉 [Automation examples](https://github.com/JosXa/tgintegration/tree/master/examples/automation)
 
 
 Installation
