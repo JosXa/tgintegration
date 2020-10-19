@@ -24,9 +24,7 @@ Installation
 
 All hail pip!
 
-``` sh
-$ pip install tgintegration --upgrade
-```
+$ `pip install tgintegration --upgrade`
 
 
 Requirements
