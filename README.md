@@ -1,7 +1,7 @@
 TgIntegration
 =============
 
-Integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
+An Integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
 based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br />**Test your bot in realtime scenarios!**
 
