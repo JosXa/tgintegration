@@ -10,7 +10,7 @@ based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 - 📄 Free software: [MIT License](https://tldrlegal.com/license/mit-license)
 
 
-[Installation](#installation) • [Requirements](#requirements) • [**Quick Start Guide**](#quick-start-guide) • [Test Frameworks](#integrating-with-test-frameworks)
+ [Requirements](#requirements) • [Installation](#installation) • [**Quick Start Guide**](#quick-start-guide) • [Test Frameworks](#integrating-with-test-frameworks)
 
 Features
 --------
