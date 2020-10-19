@@ -37,16 +37,25 @@ All hail pip!
 
 $ `pip install tgintegration --upgrade`
 
+<br />
+<details><summary><i>Feeling adventurous?</i></summary><p>
+
+For bleeding edge, install the master branch:
+
+$ `pip install git+https://github.com/JosXa/tgintegration.git`
+
+</p></details>
+
 
 Quick Start Guide
 -----------------
 
 _You can [follow along by running the example](https://github.com/JosXa/tgintegration/blob/master/examples/readme_example/readmeexample.py) ([README](https://github.com/JosXa/tgintegration/blob/master/examples/README.md))_
 
+#### Setup
+
 Suppose we want to write integration tests for [@BotListBot](https://t.me/BotListBot) by sending it a couple of
 messages and checking that it responds the way it should.
-
-#### Setup
 
 After [configuring a Pyrogram **user client**](https://docs.pyrogram.org/intro/setup),
 let's start by creating a `BotController`:
