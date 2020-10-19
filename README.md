@@ -79,7 +79,7 @@ The result should look like this:
 
 ![image](https://github.com/JosXa/tgintegration/blob/master/docs/assets/start_botlistbot.png)
 
-Examining these buttons in the response...
+Examining the buttons in the response...
 
 ``` python
 # Extract first (and only) inline keyboard from the replies
