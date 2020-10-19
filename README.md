@@ -5,12 +5,12 @@ Integration test and automation library for [Telegram Bots](https://core.telegra
 based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br />**Test your bot in realtime scenarios!**
 
-- 📖 [Documentation](https://josxa.github.io/tgintegration/)
+- 📖 [**Documentation**](https://josxa.github.io/tgintegration/)
 - 👥 [Telegram Chat](https://t.me/TgIntegration)
 - 📄 Free software: [MIT License](https://tldrlegal.com/license/mit-license)
 
 
-[Features](#features) • [Installation](#installation) • [Requirements](#requirements) • [Quick Start Guide](#quick-start-guide) • [Integrating with Test Frameworks](#integrating-with-test-frameworks)
+[**Features**](#features) • [Installation](#installation) • [Requirements](#requirements) • [**Quick Start Guide**](#quick-start-guide) • [Test Frameworks](#integrating-with-test-frameworks)
 
 Features
 --------
