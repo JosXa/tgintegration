@@ -1,8 +1,6 @@
 TgIntegration
 =============
 
-<!-- TODO: Add a bunch of shields. --/>
-
 Integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
 based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 
