@@ -34,7 +34,7 @@ Requirements
 
 - Python **3.7** or higher.
 - A [Telegram API key](https://docs.pyrogram.ml/start/ProjectSetup#api-keys).
-- A user account (seeing things happen in your own account is great for getting started)
+- A user session (seeing things happen in your own account is great for getting started)
 
 
 Quick Start Guide
@@ -42,28 +42,30 @@ Quick Start Guide
 
 _(You can [follow along by running the example](https://github.com/JosXa/tgintegration/blob/master/examples/readme_example/readmeexample.py))_
 
-Suppose we want to write integration tests for [@BotListBot](https://t.me/BotListBot) by sending it a couple of
+Suppose we want to write integration tests for the [@BotListBot](https://t.me/BotListBot) by sending it a couple of
 messages and checking that it responds the way it should.
 
-After [setting up a Pyrogram **user client**](https://docs.pyrogram.org/intro/setup),
+#### Setup
+
+After [configuring a Pyrogram **user client**](https://docs.pyrogram.org/intro/setup),
 let's start by creating a `BotController`:
 
 ``` python
 from tgintegration import BotController
 
 controller = BotController(
-    peer="@BotListBot",       # We are going to run tests on https://t.me/BotListBot 🤖
-    client=client,            # This assumes you already have a Pyrogram user client available
-    max_wait=8,               # Maximum timeout for responses (optional)
-    wait_consecutive=2,       # Minimum time to wait for more/consecutive messages (optional)
-    raise_no_response=True,   # Raise `InvalidResponseError` when no response received (defaults to True)
-    global_action_delay=2.5,  # Choosing a rather high delay so we can follow along in realtime (optional)
+    peer="@BotListBot",      # The bot under test is https://t.me/BotListBot 🤖
+    client=client,           # This assumes you already have a Pyrogram user client available
+    max_wait=8,              # Maximum timeout for responses (optional)
+    wait_consecutive=2,      # Minimum time to wait for more/consecutive messages (optional)
+    raise_no_response=True,  # Raise `InvalidResponseError` when no response is received (defaults to True)
+    global_action_delay=2.5  # Choosing a rather high delay so we can observe what's happening (optional)
 )
 
 await controller.clear_chat()  # Start with a blank screen (⚠️)
 ```
 
-Now, let's send `/start` to the bot and wait until exactly three messages have been received:
+Now, let's send `/start` to the bot and wait until exactly three messages have been received by using the asynchronous `collect` context manager:
 
 ``` python
 async with controller.collect(count=3) as response:
@@ -75,7 +77,7 @@ assert response.messages[0].sticker  # The first message is a sticker
 
 The result should look like this:
 
-![image](https://github.com/JosXa/tgintegration/blob/master/docs/images/start_botlistbot.png%0A%20:alt:%20Sending%20/start%20to%20@BotListBot)
+![image](https://github.com/JosXa/tgintegration/blob/master/docs/assets/start_botlistbot.png)
 
 Examining these buttons in the response...
 
@@ -96,11 +98,13 @@ examples = await inline_keyboard.click(pattern=r".*Examples")
 As the bot edits the message, `.click()` automatically listens for "message edited" updates and returns
 the new state as another `Response`.
 
-![image](https://github.com/JosXa/tgintegration/blob/master/docs/images/examples_botlistbot.png%0A%20:alt:%20Get%20Examples%20from%20@BotListBot)
+![image](https://github.com/JosXa/tgintegration/blob/master/docs/assets/examples_botlistbot.png)
 
 ``` python
 assert "Examples for contributing to the BotList" in examples.full_text
 ```
+
+#### Error handling
 
 So what happens when we send an invalid query or the peer fails to respond?
 
@@ -142,5 +146,5 @@ and _tgintegration_ also uses pytest for its own test suite.
 ## unittest
 
 The builtin unit test package has not been tested so far, but theoretically I don't see any problems with it.
-If you do try it out in combination with _tgintegration_, it would be awesome if you could let me know how your
-experience has been and if there was anything that should be improved to make it work.
+If you do try it out in combination with _tgintegration_, it would be awesome if you could tell me about your
+experience and whether there has been anything that could be improved 🙂 Let us know at 👉 https://t.me/TgIntegration
