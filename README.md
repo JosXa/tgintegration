@@ -147,13 +147,13 @@ assert response.is_empty
 Integrating with Test Frameworks
 --------------------------------
 
-## [pytest](https://docs.pytest.org/en/stable/index.html)
+### [pytest](https://docs.pytest.org/en/stable/index.html)
 
 Pytest is the recommended test framework for use with _tgintegration_. You can
 [browse through several examples](https://github.com/JosXa/tgintegration/tree/master/examples/pytest)
 and _tgintegration_ also uses pytest for its own test suite.
 
-## unittest
+### unittest
 
 I haven't tried out the builtin `unittest` library in combination with _tgintegration_ yet, 
 but theoretically I don't see any problems with it.
