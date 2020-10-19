@@ -12,9 +12,9 @@ TgIntegration
 Integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
 based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 
-Bring automation to Telegram and test your bots in realtime scenarios!
+**Test your bots in realtime scenarios!**
 
-- 📖 [__tgintegration__ Documentation](https://josxa.github.io/tgintegration/)
+- 📖 [_tgintegration_ Documentation](https://josxa.github.io/tgintegration/)
 - 📄 Free software: [MIT License](https://tldrlegal.com/license/mit-license)
 
 Features
@@ -44,7 +44,7 @@ Requirements
 Quick Start Guide
 -----------------
 
-__(You can [follow along by running the example](https://github.com/JosXa/tgintegration/blob/master/examples/readme_example/readmeexample.py))__
+_(You can [follow along by running the example](https://github.com/JosXa/tgintegration/blob/master/examples/readme_example/readmeexample.py))_
 
 Suppose we want to write integration tests for [@BotListBot](https://t.me/BotListBot) by sending it a couple of
 messages and checking that it responds the way it should.
@@ -126,7 +126,7 @@ async with controller.collect(raise_=False) as response:
     await client.send_message(controller.peer_id, "Henlo Fren")
 ```
 
-In this case, __tgintegration__ will simply emit a warning, but you can still assert
+In this case, _tgintegration_ will simply emit a warning, but you can still assert
 that no response has been received by using the `is_empty` property:
 
 ``` python
@@ -139,12 +139,12 @@ Integrating with test frameworks
 
 ## [pytest](https://docs.pytest.org/en/stable/index.html)
 
-Pytest is the recommended test framework for use with __tgintegration__. You can
+Pytest is the recommended test framework for use with _tgintegration_. You can
 [browse through several examples](https://github.com/JosXa/tgintegration/tree/master/examples/pytest)
-and __tgintegration__ also uses pytest for its own test suite.
+and _tgintegration_ also uses pytest for its own test suite.
 
 ## unittest
 
 The builtin unit test package has not been tested so far, but theoretically I don't see any problems with it.
-If you do try it out in combination with __tgintegration__, it would be awesome if you could let me know how your
+If you do try it out in combination with _tgintegration_, it would be awesome if you could let me know how your
 experience has been and if there was anything that should be improved to make it work.
