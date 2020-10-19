@@ -16,7 +16,7 @@ Features
 
 - 👤 Log into a Telegram user account and interact with bots or other users
 - ✅ Write **realtime integration tests** to ensure that your bot works as expected
-- ⚡️ **Automate any interaction** on Telegram!
+- ⚡️ **Automate any interaction** on Telegram ([see examples](https://github.com/JosXa/tgintegration/tree/master/examples/automation))!
 
 
 Installation
@@ -40,9 +40,9 @@ Requirements
 Quick Start Guide
 -----------------
 
-_(You can [follow along by running the example](https://github.com/JosXa/tgintegration/blob/master/examples/readme_example/readmeexample.py))_
+_You can [follow along by running the example](https://github.com/JosXa/tgintegration/blob/master/examples/readme_example/readmeexample.py) ([README](https://github.com/JosXa/tgintegration/blob/master/examples/README.md))_
 
-Suppose we want to write integration tests for the [@BotListBot](https://t.me/BotListBot) by sending it a couple of
+Suppose we want to write integration tests for [@BotListBot](https://t.me/BotListBot) by sending it a couple of
 messages and checking that it responds the way it should.
 
 #### Setup
@@ -82,7 +82,7 @@ The result should look like this:
 Examining the buttons in the response...
 
 ``` python
-# Extract first (and only) inline keyboard from the replies
+# Get first (and only) inline keyboard from the replies
 inline_keyboard = response.inline_keyboards[0]
 
 # Three buttons in the first row
