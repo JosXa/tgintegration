@@ -12,7 +12,7 @@ async def test_explore_button(controller: BotController):
     # Click the "Explore" keyboard button
     explore = await start.reply_keyboard.click(pattern=r".*Explore")
 
-    assert not explore.empty, 'Pressing the "Explore" button had no effect.'
+    assert not explore.is_empty, 'Pressing the "Explore" button had no effect.'
     assert explore.inline_keyboards, 'The "Explore" message had no inline keyboard.'
 
     # Click the "Explore" inline keyboard button 10 times or until it says that
@@ -24,5 +24,5 @@ async def test_explore_button(controller: BotController):
 
         # Pressing an inline button also makes the BotController listen for edit events.
         explore = await explore.inline_keyboards[0].click(index=2)
-        assert not explore.empty, 'Pressing the "Explore" button had no effect.'
+        assert not explore.is_empty, 'Pressing the "Explore" button had no effect.'
         count -= 1

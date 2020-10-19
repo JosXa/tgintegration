@@ -33,7 +33,7 @@ class Response:
         return self._recorder.messages
 
     @property
-    def empty(self) -> bool:
+    def is_empty(self) -> bool:
         return not self.messages
 
     @property
@@ -48,7 +48,7 @@ class Response:
     def reply_keyboard(self) -> Optional[ReplyKeyboard]:
         if self.__reply_keyboard:
             return self.__reply_keyboard
-        if self.empty:
+        if self.is_empty:
             return None
 
         # Contingent upon the way Telegram works,
@@ -74,7 +74,7 @@ class Response:
     def inline_keyboards(self) -> Optional[List[InlineKeyboard]]:
         if self.__inline_keyboards:
             return self.__inline_keyboards
-        if self.empty:
+        if self.is_empty:
             return None
 
         inline_keyboards = [
@@ -104,13 +104,13 @@ class Response:
 
     @property
     def last_message_datetime(self) -> Optional[datetime]:
-        if self.empty:
+        if self.is_empty:
             return None
         return datetime.fromtimestamp(self.messages[-1].date)
 
     @property
     def last_message_timestamp(self) -> Optional[time]:
-        if self.empty:
+        if self.is_empty:
             return None
         return self.messages[-1].date
 
@@ -146,7 +146,7 @@ class Response:
         return self.messages[item]
 
     def __str__(self):
-        if self.empty:
+        if self.is_empty:
             return "Empty response"
         return "\nthen\n".join(['"{}"'.format(m.text) for m in self.messages])
 

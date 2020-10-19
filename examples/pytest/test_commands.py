@@ -9,4 +9,4 @@ async def test_commands(controller: BotController):
     for c in controller.command_list:
         async with controller.collect() as res:
             await controller.send_command(c.command)
-        assert not res.empty, "Bot did not respond to command /{}.".format(c.command)
+        assert not res.is_empty, "Bot did not respond to command /{}.".format(c.command)

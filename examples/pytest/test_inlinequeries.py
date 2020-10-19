@@ -17,7 +17,7 @@ async def test_search(controller, client, bots):
         async with controller.collect(count=1) as res:
             await client.send_message(controller.peer, username)
 
-        assert not res.empty, "Bot did not yield a response for username {}.".format(
+        assert not res.is_empty, "Bot did not yield a response for username {}.".format(
             username
         )
         full_expected = res.full_text

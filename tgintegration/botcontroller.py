@@ -28,13 +28,13 @@ from typing_extensions import AsyncContextManager
 
 from tgintegration.collector import collect
 from tgintegration.collector import Expectation
-from tgintegration.collector import NotSet
 from tgintegration.collector import TimeoutSettings
 from tgintegration.containers.inlineresults import InlineResult
 from tgintegration.containers.inlineresults import InlineResultContainer
 from tgintegration.containers.response import Response
 from tgintegration.handler_utils import add_handler_transient
 from tgintegration.utils.frame_utils import get_caller_function_name
+from tgintegration.utils.sentinel import NotSet
 
 
 class BotController:
@@ -151,9 +151,7 @@ class BotController:
     async def _wait_global(self):
         if self.global_action_delay and self._last_response_ts:
             # Sleep for as long as the global delay prescribes
-            sleep = self.global_action_delay - (
-                time.time() - self._last_response_ts.started
-            )
+            sleep = self.global_action_delay - (time() - self._last_response_ts.started)
             if sleep > 0:
                 await asyncio.sleep(sleep)
 
@@ -193,6 +191,7 @@ class BotController:
         peer: Union[int, str] = None,
         max_wait: Union[int, float] = 15,
         wait_consecutive: Optional[Union[int, float]] = None,
+        raise_: Optional[bool] = None,
     ) -> AsyncContextManager[Response]:
         await self._ensure_preconditions()
         await self._wait_if_necessary()
@@ -204,7 +203,11 @@ class BotController:
                 min_messages=count or NotSet, max_messages=count or NotSet
             ),
             timeouts=TimeoutSettings(
-                max_wait=max_wait, wait_consecutive=wait_consecutive
+                max_wait=max_wait,
+                wait_consecutive=wait_consecutive,
+                raise_on_timeout=raise_
+                if raise_ is not None
+                else self.raise_no_response,
             ),
         ) as response:
             yield response

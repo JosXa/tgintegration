@@ -10,12 +10,13 @@ from typing import Optional
 from typing import TYPE_CHECKING
 from typing import Union
 
-from pyrogram.errors import RpcMcgetFail
+from pyrogram.errors import InternalServerError
 from pyrogram.filters import Filter
 from pyrogram.handlers import MessageHandler
 from pyrogram.types import Message
 
 from tgintegration.handler_utils import add_handler_transient
+from tgintegration.utils.sentinel import NotSet
 
 if TYPE_CHECKING:
     from tgintegration.botcontroller import BotController
@@ -42,10 +43,6 @@ class TimeoutSettings:
     """
     Whether to raise an exception when a timeout occurs or to fail with a log message.
     """
-
-
-class NotSet(object):
-    pass  # Sentinel
 
 
 @dataclass
@@ -165,12 +162,12 @@ async def collect(
                     expectation.verify(recorder.messages, timeouts)
                     return
 
-        except RpcMcgetFail as e:
+        except InternalServerError as e:
             logger.warning(e)
             await asyncio.sleep(60)  # Internal Telegram error
         except asyncio.exceptions.TimeoutError as te:
             if timeouts.raise_on_timeout:
-                raise te
+                raise InvalidResponseError() from te
             else:
                 # TODO: better warning message
                 logger.warning("Peer did not reply.")

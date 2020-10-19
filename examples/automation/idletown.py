@@ -3,8 +3,8 @@ Before running this example, go to @IdleTownBot and set up your account first:
 """
 import asyncio
 import logging
-import os
 import traceback
+from pathlib import Path
 from typing import Dict
 
 from pyrogram import Client
@@ -13,7 +13,7 @@ from pyrogram import filters as f
 from tgintegration import BotController
 from tgintegration.containers.response import Response
 
-examples_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+examples_dir = Path(__file__).parent.parent.absolute()
 SESSION_NAME: str = "tgintegration_examples"
 
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
@@ -25,7 +25,7 @@ def create_client(session_name: str = SESSION_NAME) -> Client:
     client = Client(
         session_name=session_name,
         workdir=examples_dir,
-        config_file=os.path.join(examples_dir, "config.ini"),
+        config_file=examples_dir / "config.ini",
     )
     client.load_config()
     return client
