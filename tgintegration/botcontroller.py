@@ -299,23 +299,23 @@ class BotController:
         current_offset: str = "",
     ) -> AsyncGenerator[InlineResult, None]:
         num_returned: int = 0
-        while True:
-            while num_returned <= limit:
-                for result in bot_results.results:
-                    yield InlineResult(self, result, bot_results.query_id)
+        while num_returned <= limit:
 
+            for result in bot_results.results:
+                yield InlineResult(self, result, bot_results.query_id)
                 num_returned += 1
 
             if not bot_results.next_offset or current_offset == bot_results.next_offset:
                 break  # no more results
 
-            bot_results = await self.client.get_inline_bot_results(
+            bot_results: BotResults = await self.client.get_inline_bot_results(
                 self.peer_id,
                 query,
                 offset=current_offset,
                 latitude=latitude,
                 longitude=longitude,
             )
+            current_offset = bot_results.next_offset
 
     async def query_inline(
         self,

@@ -5,12 +5,14 @@ import pytest
 from tgintegration import BotController
 
 
+pytestmark = pytest.mark.asyncio
+
+
 @pytest.fixture(scope="module")
 def bots():
     return ["@bold", "@BotListBot", "@gif"]
 
 
-@pytest.mark.asyncio
 async def test_search(controller, client, bots):
     for username in bots:
         # First send the username in private chat to get target description of the peer_user
@@ -36,12 +38,10 @@ async def test_search(controller, client, bots):
         ), "Message texts did not match."
 
 
-@pytest.mark.asyncio
-async def test_inline_queries(controller: BotController):
-    test = ["contributing", "rules", "examples"]
-
-    for t in test:
-        res = await controller.query_inline(t)
-        assert res.find_results(
-            title_pattern=re.compile(r".*{}.*".format(t), re.IGNORECASE)
-        ), "{} did not work".format(t)
+@pytest.mark.parametrize("test_input", ["contributing", "rules", "examples"])
+async def test_inline_queries(controller: BotController, test_input: str):
+    inline_results = await controller.query_inline(test_input)
+    single_result = inline_results.find_results(
+        title_pattern=re.compile(r".*{}.*".format(test_input), re.IGNORECASE)
+    )
+    assert len(single_result) == 1, "{} did not work".format(test_input)
