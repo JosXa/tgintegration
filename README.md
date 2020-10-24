@@ -7,13 +7,14 @@ based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 
 [Features](#features) • [Requirements](#requirements) • [Installation](#installation) • [**Quick Start Guide**](#quick-start-guide) • [Test Frameworks](#integrating-with-test-frameworks)
 
-- 🎬 [**See it in action!**](https://josxa.github.io/tgintegration/introduction/#see-it-in-action)
 - 📖 [Documentation](https://josxa.github.io/tgintegration/)
 - 👥 [Telegram Chat](https://t.me/TgIntegration)
 - 📄 Free software: [MIT License](https://tldrlegal.com/license/mit-license)
 
 Features
 --------
+
+▶️ [**See it in action!** 🎬](https://josxa.github.io/tgintegration/introduction/#see-it-in-action)
 
 - 👤 Log into a Telegram user account and interact with bots or other users
 - ✅ Write **realtime integration tests** to ensure that your bot works as expected! ▶️ [Pytest examples](https://github.com/JosXa/tgintegration/tree/master/examples/pytest)
