@@ -7,7 +7,7 @@ based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 
 [Features](#features) • [Requirements](#requirements) • [Installation](#installation) • [**Quick Start Guide**](#quick-start-guide) • [Test Frameworks](#integrating-with-test-frameworks)
 
-- 🎬 [See it in action!](https://josxa.github.io/tgintegration/introduction/#see-it-in-action)
+- 🎬 [**See it in action!**](https://josxa.github.io/tgintegration/introduction/#see-it-in-action)
 - 📖 [Documentation](https://josxa.github.io/tgintegration/)
 - 👥 [Telegram Chat](https://t.me/TgIntegration)
 - 📄 Free software: [MIT License](https://tldrlegal.com/license/mit-license)
