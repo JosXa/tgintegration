@@ -4,9 +4,18 @@
 routine tasks on the messenger. It does so by logging in as a user or interacting in your name using the popular
 [Pyrogram](https://github.com/pyrogram/pyrogram) library and [mtproto](https://core.telegram.org/mtproto).
 
+## See it in action
+
+<video style="width: 100%;" controls>
+  <source src="../assets/screencast-botlistbot-tests.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+
+<!--
 > "Why tests, my bot runs fine?!"
 
 *Hint: It doesn't.*
+-->
 
 ## The Testing Pyramid
 

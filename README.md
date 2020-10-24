@@ -7,10 +7,10 @@ based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 
 [Features](#features) • [Requirements](#requirements) • [Installation](#installation) • [**Quick Start Guide**](#quick-start-guide) • [Test Frameworks](#integrating-with-test-frameworks)
 
+- 🎬 [See it in action!](https://josxa.github.io/tgintegration/introduction/#see-it-in-action)
 - 📖 [Documentation](https://josxa.github.io/tgintegration/) (⚠️ WIP)
 - 👥 [Telegram Chat](https://t.me/TgIntegration)
 - 📄 Free software: [MIT License](https://tldrlegal.com/license/mit-license)
-
 
 Features
 --------
@@ -20,8 +20,6 @@ Features
 - ⚡️ **Automate any interaction** on Telegram! ▶️ [Automation examples](https://github.com/JosXa/tgintegration/tree/master/examples/automation)
 - 🛡 Fully typed for safety and **autocompletion** with your favorite IDE
 - 🐍 Built for modern Python (3.7+) with high test coverage
-
-![video](https://raw.githubusercontent.com/JosXa/tgintegration/master/docs/assets/screencast-botlistbot-tests.mp4)
 
 
 Prerequisites
