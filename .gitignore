@@ -72,3 +72,4 @@ target/
 /site/
 
 test-results*
+docs/api
