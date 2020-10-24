@@ -60,7 +60,7 @@ class ReplyKeyboard:
             filters & f.chat(self._peer_id) if filters else f.chat(self._peer_id)
         ) & (f.text | f.edited)
 
-        async with self._controller.collect(filters=filters) as res:
+        async with self._controller.collect(filters=filters) as res:  # type: Response
             await self._controller.client.send_message(
                 self._controller.peer,
                 button.text if hasattr(button, "text") else button,
@@ -120,15 +120,12 @@ class InlineKeyboard:
         self,
         pattern: Union[Pattern, str] = None,
         index: Optional[int] = None,
-        # TODO: Think about what to do with parameters
-        num_expected: Optional[int] = 1,
-        max_wait: float = 8,
-        min_wait_consecutive: float = 1.5,
-        raise_: Optional[bool] = True,
     ) -> "Response":
         button = self.find_button(pattern, index)
 
-        async with self._controller.collect(filters=f.chat(self._peer_id)) as res:
+        async with self._controller.collect(
+            filters=f.chat(self._peer_id)
+        ) as res:  # type: Response
             await self._controller.client.request_callback_answer(
                 chat_id=self._peer_id,
                 message_id=self._message_id,
@@ -138,7 +135,6 @@ class InlineKeyboard:
         return res
 
     def __eq__(self, other):
-        # TODO: test
         if not isinstance(other, InlineKeyboard):
             return False
         try:

@@ -7,6 +7,7 @@ from pathlib import Path
 from pyrogram import Client
 
 from tgintegration import BotController
+from tgintegration import Response
 
 # This example uses the configuration of `config.ini` (see examples/README)
 examples_dir = Path(__file__).parent.parent.absolute()
@@ -32,7 +33,7 @@ async def run_example():
     await controller.clear_chat()
 
     print("Sending /start and waiting for exactly 3 messages...")
-    async with controller.collect(count=3) as response:
+    async with controller.collect(count=3) as response:  # type: Response
         await controller.send_command("start")
 
     assert response.num_messages == 3
@@ -67,7 +68,7 @@ async def run_example():
         print("Ok, raised as expected.")
 
     # If `raise_` is explicitly set to False, no exception is raised
-    async with controller.collect(raise_=False) as response:
+    async with controller.collect(raise_=False) as response:  # type: Response
         print("Sending a message but expecting no reply...")
         await client.send_message(controller.peer_id, "Henlo Fren")
 

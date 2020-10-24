@@ -3,7 +3,7 @@ import re
 import pytest
 
 from tgintegration import BotController
-
+from tgintegration import Response
 
 pytestmark = pytest.mark.asyncio
 
@@ -16,7 +16,7 @@ def bots():
 async def test_search(controller, client, bots):
     for username in bots:
         # First send the username in private chat to get target description of the peer_user
-        async with controller.collect(count=1) as res:
+        async with controller.collect(count=1) as res:  # type: Response
             await client.send_message(controller.peer, username)
 
         assert not res.is_empty, "Bot did not yield a response for username {}.".format(
@@ -24,9 +24,9 @@ async def test_search(controller, client, bots):
         )
         full_expected = res.full_text
 
-        res = await controller.query_inline(username)
+        inline_response = await controller.query_inline(username)
         results = list(
-            res.find_results(
+            inline_response.find_results(
                 title_pattern=re.compile(r"{}\b.*".format(username), re.IGNORECASE)
             )
         )

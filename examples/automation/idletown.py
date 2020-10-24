@@ -69,7 +69,7 @@ async def perform_full_run(controller: BotController, max_upgrades_per_type: int
     main_menu = get_buttons(await restart())
 
     async def click_button(menu: Dict[str, str], key: str) -> Dict[str, str]:
-        async with controller.collect() as response:
+        async with controller.collect() as response:  # type: Response
             await controller.client.send_message(controller.peer_id, menu[key])
 
         return get_buttons(response)

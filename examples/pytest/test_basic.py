@@ -1,10 +1,12 @@
 import pytest
 
+from tgintegration import Response
+
 pytestmark = pytest.mark.asyncio
 
 
 async def test_start(controller, client):
-    async with controller.collect(count=3) as res:
+    async with controller.collect(count=3) as res:  # type: Response
         await controller.send_command("/start")
 
     assert res.num_messages == 3
@@ -17,7 +19,7 @@ async def test_ping(controller, client):
 
 async def test_help(controller):
     # Send /help and wait for one message
-    async with controller.collect(count=1) as res:
+    async with controller.collect(count=1) as res:  # type: Response
         await controller.send_command("/help")
 
     # Make some assertions about the response
