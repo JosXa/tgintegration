@@ -1,15 +1,34 @@
 [tool.poetry]
 name = "tgintegration"
+packages = [
+    { include = "tgintegration" }
+]
+include = ["LICENSE"]
 version = "1.0.1"
-description = "An Integration Test Library for Telegram Messenger Bots on top of Pyrogram."
-authors = ["Joscha Götzer <joscha.goetzer@gmail.com>"]
+description = "Integration test and automation library for Telegram Messenger Bots based on Pyrogram."
+authors = ["JosXa <joscha.goetzer@gmail.com>"]
 license = "MIT"
+readme = "README.md"
+repository = "https://github.com/JosXa/tgintegration"
+keywords = ["telegram-bots", "testing", "integration-tests", "library", "python"]
+classifiers = [
+    "Typing :: Typed",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: Implementation :: CPython"
+]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/JosXa/tgintegration/issues"
+"Support Chat" = "https://t.me/TgIntegration"
+"Contact Author" = "https:/t.me/JosXa"
 
 [tool.poetry.dependencies]
 python = "==3.*,>=3.7"
 typing-extensions = "^3.7.4"
 pyrogram = "^1.0.0"
-pypandoc = "^1.5"
 
 [tool.poetry.dev-dependencies]
 bumpversion = "==0.5.3"
