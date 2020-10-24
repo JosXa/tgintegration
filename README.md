@@ -21,9 +21,11 @@ Features
 - 🛡 Fully typed for safety and **autocompletion** with your favorite IDE
 - 🐍 Built for modern Python (3.7+) with high test coverage
 
+![video](https://raw.githubusercontent.com/JosXa/tgintegration/master/docs/assets/screencast-botlistbot-tests.mp4)
 
-Requirements
-------------
+
+Prerequisites
+-------------
 
 [Same as Pyrogram](https://github.com/pyrogram/pyrogram#requirements):
 
@@ -89,7 +91,7 @@ assert response.messages[0].sticker  # The first message is a sticker
 
 The result should look like this:
 
-![image](https://github.com/JosXa/tgintegration/blob/master/docs/assets/start_botlistbot.png)
+![image](https://raw.githubusercontent.com/JosXa/tgintegration/master/docs/assets/start_botlistbot.png)
 
 Examining the buttons in the response...
 
@@ -110,7 +112,7 @@ examples = await inline_keyboard.click(pattern=r".*Examples")
 As the bot edits the message, `.click()` automatically listens for "message edited" updates and returns
 the new state as another `Response`.
 
-![image](https://github.com/JosXa/tgintegration/blob/master/docs/assets/examples_botlistbot.png)
+![image](https://raw.githubusercontent.com/JosXa/tgintegration/master/docs/assets/examples_botlistbot.png)
 
 ``` python
 assert "Examples for contributing to the BotList" in examples.full_text

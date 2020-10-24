@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tgintegration"
-version = "1.0.0"
+version = "1.0.1"
 description = "An Integration Test Library for Telegram Messenger Bots on top of Pyrogram."
 authors = ["Joscha Götzer <joscha.goetzer@gmail.com>"]
 license = "MIT"
@@ -8,7 +8,8 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "==3.*,>=3.7"
 typing-extensions = "^3.7.4"
-pyrogram = "^1.0.7"
+pyrogram = "^1.0.0"
+pypandoc = "^1.5"
 
 [tool.poetry.dev-dependencies]
 bumpversion = "==0.5.3"
@@ -24,6 +25,10 @@ mkapi = { version = "^1.0.13", python = "^3.7" }
 poethepoet = "^0.9.0"
 mkdocstrings = "^0.13.6"
 mkdocs-toc-sidebar-plugin = "^0.1.0"
+pypandoc = "^1.5"
+panflute = "^1.12.5"
+markdown-include = "^0.6.0"
+mkdocs-markdownextradata-plugin = "^0.1.7"
 
 [build-system]
 requires = ["poetry>=1.0.5"]

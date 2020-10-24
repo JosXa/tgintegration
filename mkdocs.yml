@@ -3,7 +3,7 @@ site_url: https://josxa.github.io/tgintegration
 repo_url: https://github.com/JosXa/tgintegration
 theme:
   name: material
-#  logo: 'assets/tgintegration-logo.png'
+  #  logo: 'assets/tgintegration-logo.png'
   favicon: 'assets/favicon.png'
   icon:
     repo: fontawesome/brands/github
@@ -17,28 +17,27 @@ theme:
     - navigation.tabs
 
 extra:
-  # Only for insiders
-  generator: false
+  generator: false  # Only for insiders
+  tgi: '_tgintegration_'
 
 extra_css:
   - styles/mkapi-overrides.css
   - styles/mkdocstrings-overrides.css
 
 nav:
-  - Overview: 'index.md'
   - Docs:
-    - Setup:
-      - Prerequisites: 'prerequisites.md'
-      - Installation: 'installation.md'
-      - Configuration: 'configuration.md'
-    - Getting Started: 'getting-started.md'
+      - Introduction: 'introduction.md'
+      - Setup: 'setup.md'
+      - Getting Started: 'getting-started.md'
   - 'API Reference': mkapi/api/tgintegration|upper
   - Doc plugin comparison:
-    - Mkdocstrings reference: 'api-mkdocstrings.md'
-    - Mkapi reference: 'api-mkapi.md'
+      - Mkdocstrings reference: 'api-mkdocstrings.md'
+      - Mkapi reference: 'api-mkapi.md'
 
 markdown_extensions:
   - meta
+  - markdown_include.include:
+      base_path: docs
   - pymdownx.tasklist
   - pymdownx.inlinehilite
   - pymdownx.highlight
@@ -50,8 +49,10 @@ plugins:
   - search
   # TODO: Decision pending between mkapi and mkdocstrings
   - mkapi:
-      src_dirs: ["tgintegration"]
+      src_dirs: [ "tgintegration" ]
   - mkdocstrings:
       default_handler: python
       watch:
         - tgintegration
+  - markdownextradata:
+      data: 'extra_templates.yml'
