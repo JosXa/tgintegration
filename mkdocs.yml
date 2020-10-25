@@ -1,4 +1,4 @@
-site_name: TgIntegration Documentation
+site_name: tgintegration
 site_url: https://josxa.github.io/tgintegration
 repo_url: https://github.com/JosXa/tgintegration
 theme:
@@ -24,15 +24,16 @@ extra_css:
   - styles/mkapi-overrides.css
   - styles/mkdocstrings-overrides.css
 
+
 nav:
+  - Overview: 'index.md'
   - Docs:
-      - Introduction: 'introduction.md'
-      - Setup: 'setup.md'
-      - Getting Started: 'getting-started.md'
+    - Setup: 'setup.md'
+    - Getting Started: 'getting-started.md'
   - 'API Reference': mkapi/api/tgintegration|upper
-  - Doc plugin comparison:
-      - Mkdocstrings reference: 'api-mkdocstrings.md'
-      - Mkapi reference: 'api-mkapi.md'
+#  - Doc plugin comparison:
+#      - Mkdocstrings reference: 'api-mkdocstrings.md'
+#      - Mkapi reference: 'api-mkapi.md'
 
 markdown_extensions:
   - meta
