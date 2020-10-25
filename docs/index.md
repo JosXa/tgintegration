@@ -8,7 +8,7 @@ name using the popular [Pyrogram](https://github.com/pyrogram/pyrogram) library 
 ### See it in action
 
 <video style="width: 100%;" controls>
-  <source src="../assets/screencast-botlistbot-tests.mp4" type="video/mp4">
+  <source src="assets/screencast-botlistbot-tests.mp4" type="video/mp4">
 Your browser does not support the video tag.
 </video>
 
@@ -24,7 +24,7 @@ When writing software, it is almost always a good idea to have a number of tests
 complexity of your project). What kinds of tests should be written typically follows the so-called ["testing
 pyramid"](https://martinfowler.com/bliki/TestPyramid.html).
 
-<img align="left" src="../assets/testing-pyramid.png" alt="The Testing Pyramid" />
+<img align="left" src="assets/testing-pyramid.png" alt="The Testing Pyramid" />
 
 This guideline recommends to have a test suite consisting of a **large base of unit tests**, a fair **number of
 integration tests**, and only **very few end-to-end (E2E) or manual tests**. In this classification, {{tgi}} lies in
