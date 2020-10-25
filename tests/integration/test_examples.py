@@ -56,4 +56,5 @@ async def test_readme_example(session_name):
     # Late import so that the autouse fixtures run first
     from examples.readme_example import readmeexample
 
-    await readmeexample.run_example()
+    client = readmeexample.create_client(session_name)
+    await readmeexample.run_example(client)

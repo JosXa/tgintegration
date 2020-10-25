@@ -11,24 +11,30 @@ from tgintegration import Response
 
 # This example uses the configuration of `config.ini` (see examples/README)
 examples_dir = Path(__file__).parent.parent.absolute()
-
-client = Client(
-    "tgintegration_examples",
-    workdir=examples_dir,
-    config_file=examples_dir / "config.ini",
-)
-
-controller = BotController(
-    peer="@BotListBot",  # We are going to run tests on https://t.me/BotListBot
-    client=client,
-    max_wait=8,  # Maximum timeout for responses (optional)
-    wait_consecutive=2,  # Minimum time to wait for more/consecutive messages (optional)
-    raise_no_response=True,  # Raise `InvalidResponseError` when no response received (defaults to True)
-    global_action_delay=2.5,  # Choosing a rather high delay so we can follow along in realtime (optional)
-)
+SESSION_NAME: str = "tgintegration_examples"
 
 
-async def run_example():
+# This example uses the configuration of `config.ini` (see examples/README)
+def create_client(session_name: str = SESSION_NAME) -> Client:
+    client = Client(
+        session_name=session_name,
+        workdir=examples_dir,
+        config_file=examples_dir / "config.ini",
+    )
+    client.load_config()
+    return client
+
+
+async def run_example(client: Client):
+    controller = BotController(
+        peer="@BotListBot",  # We are going to run tests on https://t.me/BotListBot
+        client=client,
+        max_wait=8,  # Maximum timeout for responses (optional)
+        wait_consecutive=2,  # Minimum time to wait for more/consecutive messages (optional)
+        raise_no_response=True,  # Raise `InvalidResponseError` when no response received (defaults to True)
+        global_action_delay=2.5,  # Choosing a rather high delay so we can follow along in realtime (optional)
+    )
+
     print("Clearing chat to start with a blank screen...")
     await controller.clear_chat()
 
@@ -80,4 +86,4 @@ async def run_example():
 
 
 if __name__ == "__main__":
-    asyncio.get_event_loop().run_until_complete(run_example())
+    asyncio.get_event_loop().run_until_complete(run_example(create_client()))
