@@ -10,11 +10,6 @@ from tgintegration.containers import InvalidResponseError
 from tgintegration.containers import ReplyKeyboard
 from tgintegration.containers import Response
 
-
-__author__ = """Joscha Götzer"""
-__email__ = "joscha.goetzer@gmail.com"
-__version__ = "0.4.0"
-
 __all__ = [
     "Response",
     "BotController",
