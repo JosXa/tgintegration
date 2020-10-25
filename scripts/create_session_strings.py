@@ -10,8 +10,8 @@ from pyrogram.types import SentCode
 
 from tgintegration import BotController
 from tgintegration.collector import collect
-from tgintegration.collector import Expectation
-from tgintegration.collector import TimeoutSettings
+from tgintegration.expectation import Expectation
+from tgintegration.timeout_settings import TimeoutSettings
 
 clients: List[Client] = []
 

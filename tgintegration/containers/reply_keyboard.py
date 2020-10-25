@@ -1,3 +1,6 @@
+"""
+​
+"""
 import re
 from typing import List
 from typing import Pattern
@@ -13,12 +16,15 @@ from tgintegration.containers import NoButtonFound
 
 if TYPE_CHECKING:
     from tgintegration.botcontroller import BotController
-    from tgintegration.containers.response import Response
+    from tgintegration.containers.responses import Response
 
 
 class ReplyKeyboard:
     """
     Represents a regular keyboard in the Telegram UI and allows to click buttons in the menu.
+
+    See Also:
+        [InlineKeyboard](tgintegration.InlineKeyboard)
     """
 
     def __init__(

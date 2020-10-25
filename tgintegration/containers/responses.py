@@ -1,3 +1,6 @@
+"""
+​
+"""
 from datetime import datetime
 from time import time
 from typing import Any
@@ -10,10 +13,12 @@ from pyrogram.types import InlineKeyboardMarkup
 from pyrogram.types import Message
 from pyrogram.types import ReplyKeyboardMarkup
 
+from tgintegration.containers import InlineKeyboard
+from tgintegration.containers import ReplyKeyboard
+from tgintegration.update_recorder import MessageRecorder
+
 if TYPE_CHECKING:
     from tgintegration.botcontroller import BotController
-from tgintegration.containers import InlineKeyboard, ReplyKeyboard
-from tgintegration.update_recorder import MessageRecorder
 
 
 class Response:
@@ -152,4 +157,6 @@ class Response:
 
 
 class InvalidResponseError(Exception):
-    pass
+    """
+    Raised when peer's response did not match the [expectation](tgintegration.expectation.Expectation).
+    """

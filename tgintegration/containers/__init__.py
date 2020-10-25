@@ -6,8 +6,8 @@ from .inline_keyboard import InlineKeyboard
 from .inlineresults import InlineResult
 from .inlineresults import InlineResultContainer
 from .reply_keyboard import ReplyKeyboard
-from .response import InvalidResponseError
-from .response import Response
+from .responses import InvalidResponseError
+from .responses import Response
 
 __all__ = [
     "InlineResultContainer",

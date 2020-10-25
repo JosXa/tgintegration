@@ -4,7 +4,7 @@ packages = [
     { include = "tgintegration" }
 ]
 include = ["LICENSE"]
-version = "1.0.1"
+version = "1.1.0"
 description = "Integration test and automation library for Telegram Messenger Bots based on Pyrogram."
 authors = ["JosXa <joscha.goetzer@gmail.com>"]
 license = "MIT"
@@ -48,6 +48,7 @@ pypandoc = "^1.5"
 panflute = "^1.12.5"
 markdown-include = "^0.6.0"
 mkdocs-markdownextradata-plugin = "^0.1.7"
+autoflake = "^1.4"
 
 [build-system]
 requires = ["poetry>=1.0.5"]

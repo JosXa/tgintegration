@@ -1,5 +1,5 @@
 """
-Controller
+Entry point to {{tgi}} features.
 """
 import asyncio
 import logging
@@ -27,12 +27,12 @@ from pyrogram.types import User
 from typing_extensions import AsyncContextManager
 
 from tgintegration.collector import collect
-from tgintegration.collector import Expectation
-from tgintegration.collector import TimeoutSettings
 from tgintegration.containers.inlineresults import InlineResult
 from tgintegration.containers.inlineresults import InlineResultContainer
-from tgintegration.containers.response import Response
+from tgintegration.containers.responses import Response
+from tgintegration.expectation import Expectation
 from tgintegration.handler_utils import add_handler_transient
+from tgintegration.timeout_settings import TimeoutSettings
 from tgintegration.utils.frame_utils import get_caller_function_name
 from tgintegration.utils.sentinel import NotSet
 
@@ -193,6 +193,19 @@ class BotController:
         wait_consecutive: Optional[Union[int, float]] = None,
         raise_: Optional[bool] = None,
     ) -> AsyncContextManager[Response]:
+        """
+
+        Args:
+            filters ():
+            count ():
+            peer ():
+            max_wait ():
+            wait_consecutive ():
+            raise_ ():
+
+        Returns:
+
+        """
         await self._ensure_preconditions()
         await self._wait_if_necessary()
 

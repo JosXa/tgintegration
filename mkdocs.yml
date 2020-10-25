@@ -30,7 +30,7 @@ nav:
     - Overview: 'index.md'
     - Setup: 'setup.md'
     - Getting Started: 'getting-started.md'
-  - 'API Reference': mkapi/api/tgintegration|upper
+  - 'API Reference': mkapi/api/tgintegration
 #  - Doc plugin comparison:
 #      - Mkdocstrings reference: 'api-mkdocstrings.md'
 #      - Mkapi reference: 'api-mkapi.md'
@@ -51,6 +51,9 @@ plugins:
   # TODO: Decision pending between mkapi and mkdocstrings
   - mkapi:
       src_dirs: [ "tgintegration" ]
+#      filters: [ short ]
+      filters: []
+      on_config: docs.api_overrides.headers.on_config_with_mkapi
   - mkdocstrings:
       default_handler: python
       watch:

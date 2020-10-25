@@ -14,7 +14,7 @@ from pyrogram import Client
 from pyrogram import filters as f
 
 from tgintegration import BotController
-from tgintegration.containers.response import Response
+from tgintegration.containers.responses import Response
 
 examples_dir = Path(__file__).parent.parent.absolute()
 SESSION_NAME: str = "tgintegration_examples"

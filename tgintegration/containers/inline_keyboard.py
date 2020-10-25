@@ -1,3 +1,6 @@
+"""
+​
+"""
 import itertools
 import re
 from typing import List
@@ -7,14 +10,13 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from pyrogram import filters as f
-from pyrogram.raw.types.messages import BotCallbackAnswer
 from pyrogram.types import InlineKeyboardButton
 
 from tgintegration.containers.exceptions import NoButtonFound
 
 if TYPE_CHECKING:
     from tgintegration.botcontroller import BotController
-    from tgintegration.containers.response import Response
+    from tgintegration.containers.responses import Response
 
 
 class InlineKeyboard:
@@ -38,14 +40,17 @@ class InlineKeyboard:
         self, pattern: Pattern = None, index: int = None
     ) -> Optional[InlineKeyboardButton]:
         """
+        Attempts to retrieve a clickable button anywhere in the underlying `rows` by matching the button captions with
+        the given `pattern` or its global `index`. If no button could be found, **this method raises** `NoButtonFound`.
 
+        The `pattern` and `index` arguments are mutually exclusive.
 
         Args:
-            pattern ():
-            index ():
+            pattern: The button caption to look for (by `re.match`).
+            index: The index of the button, couting from top left to bottom right and starting at 0.
 
         Returns:
-
+            The `InlineKeyboardButton` if found.
         """
         index_set = index or index == 0
         if not any((pattern, index_set)) or all((pattern, index_set)):
@@ -71,21 +76,24 @@ class InlineKeyboard:
             except (StopIteration, ValueError):
                 raise NoButtonFound
 
-    async def _click_nowait(self, pattern=None, index=None) -> BotCallbackAnswer:
-
-        button = self.find_button(pattern, index)
-
-        return await self._controller.client.request_callback_answer(
-            chat_id=self._peer_id,
-            message_id=self._message_id,
-            callback_data=button.callback_data,
-        )
-
     async def click(
         self,
         pattern: Union[Pattern, str] = None,
         index: Optional[int] = None,
     ) -> "Response":
+        """
+        Uses `find_button` with the given `pattern` or `index`, clicks the button if found, and waits for the bot
+        to react in the same chat.
+
+        If not button could be found, `NoButtonFound` will be raised.
+
+        Args:
+            pattern: The button caption to look for (by `re.match`).
+            index: The index of the button, couting from top left to bottom right and starting at 0.
+
+        Returns:
+            The bot's `Response`.
+        """
         button = self.find_button(pattern, index)
 
         async with self._controller.collect(

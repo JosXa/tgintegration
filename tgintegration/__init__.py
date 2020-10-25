@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-The root module of `tgintegration` {{tgi}}.
+The root package of {{tgi}}.
 """
 from tgintegration.botcontroller import BotController
 from tgintegration.containers import InlineKeyboard

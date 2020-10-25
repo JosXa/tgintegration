@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pytest
 from pyrogram.types import Message
 
-from tgintegration.collector import Expectation
+from tgintegration.expectation import Expectation
 
 
 @pytest.mark.parametrize(
