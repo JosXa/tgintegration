@@ -65,7 +65,7 @@ class BotController:
             wait_consecutive: Additional time in seconds to wait for _additional_ messages upon receiving a response
                 (even when `max_wait` is exceeded).
             raise_no_response: Whether to raise an exception on timeout/invalid response or to log silently.
-            global_action_delay: TODO: Not yet implemented
+            global_action_delay: The time to wait in between `collect` calls.
         """
         self.client = client
         self.peer = peer

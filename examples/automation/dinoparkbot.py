@@ -17,7 +17,7 @@ from pyrogram import Client
 from pyrogram import filters as f
 
 from tgintegration import BotController
-from tgintegration import ReplyKeyboard
+from tgintegration.containers import ReplyKeyboard
 
 MAX_RUNS: int = -1  # No limit
 SESSION_NAME: str = "tgintegration_examples"

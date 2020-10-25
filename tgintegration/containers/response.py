@@ -12,7 +12,7 @@ from pyrogram.types import ReplyKeyboardMarkup
 
 if TYPE_CHECKING:
     from tgintegration.botcontroller import BotController
-from tgintegration.containers.keyboard import InlineKeyboard, ReplyKeyboard
+from tgintegration.containers import InlineKeyboard, ReplyKeyboard
 from tgintegration.update_recorder import MessageRecorder
 
 

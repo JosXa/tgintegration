@@ -1,11 +1,11 @@
 """
-Containers that provide abstractions over Pyrogram types for more convenient access.
+Containers are abstractions that group together Pyrogram types for more convenient access.
 """
+from .exceptions import NoButtonFound
+from .inline_keyboard import InlineKeyboard
 from .inlineresults import InlineResult
 from .inlineresults import InlineResultContainer
-from .keyboard import InlineKeyboard
-from .keyboard import NoButtonFound
-from .keyboard import ReplyKeyboard
+from .reply_keyboard import ReplyKeyboard
 from .response import InvalidResponseError
 from .response import Response
 
@@ -15,6 +15,6 @@ __all__ = [
     "Response",
     "InvalidResponseError",
     "NoButtonFound",
-    "ReplyKeyboard",
     "InlineKeyboard",
+    "ReplyKeyboard",
 ]
