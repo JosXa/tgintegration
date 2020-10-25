@@ -101,6 +101,8 @@ async def collect(
     recorder = MessageRecorder()
     handler = MessageHandler(recorder.record_message, filters=filters)
 
+    assert controller.client.is_connected
+
     async with add_handler_transient(controller.client, handler):
         response = Response(controller, recorder)
 
