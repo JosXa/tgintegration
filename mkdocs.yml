@@ -26,8 +26,8 @@ extra_css:
 
 
 nav:
-  - Overview: 'index.md'
   - Docs:
+    - Overview: 'index.md'
     - Setup: 'setup.md'
     - Getting Started: 'getting-started.md'
   - 'API Reference': mkapi/api/tgintegration|upper
