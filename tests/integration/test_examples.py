@@ -54,9 +54,6 @@ async def test_idletown_example(session_name):
 
 async def test_readme_example(session_name):
     # Late import so that the autouse fixtures run first
-    from examples.automation import idletown
+    from examples.readme_example import readmeexample
 
-    idletown.MAX_RUNS = 1
-    client = idletown.create_client(session_name)
-    controller = idletown.create_game_controller(client)
-    await idletown.perform_full_run(controller)
+    await readmeexample.run_example()
