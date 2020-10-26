@@ -16,7 +16,7 @@ jobs:
       - name: Send message to @TgIntegration
         uses: appleboy/telegram-action@master
         with:
-          to: 1246107966
+          to: -1001246107966
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
             The ${{ github.event_name }} event triggered final step.
