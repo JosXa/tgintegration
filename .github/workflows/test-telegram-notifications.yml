@@ -19,7 +19,5 @@ jobs:
           to: -1001246107966
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            A new version has been released:
-            cat CHANGELOG.md
-            The ${{ github.event_name }} event triggered final step.
-            echo This event is a pull request that had an assignee removed.
+            A new version of TgIntegration has been released! 🎉
+            See what's new at https://github.com/JosXa/tgintegration/releases
