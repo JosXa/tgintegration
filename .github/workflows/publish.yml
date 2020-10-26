@@ -1,8 +1,8 @@
-name: Publish
+name: Publish PyPI
 
 on:
   release:
-    types: [ created ]
+    types: [ published ]
   repository_dispatch:
     types: [ publish_pypi ]
   workflow_dispatch:
