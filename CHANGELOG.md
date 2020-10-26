@@ -1,3 +1,15 @@
+<a name="v1.1.0"></a>
+# [TgIntegration 1.1.0 - Fixes for clicking inline and reply keyboard buttons (v1.1.0)](https://github.com/JosXa/tgintegration/releases/tag/v1.1.0) - 26 Oct 2020
+
+## Bugfixes
+- Resolved #2 
+
+## Changes
+- The project structure changed slightly, but all the root imports stay the same.
+
+[Changes][v1.1.0]
+
+
 <a name="v1.0.1"></a>
 # [Bugfix for inline querying (v1.0.1)](https://github.com/JosXa/tgintegration/releases/tag/v1.0.1) - 25 Oct 2020
 
@@ -24,6 +36,7 @@ See the [README](https://github.com/JosXa/tgintegration/blob/master/README.md) f
 [Changes][v1.0]
 
 
+[v1.1.0]: https://github.com/JosXa/tgintegration/compare/v1.0.1...v1.1.0
 [v1.0.1]: https://github.com/JosXa/tgintegration/compare/v1.0...v1.0.1
 [v1.0]: https://github.com/JosXa/tgintegration/tree/v1.0
 
