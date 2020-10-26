@@ -13,11 +13,13 @@ jobs:
         with:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v2
-      - name: Send message to @TgIntegration
+      - name: Send message to @TgIntegration  # https://github.com/appleboy/telegram-action
         uses: appleboy/telegram-action@master
         with:
           to: -1001246107966
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
+            A new version has been released:
+            cat CHANGELOG.md
             The ${{ github.event_name }} event triggered final step.
             echo This event is a pull request that had an assignee removed.
