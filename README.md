@@ -14,7 +14,7 @@ based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 Features
 --------
 
-▶️ [**See it in action!** 🎬](https://josxa.github.io/tgintegration/introduction/#see-it-in-action)
+▶️ [**See it in action!** 🎬](https://josxa.github.io/tgintegration/#see-it-in-action)
 
 - 👤 Log into a Telegram user account and interact with bots or other users
 - ✅ Write **realtime integration tests** to ensure that your bot works as expected! ▶️ [Pytest examples](https://github.com/JosXa/tgintegration/tree/master/examples/pytest)
