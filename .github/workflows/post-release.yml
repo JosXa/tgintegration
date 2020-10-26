@@ -16,3 +16,11 @@ jobs:
         with:
           file: CHANGELOG.md
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send message to @TgIntegration  # https://github.com/appleboy/telegram-action
+        uses: appleboy/telegram-action@master
+        with:
+          to: -1001246107966
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            A new version of TgIntegration has been released! 🎉
+            See what's new at https://github.com/JosXa/tgintegration/releases
