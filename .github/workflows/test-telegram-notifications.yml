@@ -1,15 +1,11 @@
-name: Publish PyPI
+name: Test Telegram Notifications
 
 on:
-  release:
-    types: [ published ]
-  repository_dispatch:
-    types: [ publish_pypi ]
   workflow_dispatch:
 
 
 jobs:
-  publish:
+  notify:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
@@ -17,14 +13,11 @@ jobs:
         with:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Send message to @TgIntegration
+        uses: appleboy/telegram-action@master
         with:
-          python-version: 3.8
-      - name: "Install Poetry"
-        uses: Gr1N/setup-poetry@v3
-        with:
-          poetry-version: 1.0
-      - name: Poetry install
-        run: poetry install --no-dev
-      - name: Poetry publish
-        run: poetry publish --build -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_PASSWORD }}
+          to: '@TgIntegration'
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            The ${{ github.event_name }} event triggered final step.
+            echo This event is a pull request that had an assignee removed.
