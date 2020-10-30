@@ -1,9 +1,17 @@
 TgIntegration
 =============
 
+
 An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
 based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br />**Test your bot in realtime scenarios!**
+
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tgintegration)](https://pypi.org/project/tgintegration/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/tgintegration)](https://pypi.org/project/tgintegration/)
+[![PyPI](https://img.shields.io/pypi/v/tgintegration)](https://pypi.org/project/tgintegration/)
+![GitHub top language](https://img.shields.io/github/languages/top/josxa/tgintegration)
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/josxa/tgintegration/Build/master)](https://github.com/JosXa/tgintegration/actions?query=workflow%3ABuild)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/josxa/tgintegration/Docs?label=docs)](https://josxa.github.io/tgintegration)
 
 [Features](#features) • [Requirements](#requirements) • [Installation](#installation) • [**Quick Start Guide**](#quick-start-guide) • [Test Frameworks](#integrating-with-test-frameworks)
 
