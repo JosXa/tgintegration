@@ -1,7 +1,6 @@
 TgIntegration
 =============
 
-
 An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
 based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 <br />**Test your bot in realtime scenarios!**
@@ -18,6 +17,7 @@ based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 - 📖 [Documentation](https://josxa.github.io/tgintegration/)
 - 👥 [Telegram Chat](https://t.me/TgIntegration)
 - 📄 Free software: [MIT License](https://tldrlegal.com/license/mit-license)
+- [<img src="https://raw.githubusercontent.com/JosXa/tgintegration/master/docs/assets/pycharm-logos/icon-pycharm.svg" width="20" height="20" />]((https://www.jetbrains.com/?from=tgintegration)) Built with [PyCharm](https://www.jetbrains.com/?from=tgintegration)
 
 Features
 --------
