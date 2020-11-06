@@ -5,7 +5,7 @@ import asyncio
 import logging
 from contextlib import asynccontextmanager
 from time import time
-from typing import AsyncGenerator
+from typing import AsyncGenerator, BinaryIO
 from typing import cast
 from typing import List
 from typing import Optional
@@ -301,6 +301,29 @@ class BotController:
             text += " ".join(args)
 
         return await self.client.send_message(peer or self.peer_id, text)
+
+    async def send_message(
+        self,
+        message: str,
+        peer: Union[int, str] = None,
+    ) -> Message:
+        """
+        Send a message with corresponding parameters.
+        """
+
+        return await self.client.send_message(peer or self.peer_id, message)
+
+    async def send_photo(
+        self,
+        photo: Union[str, BinaryIO],
+        caption: str = None,
+        peer: Union[int, str] = None,
+    ):
+        """
+        Send a photo with corresponding parameters.
+        """
+
+        return await self.client.send_photo(peer or self.peer_id, photo, caption=caption)
 
     async def _iter_bot_results(
         self,
