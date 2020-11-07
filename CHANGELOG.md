@@ -2,7 +2,7 @@
 # [TgIntegration 1.1.0 - Fixes for clicking inline and reply keyboard buttons (v1.1.0)](https://github.com/JosXa/tgintegration/releases/tag/v1.1.0) - 26 Oct 2020
 
 ## Bugfixes
-- Resolved #2 
+- Resolved #2
 
 ## Changes
 - The project structure changed slightly, but all the root imports stay the same.
