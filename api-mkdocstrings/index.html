@@ -1,0 +1,1275 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <link rel="canonical" href="https://josxa.github.io/tgintegration/api-mkdocstrings/">
+      
+      
+      <link rel="shortcut icon" href="../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.0">
+    
+    
+      
+        <title>mkdocstrings - tgintegration</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.bc7e593a.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab28b872.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#4051b5">
+        
+      
+    
+    
+    
+      
+        
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    
+      <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    
+      <link rel="stylesheet" href="../css/mkapi-common.css">
+    
+      <link rel="stylesheet" href="../styles/mkapi-overrides.css">
+    
+      <link rel="stylesheet" href="../styles/mkdocstrings-overrides.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="indigo" data-md-color-accent="indigo">
+      
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mkdocstrings" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://josxa.github.io/tgintegration" title="tgintegration" class="md-header-nav__button md-logo" aria-label="tgintegration">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            tgintegration
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              mkdocstrings
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/JosXa/tgintegration/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href=".." class="md-tabs__link">
+          Docs
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    
+    
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../api/tgintegration/" class="md-tabs__link">
+          API Reference
+        </a>
+      
+    </li>
+  
+
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://josxa.github.io/tgintegration" title="tgintegration" class="md-nav__button md-logo" aria-label="tgintegration">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    tgintegration
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/JosXa/tgintegration/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+    <label class="md-nav__link" for="nav-1">
+      Docs
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Docs" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        <span class="md-nav__icon md-icon"></span>
+        Docs
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href=".." class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../setup/" class="md-nav__link">
+      Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../getting-started/" class="md-nav__link">
+      Getting Started
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      API Reference
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="API Reference" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon"></span>
+        API Reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-1" type="checkbox" id="nav-2-1">
+    
+    <label class="md-nav__link" for="nav-2-1">
+      tgintegration
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="tgintegration" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-1">
+        <span class="md-nav__icon md-icon"></span>
+        tgintegration
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/tgintegration/" class="md-nav__link">
+      tgintegration
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/tgintegration.collector/" class="md-nav__link">
+      tgintegration.collector
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2">
+    
+    <label class="md-nav__link" for="nav-2-2">
+      tgintegration.containers
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="tgintegration.containers" data-md-level="2">
+      <label class="md-nav__title" for="nav-2-2">
+        <span class="md-nav__icon md-icon"></span>
+        tgintegration.containers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/tgintegration.containers/" class="md-nav__link">
+      tgintegration.containers
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/tgintegration.containers.responses/" class="md-nav__link">
+      tgintegration.containers.responses
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/tgintegration.containers.reply_keyboard/" class="md-nav__link">
+      tgintegration.containers.reply_keyboard
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/tgintegration.containers.inline_keyboard/" class="md-nav__link">
+      tgintegration.containers.inline_keyboard
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/tgintegration.botcontroller/" class="md-nav__link">
+      tgintegration.botcontroller
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/tgintegration.expectation/" class="md-nav__link">
+      tgintegration.expectation
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tgintegration.botcontroller" class="md-nav__link">
+    tgintegration.botcontroller
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tgintegration.botcontroller.BotController" class="md-nav__link">
+    BotController
+  </a>
+  
+    <nav class="md-nav" aria-label="BotController">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tgintegration.botcontroller.BotController.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tgintegration.botcontroller.BotController.add_handler_transient" class="md-nav__link">
+    add_handler_transient()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tgintegration.botcontroller.BotController.clear_chat" class="md-nav__link">
+    clear_chat()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tgintegration.botcontroller.BotController.collect" class="md-nav__link">
+    collect()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tgintegration.botcontroller.BotController.initialize" class="md-nav__link">
+    initialize()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tgintegration.botcontroller.BotController.query_inline" class="md-nav__link">
+    query_inline()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tgintegration.botcontroller.BotController.send_command" class="md-nav__link">
+    send_command()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/JosXa/tgintegration/edit/master/docs/api-mkdocstrings.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="mkdocstrings">mkdocstrings</h1>
+<div class="doc doc-object doc-module">
+<h2 class="hidden-toc" href="#tgintegration.botcontroller" id="tgintegration.botcontroller" style="visibility: hidden; position: absolute;">
+        </h2>
+<div class="doc doc-contents first">
+<p>Entry point to {{tgi}} features.</p>
+<div class="doc doc-children">
+<div class="doc doc-object doc-class">
+<h2 class="doc doc-heading" id="tgintegration.botcontroller.BotController">
+
+        <code>BotController</code>
+
+
+      </h2>
+<div class="doc doc-contents ">
+<p>This class is the entry point for all interactions with either regular bots or userbots in <code>TgIntegration</code>.
+It expects a Pyrogram <code>Client</code> (typically a <strong>user client</strong>) that serves as the controll<strong>ing</strong> account for a
+specific <code>peer</code> - which can be seen as the "bot under test" or "conversation partner".
+In addition, the controller holds a number of settings to control the timeouts for all these interactions.</p>
+<div class="doc doc-children">
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tgintegration.botcontroller.BotController.__init__">
+
+        <code class="highlight language-python">
+__init__<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">peer</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">max_wait</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">wait_consecutive</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">raise_no_response</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">global_action_delay</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>        </code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-special"><code>special</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p>Creates a new <code>BotController</code>.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>client</code></td>
+<td><code>Client</code></td>
+<td>
+<p>A Pyrogram user client that acts as the controll<em>ing</em> account.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>peer</code></td>
+<td><code>Union[int, str]</code></td>
+<td>
+<p>The bot under test or conversation partner.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>max_wait</code></td>
+<td><code>Union[int, float]</code></td>
+<td>
+<p>Maximum time in seconds for the <code>peer</code> to produce the expected response.</p>
+</td>
+<td><code>20.0</code></td>
+</tr>
+<tr>
+<td><code>wait_consecutive</code></td>
+<td><code>Union[int, float]</code></td>
+<td>
+<p>Additional time in seconds to wait for <em>additional</em> messages upon receiving a response
+(even when <code>max_wait</code> is exceeded).</p>
+</td>
+<td><code>2.0</code></td>
+</tr>
+<tr>
+<td><code>raise_no_response</code></td>
+<td><code>bool</code></td>
+<td>
+<p>Whether to raise an exception on timeout/invalid response or to log silently.</p>
+</td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td><code>global_action_delay</code></td>
+<td><code>Union[int, float]</code></td>
+<td>
+<p>The time to wait in between <code>collect</code> calls.</p>
+</td>
+<td><code>0.8</code></td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>tgintegration/botcontroller.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">client</span><span class="p">:</span> <span class="n">Client</span><span class="p">,</span>
+    <span class="n">peer</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">max_wait</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span>
+    <span class="n">wait_consecutive</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">raise_no_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">global_action_delay</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Creates a new `BotController`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client: A Pyrogram user client that acts as the controll*ing* account.</span>
+<span class="sd">        peer: The bot under test or conversation partner.</span>
+<span class="sd">        max_wait: Maximum time in seconds for the `peer` to produce the expected response.</span>
+<span class="sd">        wait_consecutive: Additional time in seconds to wait for _additional_ messages upon receiving a response</span>
+<span class="sd">            (even when `max_wait` is exceeded).</span>
+<span class="sd">        raise_no_response: Whether to raise an exception on timeout/invalid response or to log silently.</span>
+<span class="sd">        global_action_delay: The time to wait in between `collect` calls.</span>
+<span class="sd">    """</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">peer</span> <span class="o">=</span> <span class="n">peer</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">max_wait_response</span> <span class="o">=</span> <span class="n">max_wait</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">min_wait_consecutive</span> <span class="o">=</span> <span class="n">wait_consecutive</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">raise_no_response</span> <span class="o">=</span> <span class="n">raise_no_response</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">global_action_delay</span> <span class="o">=</span> <span class="n">global_action_delay</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_input_peer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">InputPeerUser</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">peer_user</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">peer_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">command_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BotCommand</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_last_response_ts</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tgintegration.botcontroller.BotController.add_handler_transient">
+
+        <code class="highlight language-python">
+add_handler_transient<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>        </code>
+
+
+      </h3>
+<div class="doc doc-contents ">
+<p>Registers a one-time/ad-hoc Pyrogram <code>Handler</code> that is only valid during the context manager body.</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>handler</code></td>
+<td><code>Handler</code></td>
+<td>
+<p>A Pyrogram <code>Handler</code> (typically a <code>MessageHandler</code>).</p>
+</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition yields">
+<p class="admonition-title">Yields</p>
+<p><code>None</code></p>
+</div>
+<p><strong>Examples:</strong></p>
+<div class="highlight">
+<pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">some_callback</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">controller</span><span class="o">.</span><span class="n">add_handler_transient</span><span class="p">(</span><span class="n">MessageHandler</span><span class="p">(</span><span class="n">some_callback</span><span class="p">,</span> <span class="n">filters</span><span class="o">.</span><span class="n">text</span><span class="p">)):</span>
+        <span class="k">await</span> <span class="n">controller</span><span class="o">.</span><span class="n">send_command</span><span class="p">(</span><span class="s2">"start"</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Wait 3 seconds for a reply</span>
+</code></pre>
+</div>
+<details class="quote">
+          <summary>Source code in <code>tgintegration/botcontroller.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="nd">@asynccontextmanager</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">add_handler_transient</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Handler</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncContextManager</span><span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Registers a one-time/ad-hoc Pyrogram `Handler` that is only valid during the context manager body.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        handler: A Pyrogram `Handler` (typically a `MessageHandler`).</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        `None`</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        ``` python</span>
+<span class="sd">        async def some_callback(client, message):</span>
+<span class="sd">            print(message)</span>
+
+<span class="sd">        async def main():</span>
+<span class="sd">            async with controller.add_handler_transient(MessageHandler(some_callback, filters.text)):</span>
+<span class="sd">                await controller.send_command("start")</span>
+<span class="sd">                await asyncio.sleep(3)  # Wait 3 seconds for a reply</span>
+<span class="sd">        ```</span>
+<span class="sd">    """</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">add_handler_transient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+        <span class="k">yield</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tgintegration.botcontroller.BotController.clear_chat">
+
+        <code class="highlight language-python">
+clear_chat<span class="p">(</span><span class="bp">self</span><span class="p">)</span>        </code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-async"><code>async</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p>Deletes all messages in the conversation with the assigned <code>peer</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Be careful as this will completely drop your mutual message history.</p>
+</div>
+<details class="quote">
+          <summary>Source code in <code>tgintegration/botcontroller.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">clear_chat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Deletes all messages in the conversation with the assigned `peer`.</span>
+
+<span class="sd">    !!! warning</span>
+<span class="sd">        Be careful as this will completely drop your mutual message history.</span>
+<span class="sd">    """</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_preconditions</span><span class="p">()</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+        <span class="n">DeleteHistory</span><span class="p">(</span><span class="n">peer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_input_peer</span><span class="p">,</span> <span class="n">max_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">just_clear</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tgintegration.botcontroller.BotController.collect">
+
+        <code class="highlight language-python">
+collect<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">peer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_wait</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">wait_consecutive</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">raise_</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>        </code>
+
+
+      </h3>
+<div class="doc doc-contents ">
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filters</code></td>
+<td><code>Filter</code></td>
+<td></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>count</code></td>
+<td><code>int</code></td>
+<td></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>peer</code></td>
+<td><code>Union[int, str]</code></td>
+<td></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>max_wait</code></td>
+<td><code>Union[int, float]</code></td>
+<td></td>
+<td><code>15</code></td>
+</tr>
+<tr>
+<td><code>wait_consecutive</code></td>
+<td><code>Union[int, float]</code></td>
+<td></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>raise_</code></td>
+<td><code>Optional[bool]</code></td>
+<td></td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AbstractAsyncContextManager[tgintegration.containers.responses.Response]</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>tgintegration/botcontroller.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="nd">@asynccontextmanager</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">collect</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">filters</span><span class="p">:</span> <span class="n">Filter</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">peer</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_wait</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="n">wait_consecutive</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">raise_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncContextManager</span><span class="p">[</span><span class="n">Response</span><span class="p">]:</span>
+    <span class="sd">"""</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filters ():</span>
+<span class="sd">        count ():</span>
+<span class="sd">        peer ():</span>
+<span class="sd">        max_wait ():</span>
+<span class="sd">        wait_consecutive ():</span>
+<span class="sd">        raise_ ():</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    """</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_preconditions</span><span class="p">()</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_if_necessary</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">with</span> <span class="n">collect</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_merge_default_filters</span><span class="p">(</span><span class="n">filters</span><span class="p">,</span> <span class="n">peer</span><span class="p">),</span>
+        <span class="n">expectation</span><span class="o">=</span><span class="n">Expectation</span><span class="p">(</span>
+            <span class="n">min_messages</span><span class="o">=</span><span class="n">count</span> <span class="ow">or</span> <span class="n">NotSet</span><span class="p">,</span> <span class="n">max_messages</span><span class="o">=</span><span class="n">count</span> <span class="ow">or</span> <span class="n">NotSet</span>
+        <span class="p">),</span>
+        <span class="n">timeouts</span><span class="o">=</span><span class="n">TimeoutSettings</span><span class="p">(</span>
+            <span class="n">max_wait</span><span class="o">=</span><span class="n">max_wait</span><span class="p">,</span>
+            <span class="n">wait_consecutive</span><span class="o">=</span><span class="n">wait_consecutive</span><span class="p">,</span>
+            <span class="n">raise_on_timeout</span><span class="o">=</span><span class="n">raise_</span>
+            <span class="k">if</span> <span class="n">raise_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">raise_no_response</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">response</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_last_response_ts</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">last_message_timestamp</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tgintegration.botcontroller.BotController.initialize">
+
+        <code class="highlight language-python">
+initialize<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_client</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>        </code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-async"><code>async</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p>Fetches and caches information about the given <code>peer</code> and optionally starts the assigned <code>client</code>.
+This method will automatically be called when coroutines of this class are invoked, but you can call it
+manually to override defaults (namely whether to <code>start_client</code>).</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>start_client</code></td>
+<td><code>bool</code></td>
+<td>
+<p>Set to <code>False</code> if the client should not be started as part of initialization.</p>
+</td>
+<td><code>True</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is unlikely that you will need to call this manually.</p>
+</div>
+<details class="quote">
+          <summary>Source code in <code>tgintegration/botcontroller.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_client</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># noinspection PyUnresolvedReferences</span>
+    <span class="sd">"""</span>
+<span class="sd">    Fetches and caches information about the given `peer` and optionally starts the assigned `client`.</span>
+<span class="sd">    This method will automatically be called when coroutines of this class are invoked, but you can call it</span>
+<span class="sd">    manually to override defaults (namely whether to `start_client`).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        start_client: Set to `False` if the client should not be started as part of initialization.</span>
+
+<span class="sd">    !!! note</span>
+<span class="sd">        It is unlikely that you will need to call this manually.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">start_client</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_input_peer</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">resolve_peer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">peer</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">peer_user</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_users</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">peer</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">peer_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">peer_user</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">peer_user</span><span class="o">.</span><span class="n">is_bot</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">command_list</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_command_list</span><span class="p">()</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tgintegration.botcontroller.BotController.query_inline">
+
+        <code class="highlight language-python">
+query_inline<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>        </code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-async"><code>async</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p>Requests inline results from the <code>peer</code> (which needs to be a bot).</p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td><code>str</code></td>
+<td>
+<p>The query text.</p>
+</td>
+<td><em>required</em></td>
+</tr>
+<tr>
+<td><code>latitude</code></td>
+<td><code>float</code></td>
+<td>
+<p>Latitude of a geo point.</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>longitude</code></td>
+<td><code>float</code></td>
+<td>
+<p>Longitude of a geo point.</p>
+</td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td><code>int</code></td>
+<td>
+<p>When result pages get iterated automatically, specifies the maximum number of results to return
+from the bot.</p>
+</td>
+<td><code>200</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InlineResultContainer</code></td>
+<td>
+<p>A container for convenient access to the inline results.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<details class="quote">
+          <summary>Source code in <code>tgintegration/botcontroller.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">query_inline</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InlineResultContainer</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Requests inline results from the `peer` (which needs to be a bot).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query: The query text.</span>
+<span class="sd">        latitude: Latitude of a geo point.</span>
+<span class="sd">        longitude: Longitude of a geo point.</span>
+<span class="sd">        limit: When result pages get iterated automatically, specifies the maximum number of results to return</span>
+<span class="sd">            from the bot.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A container for convenient access to the inline results.</span>
+<span class="sd">    """</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_preconditions</span><span class="p">(</span><span class="n">bots_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">limit</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot get 0 or less results."</span><span class="p">)</span>
+
+    <span class="n">start_offset</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="n">first_batch</span><span class="p">:</span> <span class="n">BotResults</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_inline_bot_results</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">peer_id</span><span class="p">,</span>
+        <span class="n">query</span><span class="p">,</span>
+        <span class="n">offset</span><span class="o">=</span><span class="n">start_offset</span><span class="p">,</span>
+        <span class="n">latitude</span><span class="o">=</span><span class="n">latitude</span><span class="p">,</span>
+        <span class="n">longitude</span><span class="o">=</span><span class="n">longitude</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">gallery</span> <span class="o">=</span> <span class="n">first_batch</span><span class="o">.</span><span class="n">gallery</span>
+    <span class="n">switch_pm</span> <span class="o">=</span> <span class="n">first_batch</span><span class="o">.</span><span class="n">switch_pm</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">first_batch</span><span class="o">.</span><span class="n">users</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">x</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_bot_results</span><span class="p">(</span>
+            <span class="n">first_batch</span><span class="p">,</span>
+            <span class="n">query</span><span class="p">,</span>
+            <span class="n">latitude</span><span class="o">=</span><span class="n">latitude</span><span class="p">,</span>
+            <span class="n">longitude</span><span class="o">=</span><span class="n">longitude</span><span class="p">,</span>
+            <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
+            <span class="n">current_offset</span><span class="o">=</span><span class="n">start_offset</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">InlineResultContainer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">query</span><span class="p">,</span>
+        <span class="n">latitude</span><span class="o">=</span><span class="n">latitude</span><span class="p">,</span>
+        <span class="n">longitude</span><span class="o">=</span><span class="n">longitude</span><span class="p">,</span>
+        <span class="n">results</span><span class="o">=</span><span class="n">results</span><span class="p">,</span>
+        <span class="n">gallery</span><span class="o">=</span><span class="n">gallery</span><span class="p">,</span>
+        <span class="n">switch_pm</span><span class="o">=</span><span class="n">switch_pm</span><span class="p">,</span>
+        <span class="n">users</span><span class="o">=</span><span class="n">users</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+<div class="doc doc-object doc-method">
+<h3 class="doc doc-heading" id="tgintegration.botcontroller.BotController.send_command">
+
+        <code class="highlight language-python">
+send_command<span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">peer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add_bot_name</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>        </code>
+
+  <span class="doc doc-properties">
+      <small class="doc doc-property doc-property-async"><code>async</code></small>
+  </span>
+
+      </h3>
+<div class="doc doc-contents ">
+<p>Send a slash-command with corresponding parameters.</p>
+<details class="quote">
+          <summary>Source code in <code>tgintegration/botcontroller.py</code></summary>
+          <div class="highlight">
+<pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">send_command</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">peer</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">add_bot_name</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Message</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Send a slash-command with corresponding parameters.</span>
+<span class="sd">    """</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="n">command</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">add_bot_name</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">peer_user</span><span class="o">.</span><span class="n">username</span><span class="p">:</span>
+        <span class="n">text</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"@</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">peer_user</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">"</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">text</span> <span class="o">+=</span> <span class="s2">" "</span>
+        <span class="n">text</span> <span class="o">+=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">peer</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">peer_id</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+</code></pre>
+</div>
+</details>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.6a3d08fc.min.js"></script>
+      <script src="../assets/javascripts/bundle.71201edf.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: ['navigation.instant', 'navigation.expand', 'navigation.tabs'],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.4ac00218.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+        <script src="../js/mkapi.js"></script>
+      
+    
+  </body>
+</html>
