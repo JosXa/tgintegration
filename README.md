@@ -3,8 +3,7 @@ TgIntegration
 
 **Are you a user of TgIntegration?** I'm actively looking for feedback and ways to improve the library, come and let me know in the [official group](https://t.me/TgIntegration)!
 
-An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots)
-based on [Pyrogram](https://github.com/pyrogram/pyrogram).
+<ins>An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots) based on [Pyrogram](https://github.com/pyrogram/pyrogram).</ins>
 <br />**Test your bot in realtime scenarios!**
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tgintegration)](https://pypi.org/project/tgintegration/)
@@ -14,7 +13,7 @@ based on [Pyrogram](https://github.com/pyrogram/pyrogram).
 [![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/josxa/tgintegration/Build/master)](https://github.com/JosXa/tgintegration/actions?query=workflow%3ABuild)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/josxa/tgintegration/Docs?label=docs)](https://josxa.github.io/tgintegration)
 
-[Features](#features) • [Requirements](#requirements) • [Installation](#installation) • [**Quick Start Guide**](#quick-start-guide) • [Test Frameworks](#integrating-with-test-frameworks)
+[Features](#features) • [Requirements](#prerequisites) • [Installation](#installation) • [**Quick Start Guide**](#quick-start-guide) • [Test Frameworks](#integrating-with-test-frameworks)
 
 - 📖 [Documentation](https://josxa.github.io/tgintegration/)
 - 👥 [Telegram Chat](https://t.me/TgIntegration)
