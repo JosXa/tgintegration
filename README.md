@@ -37,9 +37,10 @@ Prerequisites
 
 [Same as Pyrogram](https://github.com/pyrogram/pyrogram#requirements):
 
-- Python **3.7** or higher.
 - A [Telegram API key](https://docs.pyrogram.ml/start/ProjectSetup#api-keys).
 - A user session (seeing things happen in your own account is great for getting started)
+
+But: Python **3.8** or higher (currently)!
 
 
 Installation
