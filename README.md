@@ -29,7 +29,7 @@ Features
 - ✅ Write **realtime integration tests** to ensure that your bot works as expected! ▶️ [Pytest examples](https://github.com/JosXa/tgintegration/tree/master/examples/pytest)
 - ⚡️ **Automate any interaction** on Telegram! ▶️ [Automatically play @IdleTownBot](https://github.com/JosXa/tgintegration/blob/master/examples/automation/idletown.py) | [More examples](https://github.com/JosXa/tgintegration/tree/master/examples/automation)
 - 🛡 Fully typed for safety and **autocompletion** with your favorite IDE
-- 🐍 Built for modern Python (3.7+) with high test coverage
+- 🐍 Built for modern Python (3.8+) with high test coverage
 
 
 Prerequisites
@@ -39,8 +39,7 @@ Prerequisites
 
 - A [Telegram API key](https://docs.pyrogram.ml/start/ProjectSetup#api-keys).
 - A user session (seeing things happen in your own account is great for getting started)
-
-But: Python **3.8** or higher (currently)!
+- But: **Python 3.8** or higher!
 
 
 Installation
