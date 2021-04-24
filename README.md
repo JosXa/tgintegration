@@ -41,6 +41,8 @@ Prerequisites
 - A user session (seeing things happen in your own account is great for getting started)
 - But: **Python 3.8** or higher!
 
+A basic understanding of async/await and [asynchronous context managers](https://docs.python.org/3/library/contextlib.html#contextlib.asynccontextmanager) is assumed, as TgIntegration heavily relies on the latter to automate conversations.
+
 
 Installation
 ------------
