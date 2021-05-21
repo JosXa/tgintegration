@@ -1,10 +1,10 @@
 TgIntegration
 =============
 
-**Are you a user of TgIntegration?** I'm actively looking for feedback and ways to improve the library, come and let me know in the [official group](https://t.me/TgIntegration)!
-
 <ins>An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots) based on [Pyrogram](https://github.com/pyrogram/pyrogram).</ins>
 <br />**Test your bot in realtime scenarios!**
+
+**Are you a user of TgIntegration?** I'm actively looking for feedback and ways to improve the library, come and let me know in the [official group](https://t.me/TgIntegration)!
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tgintegration)](https://pypi.org/project/tgintegration/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/tgintegration)](https://pypi.org/project/tgintegration/)
