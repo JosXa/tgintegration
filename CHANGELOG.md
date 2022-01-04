@@ -1,3 +1,11 @@
+<a name="v1.2.0"></a>
+# [TgIntegration 1.2.0 - Adapt to changes in Pyrogram (v1.2.0)](https://github.com/JosXa/tgintegration/releases/tag/v1.2.0) - 04 Jan 2022
+
+Thanks to @LuchoTurtle for [fixing 'bot_info' attribute from GetFullUser](https://github.com/JosXa/tgintegration/pull/34)!
+
+[Changes][v1.2.0]
+
+
 <a name="v1.1.0"></a>
 # [TgIntegration 1.1.0 - Fixes for clicking inline and reply keyboard buttons (v1.1.0)](https://github.com/JosXa/tgintegration/releases/tag/v1.1.0) - 26 Oct 2020
 
@@ -36,6 +44,7 @@ See the [README](https://github.com/JosXa/tgintegration/blob/master/README.md) f
 [Changes][v1.0]
 
 
+[v1.2.0]: https://github.com/JosXa/tgintegration/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/JosXa/tgintegration/compare/v1.0.1...v1.1.0
 [v1.0.1]: https://github.com/JosXa/tgintegration/compare/v1.0...v1.0.1
 [v1.0]: https://github.com/JosXa/tgintegration/tree/v1.0
