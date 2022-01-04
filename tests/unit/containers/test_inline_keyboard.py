@@ -158,7 +158,7 @@ BTN_C = InlineKeyboardButton("c", callback_data="c")
     ],
 )
 def test_click_inline_keyboard_button_by_index(rows, idx, expected):
-    """ https://github.com/JosXa/tgintegration/issues/2 """
+    """https://github.com/JosXa/tgintegration/issues/2"""
 
     CHAT_ID = 12345
     MESSAGE_ID = 123
