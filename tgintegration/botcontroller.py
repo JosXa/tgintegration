@@ -132,7 +132,7 @@ class BotController:
                     await self.client.send(
                         GetFullUser(id=await self.client.resolve_peer(self.peer_id))
                     )
-                ).bot_info,
+                ).full_user.bot_info,
             ).commands
         )
 
