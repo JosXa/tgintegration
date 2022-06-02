@@ -18,7 +18,8 @@ clients: List[Client] = []
 
 async def create_session_string(test_mode: bool = False):
     memory_client = Client(
-        session_name=":memory:",
+        name=":memory:",
+        in_memory=True,
         api_id=config("API_ID"),
         api_hash=config("API_HASH"),
         test_mode=test_mode,

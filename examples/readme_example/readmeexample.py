@@ -21,6 +21,7 @@ def create_client(session_name: str = SESSION_NAME) -> Client:
         name=session_name,
         api_id=config("API_ID"),
         api_hash=config("API_HASH"),
+        session_string=config("SESSION_STRING"),
         workdir=str(examples_dir),
     )
 

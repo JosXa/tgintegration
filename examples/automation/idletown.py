@@ -9,6 +9,7 @@ import logging
 import traceback
 from pathlib import Path
 from typing import Dict
+from decouple import config
 
 from pyrogram import Client
 from pyrogram import filters as f
@@ -25,13 +26,13 @@ log = logging.getLogger(__name__)
 
 # This example uses the configuration of `config.ini` (see examples/README)
 def create_client(session_name: str = SESSION_NAME) -> Client:
-    client = Client(
-        session_name=session_name,
-        workdir=examples_dir,
-        config_file=examples_dir / "config.ini",
+    return Client(
+        name=session_name,
+        api_id=config("API_ID"),
+        api_hash=config("API_HASH"),
+        session_string=config("SESSION_STRING"),
+        workdir=str(examples_dir),
     )
-    client.load_config()
-    return client
 
 
 def create_game_controller(client: Client = None) -> BotController:
@@ -76,7 +77,6 @@ async def perform_full_run(controller: BotController, max_upgrades_per_type: int
 
     # Get World Exp if possible
     if "worldexp" in main_menu:
-
         worldexp_menu = await click_button(main_menu, "worldexp")
         confirm_menu = await click_button(worldexp_menu, "claimx1")
         await click_button(confirm_menu, "yes")

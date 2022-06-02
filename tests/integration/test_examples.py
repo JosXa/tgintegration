@@ -3,13 +3,14 @@ import pytest
 pytestmark = pytest.mark.asyncio
 
 
-async def test_dinopark_example(session_name):
-    # Late import so that the autouse fixtures run first
-    from examples.automation import dinoparkbot
-
-    client = dinoparkbot.create_client(session_name)
-    game = dinoparkbot.create_game_controller(client)
-    await game.perform_full_run()
+# TODO: Bot is offline. Does anyone have a nice alternative to automate?
+# async def test_dinopark_example(session_name):
+#     # Late import so that the autouse fixtures run first
+#     from examples.automation import dinoparkbot
+#
+#     client = dinoparkbot.create_client(session_name)
+#     game = dinoparkbot.create_game_controller(client)
+#     await game.perform_full_run()
 
 
 async def test_idletown_example(session_name):

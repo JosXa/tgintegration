@@ -13,6 +13,8 @@ from typing import List
 from typing import Optional
 from typing import Tuple
 
+from decouple import config
+
 from pyrogram import Client
 from pyrogram import filters as f
 
@@ -27,6 +29,9 @@ examples_dir = Path(__file__).parent.parent.absolute()
 def create_client(session_name: str) -> Client:
     return Client(
         name=session_name,
+        api_id=config("API_ID"),
+        api_hash=config("API_HASH"),
+        session_string=config("SESSION_STRING"),
         workdir=str(examples_dir),
     )
 
