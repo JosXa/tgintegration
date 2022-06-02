@@ -2,6 +2,7 @@
 ​
 """
 import itertools
+import logging
 import re
 from typing import List
 from typing import Optional
@@ -13,6 +14,8 @@ from pyrogram import filters as f
 from pyrogram.types import InlineKeyboardButton
 
 from tgintegration.containers.exceptions import NoButtonFound
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from tgintegration.botcontroller import BotController
@@ -99,10 +102,12 @@ class InlineKeyboard:
         async with self._controller.collect(
             filters=f.chat(self._peer_id)
         ) as res:  # type: Response
+            logger.debug(f"Clicking button with caption '{button.text}'...")
             await self._controller.client.request_callback_answer(
                 chat_id=self._peer_id,
                 message_id=self._message_id,
                 callback_data=button.callback_data,
+                timeout=30,
             )
 
         return res

@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from contextlib import asynccontextmanager
+from typing import List
 
 from pyrogram import Client
 from pyrogram.dispatcher import Dispatcher
@@ -20,7 +21,7 @@ def find_free_group(dispatcher: Dispatcher, max_index: int = -1000) -> int:
 
 
 @asynccontextmanager
-async def add_handler_transient(client: Client, handler: Handler):
+async def add_handlers_transient(client: Client, handlers: List[Handler]):
     dispatcher = client.dispatcher
 
     # TODO: Add a comment why it's necessary to circumvent pyro's builtin
@@ -32,7 +33,8 @@ async def add_handler_transient(client: Client, handler: Handler):
     try:
         dispatcher.groups[group] = []
         dispatcher.groups = OrderedDict(sorted(dispatcher.groups.items()))
-        dispatcher.groups[group].append(handler)
+        for handler in handlers:
+            dispatcher.groups[group].append(handler)
     finally:
         for lock in dispatcher.locks_list:
             lock.release()
@@ -46,7 +48,8 @@ async def add_handler_transient(client: Client, handler: Handler):
         if group not in dispatcher.groups:
             raise ValueError(f"Group {group} does not exist. Handler was not removed.")
 
-        dispatcher.groups[group].remove(handler)
+        for handler in handlers:
+            dispatcher.groups[group].remove(handler)
     finally:
         for lock in dispatcher.locks_list:
             lock.release()

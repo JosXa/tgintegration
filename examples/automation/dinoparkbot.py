@@ -26,9 +26,8 @@ examples_dir = Path(__file__).parent.parent.absolute()
 
 def create_client(session_name: str) -> Client:
     return Client(
-        session_name=session_name,
-        workdir=examples_dir,
-        config_file=examples_dir / "config.ini",
+        name=session_name,
+        workdir=str(examples_dir),
     )
 
 

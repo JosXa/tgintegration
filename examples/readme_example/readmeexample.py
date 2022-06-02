@@ -5,6 +5,7 @@ import asyncio
 from pathlib import Path
 
 from pyrogram import Client
+from decouple import config
 
 from tgintegration import BotController
 from tgintegration import Response
@@ -16,13 +17,12 @@ SESSION_NAME: str = "tgintegration_examples"
 
 # This example uses the configuration of `config.ini` (see examples/README)
 def create_client(session_name: str = SESSION_NAME) -> Client:
-    client = Client(
-        session_name=session_name,
-        workdir=examples_dir,
-        config_file=examples_dir / "config.ini",
+    return Client(
+        name=session_name,
+        api_id=config("API_ID"),
+        api_hash=config("API_HASH"),
+        workdir=str(examples_dir),
     )
-    client.load_config()
-    return client
 
 
 async def run_example(client: Client):

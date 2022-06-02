@@ -11,10 +11,10 @@ from typing import TYPE_CHECKING
 
 from pyrogram.errors import InternalServerError
 from pyrogram.filters import Filter
-from pyrogram.handlers import MessageHandler
+from pyrogram.handlers import EditedMessageHandler, MessageHandler
 
 from tgintegration.expectation import Expectation
-from tgintegration.handler_utils import add_handler_transient
+from tgintegration.handler_utils import add_handlers_transient
 from tgintegration.timeout_settings import TimeoutSettings
 
 if TYPE_CHECKING:
@@ -37,11 +37,16 @@ async def collect(
     timeouts = timeouts or TimeoutSettings()
 
     recorder = MessageRecorder()
-    handler = MessageHandler(recorder.record_message, filters=filters)
+    message_handler = MessageHandler(recorder.record_message, filters=filters)
+    edited_message_handler = EditedMessageHandler(
+        recorder.record_message, filters=filters
+    )
 
     assert controller.client.is_connected
 
-    async with add_handler_transient(controller.client, handler):
+    async with add_handlers_transient(
+        controller.client, [message_handler, edited_message_handler]
+    ):
         response = Response(controller, recorder)
 
         logger.debug("Collector set up. Executing user-defined interaction...")
@@ -89,8 +94,7 @@ async def collect(
 
                 num_received = len(recorder.messages)  # TODO: this is ugly
 
-                is_sufficient = expectation.is_sufficient(recorder.messages)
-                if is_sufficient:
+                if expectation.is_sufficient(recorder.messages):
                     expectation.verify(recorder.messages, timeouts)
                     return
 

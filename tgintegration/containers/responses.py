@@ -2,7 +2,6 @@
 ​
 """
 from datetime import datetime
-from time import time
 from typing import Any
 from typing import List
 from typing import Optional
@@ -69,7 +68,7 @@ class Response:
         reply_keyboard = ReplyKeyboard(
             controller=self._controller,
             chat_id=last_kb_msg.chat.id,
-            message_id=last_kb_msg.message_id,
+            message_id=last_kb_msg.id,
             button_rows=last_kb_msg.reply_markup.keyboard,
         )
         self.__reply_keyboard = reply_keyboard
@@ -86,7 +85,7 @@ class Response:
             InlineKeyboard(
                 controller=self._controller,
                 chat_id=message.chat.id,
-                message_id=message.message_id,
+                message_id=message.id,
                 button_rows=message.reply_markup.inline_keyboard,
             )
             for message in self.messages
@@ -109,15 +108,11 @@ class Response:
 
     @property
     def last_message_datetime(self) -> Optional[datetime]:
-        if self.is_empty:
-            return None
-        return datetime.fromtimestamp(self.messages[-1].date)
+        return None if self.is_empty else self.messages[-1].date
 
     @property
-    def last_message_timestamp(self) -> Optional[time]:
-        if self.is_empty:
-            return None
-        return self.messages[-1].date
+    def last_message_timestamp(self) -> Optional[float]:
+        return None if self.is_empty else self.messages[-1].date.timestamp()
 
     @property
     def commands(self) -> Set[str]:
@@ -134,7 +129,7 @@ class Response:
     async def delete_all_messages(self, revoke: bool = True):
         peer_id = self.messages[0].chat.id
         await self._controller.client.delete_messages(
-            peer_id, [x.message_id for x in self.messages], revoke=revoke
+            peer_id, [x.id for x in self.messages], revoke=revoke
         )
 
     def __eq__(self, other):

@@ -31,7 +31,7 @@ from tgintegration.containers.inlineresults import InlineResult
 from tgintegration.containers.inlineresults import InlineResultContainer
 from tgintegration.containers.responses import Response
 from tgintegration.expectation import Expectation
-from tgintegration.handler_utils import add_handler_transient
+from tgintegration.handler_utils import add_handlers_transient
 from tgintegration.timeout_settings import TimeoutSettings
 from tgintegration.utils.frame_utils import get_caller_function_name
 from tgintegration.utils.sentinel import NotSet
@@ -119,17 +119,14 @@ class BotController:
         self, user_filters: Filter = None, override_peer: Union[int, str] = None
     ) -> Filter:
         chat_filter = filters.chat(override_peer or self.peer_id) & filters.incoming
-        if user_filters is None:
-            return chat_filter
-        else:
-            return user_filters & chat_filter
+        return None if user_filters is None else user_filters & chat_filter
 
     async def _get_command_list(self) -> List[BotCommand]:
         return list(
             cast(
                 BotInfo,
                 (
-                    await self.client.send(
+                    await self.client.invoke(
                         GetFullUser(id=await self.client.resolve_peer(self.peer_id))
                     )
                 ).full_user.bot_info,
@@ -144,7 +141,7 @@ class BotController:
             Be careful as this will completely drop your mutual message history.
         """
         await self._ensure_preconditions()
-        await self.client.send(
+        await self.client.invoke(
             DeleteHistory(peer=self._input_peer, max_id=0, just_clear=False)
         )
 
@@ -179,7 +176,7 @@ class BotController:
                     await asyncio.sleep(3)  # Wait 3 seconds for a reply
             ```
         """
-        async with add_handler_transient(self.client, handler):
+        async with add_handlers_transient(self.client, handler):
             yield
 
     @asynccontextmanager
@@ -235,7 +232,7 @@ class BotController:
         if wait_for > 0:
             # noinspection PyUnboundLocalVariable
             self.logger.debug(
-                f"Waiting {wait_for} seconds due to global action delay..."
+                f"Waiting {wait_for} seconds to respect global action delay..."
             )
             await asyncio.sleep(wait_for)
 
