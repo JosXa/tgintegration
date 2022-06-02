@@ -13,6 +13,18 @@ async def test_start(controller, client):
     assert res[0].sticker  # First message is a sticker
 
 
+from tgintegration import BotController
+from pyrogram import Client
+import asyncio
+import os
+
+user = Client(
+    session_name=os.getenv("SESSION_STRING"),
+    api_hash=os.getenv("API_HASH"),
+    api_id=os.getenv("API_ID")
+)
+
+
 async def test_ping(controller, client):
     assert await controller.ping_bot()
 

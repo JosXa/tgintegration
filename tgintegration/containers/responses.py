@@ -1,7 +1,7 @@
 """
 ​
 """
-from datetime import datetime
+from datetime import datetime, tzinfo
 from time import time
 from typing import Any
 from typing import List
@@ -9,6 +9,7 @@ from typing import Optional
 from typing import Set
 from typing import TYPE_CHECKING
 
+import pytz
 from pyrogram.types import InlineKeyboardMarkup
 from pyrogram.types import Message
 from pyrogram.types import ReplyKeyboardMarkup
@@ -22,12 +23,17 @@ if TYPE_CHECKING:
 
 
 class Response:
+    """
+    Container that represents any number of consecutive messages received as a result of the interaction with a peer.
+    """
+
     def __init__(self, controller: "BotController", recorder: MessageRecorder):
         self._controller = controller
         self._recorder = recorder
 
-        self.started: Optional[float] = None
-        self.action_result: Any = None
+        # Assigned to by collectors
+        self.interaction_started_at: Optional[datetime] = None
+        self.wait_started_at: Optional[datetime] = None
 
         # cached properties
         self.__reply_keyboard: Optional[ReplyKeyboard] = None
@@ -111,7 +117,7 @@ class Response:
     def last_message_datetime(self) -> Optional[datetime]:
         if self.is_empty:
             return None
-        return datetime.fromtimestamp(self.messages[-1].date)
+        return datetime.fromtimestamp(self.messages[-1].date, tz=pytz.UTC)
 
     @property
     def last_message_timestamp(self) -> Optional[time]:

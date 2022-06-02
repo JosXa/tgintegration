@@ -6,6 +6,7 @@ import logging
 from contextlib import asynccontextmanager
 from datetime import datetime
 from datetime import timedelta
+from time import time
 from typing import AsyncContextManager
 from typing import TYPE_CHECKING
 
@@ -41,11 +42,16 @@ async def collect(
 
     assert controller.client.is_connected
 
+    # noinspection DuplicatedCode
     async with add_handler_transient(controller.client, handler):
         response = Response(controller, recorder)
 
         logger.debug("Collector set up. Executing user-defined interaction...")
+        response.interaction_started_at = datetime.utcnow()
+
         yield response  # Start user-defined interaction
+
+        response.wait_started_at = datetime.utcnow()
         logger.debug("interaction complete.")
 
         num_received = 0
@@ -74,9 +80,7 @@ async def collect(
                 if timeouts.wait_consecutive:
                     # Always wait for at least `wait_consecutive` seconds for another message
                     try:
-                        logger.debug(
-                            f"Checking for consecutive message to #{num_received}..."
-                        )
+                        logger.debug(f"Checking for consecutive message to #{num_received}...")
                         await asyncio.wait_for(
                             recorder.wait_until(lambda msgs: len(msgs) > num_received),
                             # The consecutive end may go over the max wait timeout,
@@ -107,7 +111,7 @@ async def collect(
             await asyncio.sleep(60)  # Internal Telegram error
         except asyncio.exceptions.TimeoutError as te:
             if timeouts.raise_on_timeout:
-                raise InvalidResponseError() from te
+                raise te
             else:
                 # TODO: better warning message
                 logger.warning("Peer did not reply.")

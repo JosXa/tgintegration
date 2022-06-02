@@ -2,6 +2,7 @@
 Entry point to {{tgi}} features.
 """
 import asyncio
+import inspect
 import logging
 from contextlib import asynccontextmanager
 from time import time
@@ -15,6 +16,7 @@ from pyrogram import Client
 from pyrogram import filters
 from pyrogram.errors import FloodWait
 from pyrogram.filters import Filter
+from pyrogram.handlers import MessageHandler
 from pyrogram.handlers.handler import Handler
 from pyrogram.raw.base import BotCommand
 from pyrogram.raw.functions.messages import DeleteHistory
@@ -31,8 +33,9 @@ from tgintegration.containers.inlineresults import InlineResult
 from tgintegration.containers.inlineresults import InlineResultContainer
 from tgintegration.containers.responses import Response
 from tgintegration.expectation import Expectation
-from tgintegration.handler_utils import add_handler_transient
+from tgintegration.handler_utils import add_handler_transient, find_free_group
 from tgintegration.timeout_settings import TimeoutSettings
+from tgintegration.utils.format_utils import display_name
 from tgintegration.utils.frame_utils import get_caller_function_name
 from tgintegration.utils.sentinel import NotSet
 
@@ -74,6 +77,11 @@ class BotController:
         self.raise_no_response = raise_no_response
         self.global_action_delay = global_action_delay
 
+        _group = find_free_group(self.client.dispatcher, -10000)
+        self.client.add_handler(MessageHandler(self._any_message_handler), group=_group)
+
+        self._controller_me: Optional[User] = None
+
         self._input_peer: Optional[InputPeerUser] = None
         self.peer_user: Optional[User] = None
         self.peer_id: Optional[int] = None
@@ -81,6 +89,32 @@ class BotController:
 
         self._last_response_ts: Optional[time] = None
         self.logger = logging.getLogger(self.__class__.__name__)
+
+        self._get_me_future: asyncio.Future
+        get_me = self.client.get_me
+        if inspect.iscoroutinefunction(get_me):
+            self._get_me_future = self.client.loop.create_task(get_me(), name="get_me")
+        else:
+            self._get_me_future = asyncio.Future()
+            self._get_me_future.set_result(get_me())
+
+    async def _any_message_handler(self, client: Client, message: Message):
+        self.logger.debug(
+            f"Message {message.message_id} received in {display_name(message.chat)}."
+        )
+        pass
+
+    @property
+    def me(self) -> User:
+        if self._controller_me:
+            return self._controller_me
+
+        self._controller_me = (res := self._get_me_future.result())
+        return res
+
+    @property
+    def own_id(self) -> int:
+        return self.me.id
 
     async def initialize(self, start_client: bool = True) -> None:
         # noinspection PyUnresolvedReferences
@@ -144,21 +178,17 @@ class BotController:
             Be careful as this will completely drop your mutual message history.
         """
         await self._ensure_preconditions()
-        await self.client.send(
-            DeleteHistory(peer=self._input_peer, max_id=0, just_clear=False)
-        )
+        await self.client.send(DeleteHistory(peer=self._input_peer, max_id=0, just_clear=False))
 
     async def _wait_global(self):
         if self.global_action_delay and self._last_response_ts:
             # Sleep for as long as the global delay prescribes
-            sleep = self.global_action_delay - (time() - self._last_response_ts.started)
+            sleep = self.global_action_delay - (time() - self._last_response_ts)
             if sleep > 0:
                 await asyncio.sleep(sleep)
 
     @asynccontextmanager
-    async def add_handler_transient(
-        self, handler: Handler
-    ) -> AsyncContextManager[None]:
+    async def add_handler_transient(self, handler: Handler) -> AsyncContextManager[None]:
         """
         Registers a one-time/ad-hoc Pyrogram `Handler` that is only valid during the context manager body.
 
@@ -198,7 +228,8 @@ class BotController:
         Args:
             filters ():
             count ():
-            peer ():
+            peer: The conversation partner's identity. Specify only if the default peer assigned from the constructor
+                should be overridden.
             max_wait ():
             wait_consecutive ():
             raise_ ():
@@ -212,15 +243,11 @@ class BotController:
         async with collect(
             self,
             self._merge_default_filters(filters, peer),
-            expectation=Expectation(
-                min_messages=count or NotSet, max_messages=count or NotSet
-            ),
+            expectation=Expectation(min_messages=count or NotSet, max_messages=count or NotSet),
             timeouts=TimeoutSettings(
                 max_wait=max_wait,
                 wait_consecutive=wait_consecutive,
-                raise_on_timeout=raise_
-                if raise_ is not None
-                else self.raise_no_response,
+                raise_on_timeout=raise_ if raise_ is not None else self.raise_no_response,
             ),
         ) as response:
             yield response
@@ -234,9 +261,7 @@ class BotController:
         wait_for = (self.global_action_delay + self._last_response_ts) - time()
         if wait_for > 0:
             # noinspection PyUnboundLocalVariable
-            self.logger.debug(
-                f"Waiting {wait_for} seconds due to global action delay..."
-            )
+            self.logger.debug(f"Waiting {wait_for} seconds due to global action delay...")
             await asyncio.sleep(wait_for)
 
     async def ping_bot(
@@ -263,9 +288,7 @@ class BotController:
                     await self.send_command(m, peer=peer)
                 except FloodWait as e:
                     if e.x > 5:
-                        self.logger.warning(
-                            "send_message flood: waiting {} seconds".format(e.x)
-                        )
+                        self.logger.warning("send_message flood: waiting {} seconds".format(e.x))
                     await asyncio.sleep(e.x)
                     continue
 
@@ -273,9 +296,7 @@ class BotController:
             self,
             self._merge_default_filters(override_filters, peer),
             expectation=Expectation(min_messages=1),
-            timeouts=TimeoutSettings(
-                max_wait=max_wait, wait_consecutive=wait_consecutive
-            ),
+            timeouts=TimeoutSettings(max_wait=max_wait, wait_consecutive=wait_consecutive),
         ) as response:
             await send_pings()
 

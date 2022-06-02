@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from decouple import config
 
-examples_dir = Path(__file__).parent.parent.parent / "examples"
+examples_dir = Path(__file__).parent.parent.parent.parent / "examples"
 
 
 # noinspection PyCallingNonCallable

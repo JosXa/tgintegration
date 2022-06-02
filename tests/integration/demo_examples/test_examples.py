@@ -1,5 +1,6 @@
 import pytest
 
+
 pytestmark = pytest.mark.asyncio
 
 
@@ -14,7 +15,7 @@ async def test_dinopark_example(session_name):
 
 async def test_idletown_example(session_name):
     # Late import so that the autouse fixtures run first
-    from examples.automation import idletown
+    import examples.automation.idletown as idletown
 
     idletown.MAX_RUNS = 1
     client = idletown.create_client(session_name)
@@ -24,7 +25,7 @@ async def test_idletown_example(session_name):
 
 async def test_readme_example(session_name):
     # Late import so that the autouse fixtures run first
-    from examples.readme_example import readmeexample
+    import examples.readme_example.readmeexample as readmeexample
 
     client = readmeexample.create_client(session_name)
     await readmeexample.run_example(client)

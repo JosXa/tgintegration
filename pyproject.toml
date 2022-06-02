@@ -4,7 +4,7 @@ packages = [
     { include = "tgintegration" }
 ]
 include = ["LICENSE"]
-version = "1.1.0"
+version = "1.2.0"
 description = "Integration test and automation library for Telegram Messenger Bots based on Pyrogram."
 authors = ["JosXa <joscha.goetzer@gmail.com>"]
 license = "MIT"
@@ -29,6 +29,7 @@ classifiers = [
 python = "==3.*,>=3.7"
 typing-extensions = "^3.7.4"
 pyrogram = "^1.0.0"
+pytz = "^2020.5"
 
 [tool.poetry.dev-dependencies]
 bumpversion = "==0.5.3"
