@@ -11,7 +11,8 @@ from typing import TYPE_CHECKING
 
 from pyrogram.errors import InternalServerError
 from pyrogram.filters import Filter
-from pyrogram.handlers import EditedMessageHandler, MessageHandler
+from pyrogram.handlers import EditedMessageHandler
+from pyrogram.handlers import MessageHandler
 
 from tgintegration.expectation import Expectation
 from tgintegration.handler_utils import add_handlers_transient
