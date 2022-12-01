@@ -9,8 +9,8 @@ import logging
 import traceback
 from pathlib import Path
 from typing import Dict
-from decouple import config
 
+from decouple import config
 from pyrogram import Client
 from pyrogram import filters as f
 

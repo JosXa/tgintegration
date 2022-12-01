@@ -4,8 +4,8 @@ Full version of the GitHub README.
 import asyncio
 from pathlib import Path
 
-from pyrogram import Client
 from decouple import config
+from pyrogram import Client
 
 from tgintegration import BotController
 from tgintegration import Response
