@@ -71,7 +71,7 @@ _You can [follow along by running the example](https://github.com/JosXa/tgintegr
 Suppose we want to write integration tests for [@BotListBot](https://t.me/BotListBot) by sending it a couple of
 messages and checking that it responds the way it should.
 
-After [configuring a Pyrogram **user client**](https://docs.pyrogram.org/intro/setup),
+After [configuring a Pyrogram **user client**](https://docs.pyrogram.org/start/setup),
 let's start by creating a `BotController`:
 
 ``` python
