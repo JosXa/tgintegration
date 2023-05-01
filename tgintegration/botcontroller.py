@@ -304,7 +304,6 @@ class BotController:
         self,
         filename: str,
         peer: Union[int, str] = None,
-        add_bot_name: bool = True,
     ) -> Document:
         """
         Send a file.
