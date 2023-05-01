@@ -299,7 +299,7 @@ class BotController:
             text += " ".join(args)
 
         return await self.client.send_message(peer or self.peer_id, text)
-    
+
     async def send_document(
         self,
         filename: str,
@@ -310,7 +310,7 @@ class BotController:
         Send a file.
         """
         return await self.client.send_document(peer or self.peer_id, filename)
-    
+
     async def _iter_bot_results(
         self,
         bot_results: BotResults,
