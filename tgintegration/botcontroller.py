@@ -22,6 +22,7 @@ from pyrogram.raw.functions.users import GetFullUser
 from pyrogram.raw.types import BotInfo
 from pyrogram.raw.types import InputPeerUser
 from pyrogram.raw.types.messages import BotResults
+from pyrogram.types import Document
 from pyrogram.types import Message
 from pyrogram.types import User
 from typing_extensions import AsyncContextManager
