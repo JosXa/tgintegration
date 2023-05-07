@@ -299,7 +299,16 @@ class BotController:
             text += " ".join(args)
 
         return await self.client.send_message(peer or self.peer_id, text)
-
+    
+    async def send_message(
+        self,
+        peer: Union[int, str] = None,
+    ) -> Message:
+        """
+        Send a message to the chat.
+        """
+        return await self.client.send_message(peer or self.peer_id, text)
+    
     async def send_document(
         self,
         filename: str,
