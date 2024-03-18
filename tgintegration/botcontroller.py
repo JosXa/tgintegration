@@ -215,9 +215,9 @@ class BotController:
             timeouts=TimeoutSettings(
                 max_wait=max_wait,
                 wait_consecutive=wait_consecutive,
-                raise_on_timeout=raise_
-                if raise_ is not None
-                else self.raise_no_response,
+                raise_on_timeout=(
+                    raise_ if raise_ is not None else self.raise_no_response
+                ),
             ),
         ) as response:
             yield response
