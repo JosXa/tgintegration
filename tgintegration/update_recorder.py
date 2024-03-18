@@ -29,7 +29,7 @@ class MessageRecorder:
         async with self._lock:
             message.exact_timestamp = time.time()
             self.messages.append(message)
-            for (pred, ev) in self._event_conditions:
+            for pred, ev in self._event_conditions:
                 if pred(self.messages):
                     ev.set()
 

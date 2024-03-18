@@ -34,9 +34,11 @@ async def main():
 
         await client.send_message(
             "@TgIntegration",
-            "You did not reply :("
-            if response.is_empty
-            else f"You replied with: {response.full_text}",
+            (
+                "You did not reply :("
+                if response.is_empty
+                else f"You replied with: {response.full_text}"
+            ),
         )
 
 
