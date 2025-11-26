@@ -20,6 +20,8 @@
     *   **CI/CD**: GitHub Actions for testing and publishing to JSR & NPM.
 
 ## Overview
+**Note**: The legacy Python codebase has been moved to the `archive/` directory. Please refer to it for logic porting and historical context.
+
 This document outlines the plan to rewrite `tgintegration` from Python (Pyrogram) to TypeScript (mtcute), utilizing a modern stack including Bun, Biome, VitePress, and GitHub Actions.
 
 ## Target Stack
