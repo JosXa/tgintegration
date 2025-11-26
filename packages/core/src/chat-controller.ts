@@ -1,5 +1,8 @@
 import type { Message } from "@mtcute/core";
+import type { tl } from "@mtcute/tl";
 import { InvalidResponseError } from "./errors.js";
+import { InlineResult } from "./inline-result.js";
+import { InlineResultContainer } from "./inline-result-container.js";
 import type { ChatControllerOptions } from "./options.js";
 import { Response } from "./response.js";
 import type { AnyTelegramClient, CollectOptions } from "./types.js";
@@ -231,5 +234,132 @@ export class ChatController {
     }
 
     return new Response(this, messages);
+  }
+
+  /**
+   * Query a bot for inline results (user-side inline query).
+   *
+   * @param query - The search query text
+   * @param options - Optional parameters for the inline query
+   * @returns Container with inline results
+   *
+   * @example
+   * ```typescript
+   * const results = await controller.queryInline("cats", { limit: 50 });
+   * const catGifs = results.findResults({ typePattern: /gif/ });
+   * await catGifs[0].send();
+   * ```
+   */
+  async inlineQuery(
+    query: string,
+    options: {
+      latitude?: number;
+      longitude?: number;
+      limit?: number;
+      offset?: string;
+      paginationDelay?: number;
+    } = {},
+  ): Promise<InlineResultContainer> {
+    await this.ensurePreconditions();
+
+    const {
+      latitude,
+      longitude,
+      limit = 100,
+      offset = "",
+      paginationDelay = 3000,
+    } = options;
+
+    if (limit <= 0) {
+      throw new Error("limit must be greater than 0");
+    }
+
+    // Use raw TL method: messages.getInlineBotResults
+    const botUser = await this.client.resolveUser(this.peer);
+    const firstBatch = (await this.client.call({
+      _: "messages.getInlineBotResults",
+      bot: botUser,
+      peer: await this.client.resolvePeer("me"),
+      query,
+      offset,
+      geoPoint:
+        latitude !== undefined && longitude !== undefined
+          ? {
+              _: "inputGeoPoint",
+              lat: latitude,
+              long: longitude,
+            }
+          : undefined,
+    })) as tl.messages.RawBotResults;
+
+    const allResults: InlineResult[] = [];
+    let currentOffset = offset;
+    let currentBatch = firstBatch;
+
+    // Paginate through results if needed
+    while (allResults.length < limit) {
+      for (const result of currentBatch.results) {
+        if (result._ === "botInlineResult") {
+          allResults.push(new InlineResult(this, result, currentBatch.queryId));
+        }
+        if (allResults.length >= limit) break;
+      }
+
+      // Check if there are more results
+      if (
+        !currentBatch.nextOffset ||
+        currentBatch.nextOffset === currentOffset
+      ) {
+        break;
+      }
+
+      // Wait before next pagination request to avoid flood wait
+      await sleep(paginationDelay);
+
+      currentOffset = currentBatch.nextOffset;
+      currentBatch = (await this.client.call({
+        _: "messages.getInlineBotResults",
+        bot: botUser,
+        peer: await this.client.resolvePeer("me"),
+        query,
+        offset: currentOffset,
+        geoPoint:
+          latitude !== undefined && longitude !== undefined
+            ? {
+                _: "inputGeoPoint",
+                lat: latitude,
+                long: longitude,
+              }
+            : undefined,
+      })) as tl.messages.RawBotResults;
+    }
+
+    return new InlineResultContainer(
+      this,
+      query,
+      allResults,
+      currentBatch.gallery || false,
+      currentBatch.switchPm,
+      currentBatch.nextOffset,
+    );
+  }
+
+  /**
+   * Get the list of commands available for this bot.
+   */
+  async getBotCommands(): Promise<string[]> {
+    await this.ensurePreconditions();
+
+    try {
+      const commands = await this.client.call({
+        _: "bots.getBotCommands",
+        bot: await this.client.resolveUser(this.peer),
+        scope: { _: "botCommandScopeDefault" },
+        langCode: "",
+      });
+      return commands.map((c: any) => c.command);
+    } catch {
+      return [];
+    }
   }
 }

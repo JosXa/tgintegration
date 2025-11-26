@@ -11,6 +11,9 @@ export type AnyTelegramClient = Pick<
   | "getFullUser"
   | "getCallbackAnswer"
   | "disconnect"
+  | "call"
+  | "resolvePeer"
+  | "resolveUser"
 >;
 
 export interface TimeoutSettings {

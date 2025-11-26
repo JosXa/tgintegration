@@ -13,6 +13,18 @@ async function main() {
     globalActionDelay: 1000, // 1s delay to follow along
   });
 
+  /*
+  Alternative syntax idea:
+
+  await controller.collect
+    .messages(3)
+    .maxWait(5000)
+    .withThrowOnTimeout()
+    .start(async (ctx) => {
+      await ctx.sendText("This is an awesome poll");
+    }
+  */
+
   await controller.initialize();
 
   console.log("Clearing chat to start with a blank screen...");

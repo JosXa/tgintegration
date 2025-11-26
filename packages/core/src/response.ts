@@ -76,6 +76,19 @@ export class Response {
     return undefined;
   }
 
+  /**
+   * Extract command names from the response text (e.g., /start, /help).
+   */
+  get commands(): string[] {
+    const commands = new Set<string>();
+    const regex = /\/(\w+)/g;
+    let match;
+    while ((match = regex.exec(this.fullText)) !== null) {
+      commands.add(match[1]);
+    }
+    return Array.from(commands);
+  }
+
   debug(): void {
     console.log(
       this.count > 0

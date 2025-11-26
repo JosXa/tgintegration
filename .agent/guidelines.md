@@ -71,7 +71,11 @@ alwaysApply: true
 
 ### Code Quality
 
-- **Always reformat after making changes**: Run `bun run format:fix` after concluding any code changes to ensure consistent formatting
+- **REQUIRED: Run `bun run ai:check` after concluding changes** - This command runs formatting fixes, typechecks, and tests across the entire monorepo
+  - You MUST run this after concluding changes
+  - You SHOULD run this intermediarily during development to catch issues early
+  - The build will fail if formatting, type errors, or test failures are detected
+  - Never skip this step - it ensures code quality and prevents breaking changes
 - Use `bun run format` to check formatting without making changes
 - Biome handles both linting and formatting with unsafe fixes enabled
 

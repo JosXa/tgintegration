@@ -14,7 +14,8 @@
     "lint": "biome check .",
     "format": "biome check .",
     "format:fix": "biome check --write --unsafe .",
-    "typecheck": "tsc -b --noEmit"
+    "typecheck": "tsc -b --noEmit",
+    "ai:check": "bun run format:fix && bun run typecheck && bun run test"
   },
   "type": "module",
   "workspaces": [
