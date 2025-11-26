@@ -3,7 +3,7 @@
   "module": "index.ts",
   "devDependencies": {
     "@types/bun": "latest",
-    "@biomejs/biome": "latest"
+    "@biomejs/biome": "^2.3.7"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -12,7 +12,8 @@
   "scripts": {
     "test": "bun test",
     "lint": "biome check .",
-    "format": "biome check --write .",
+    "format": "biome check .",
+    "format:fix": "biome check --write --unsafe .",
     "typecheck": "tsc -b --noEmit"
   },
   "type": "module",

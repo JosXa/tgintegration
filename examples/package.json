@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@tgintegration/core": "workspace:*"
+    "@tgintegration/core": "workspace:*",
+    "dotenv": "^16.4.5"
   }
 }

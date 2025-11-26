@@ -69,6 +69,12 @@ alwaysApply: true
 4. **Document**: Use VitePress for documentation
 5. **Publish**: JSR first, then NPM via `bun publish`
 
+### Code Quality
+
+- **Always reformat after making changes**: Run `bun run format:fix` after concluding any code changes to ensure consistent formatting
+- Use `bun run format` to check formatting without making changes
+- Biome handles both linting and formatting with unsafe fixes enabled
+
 ### Key Constraints
 
 - **No runner-specific plugins** - keep library framework agnostic

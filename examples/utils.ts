@@ -1,9 +1,19 @@
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { TelegramClient } from "@mtcute/bun";
-import { ChatController, type CollectOptions } from "@tgintegration/core";
+import * as dotenv from "dotenv";
+
+// Load .env from project root
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const projectRoot = resolve(__dirname, "..");
+
+dotenv.config({ path: resolve(projectRoot, ".env") });
 
 export async function createClient() {
-  const apiId = parseInt(process.env.API_ID || "");
+  const apiId = parseInt(process.env.API_ID || "", 10);
   const apiHash = process.env.API_HASH || "";
+  const _phone = process.env.PHONE_NUMBER || "";
   const session = process.env.SESSION_STRING || "";
 
   if (!apiId || !apiHash) {
@@ -11,8 +21,8 @@ export async function createClient() {
   }
 
   // Use file storage with session import (like in test-client.ts)
-  const dbPath = "./examples/session.db";
-  
+  const dbPath = resolve(projectRoot, "examples", "session.db");
+
   const client = new TelegramClient({
     apiId,
     apiHash,
@@ -20,7 +30,7 @@ export async function createClient() {
   });
 
   await client.connect();
-  
+
   if (session) {
     await client.importSession(session, true);
   }

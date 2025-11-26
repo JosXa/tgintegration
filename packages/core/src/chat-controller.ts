@@ -1,4 +1,4 @@
-import { Message } from "@mtcute/core";
+import type { Message } from "@mtcute/core";
 import { InvalidResponseError } from "./errors.js";
 import type { ChatControllerOptions } from "./options.js";
 import { Response } from "./response.js";
@@ -14,10 +14,9 @@ export class ChatController {
   constructor(
     public readonly client: AnyTelegramClient,
     public readonly peer: string | number,
-    public readonly defaults: CollectOptions = {},
-    options: ChatControllerOptions = {}
+    public readonly defaults: CollectOptions & ChatControllerOptions = {},
   ) {
-    this.globalActionDelay = options.globalActionDelay ?? 800;
+    this.globalActionDelay = this.defaults.globalActionDelay ?? 800;
   }
 
   async initialize() {
@@ -26,28 +25,28 @@ export class ChatController {
     // We can try accessing network.isConnected if available, but start() is robust.
     // For now, just call start({}) which should be idempotent or we catch error.
     try {
-        await this.client.start({});
-    } catch (e: any) {
-        if (e.message?.includes("already connected")) {
-            // ignore
-        } else {
-            // throw e; 
-            // actually start() might not throw if already connected, just return user.
-        }
+      await this.client.start({});
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message?.includes("already connected")) {
+        // ignore
+      } else {
+        // throw e;
+        // actually start() might not throw if already connected, just return user.
+      }
     }
 
     // Try to get as chat first (groups/channels), fallback to user (bots/private chats)
     try {
-        const chat = await this.client.getFullChat(this.peer);
-        this._peerIdResolved = chat.id;
-    } catch (e: any) {
-        // If it's not a chat, try to get as user (for bots and private chats)
-        try {
-            const user = await this.client.getFullUser(this.peer);
-            this._peerIdResolved = user.id;
-        } catch (e2: any) {
-            throw new Error(`Could not resolve peer: ${this.peer}`);
-        }
+      const chat = await this.client.getFullChat(this.peer);
+      this._peerIdResolved = chat.id;
+    } catch (_e: unknown) {
+      // If it's not a chat, try to get as user (for bots and private chats)
+      try {
+        const user = await this.client.getFullUser(this.peer);
+        this._peerIdResolved = user.id;
+      } catch (_e2: unknown) {
+        throw new Error(`Could not resolve peer: ${this.peer}`);
+      }
     }
   }
 
@@ -74,9 +73,10 @@ export class ChatController {
 
   async sendCommand(command: string, args: string[] = []) {
     await this.ensurePreconditions();
-    
-    const text = args.length > 0 ? `/${command} ${args.join(" ")}` : `/${command}`;
-    
+
+    const text =
+      args.length > 0 ? `/${command} ${args.join(" ")}` : `/${command}`;
+
     return this.client.sendText(this.peer, text);
   }
 
@@ -97,43 +97,69 @@ export class ChatController {
   }
 
   /**
-   * Pings the bot with /start (or custom messages) and waits for a response.
+   * Disconnects the underlying Telegram client.
    */
-  async pingBot(options: {
-    messages?: string[];
-    maxWait?: number;
-    overridePeer?: string | number;
-  } = {}): Promise<Response> {
-      const msgs = options.messages || ["/start"];
-      
-      return this.collect({
-          minMessages: 1,
-          maxWait: options.maxWait
-      }, async () => {
-          for (const msg of msgs) {
-              if (msg.startsWith("/")) {
-                  await this.sendCommand(msg.substring(1));
-              } else {
-                  await this.client.sendText(this.peer, msg);
-              }
-              await sleep(1000); // Small delay between pings
-          }
-      });
+  async disconnect() {
+    await this.client.disconnect();
   }
 
-  async collect(options: CollectOptions, action: () => Promise<void>): Promise<Response> {
+  /**
+   * Pings the bot with /start (or custom messages) and waits for a response.
+   */
+  async pingBot(
+    options: {
+      messages?: string[];
+      maxWait?: number;
+      overridePeer?: string | number;
+    } = {},
+  ): Promise<Response> {
+    const msgs = options.messages || ["/start"];
+
+    return this.collect(
+      {
+        minMessages: 1,
+        maxWait: options.maxWait,
+      },
+      async () => {
+        for (const msg of msgs) {
+          if (msg.startsWith("/")) {
+            await this.sendCommand(msg.substring(1));
+          } else {
+            await this.client.sendText(this.peer, msg);
+          }
+          await sleep(1000); // Small delay between pings
+        }
+      },
+    );
+  }
+
+  async collect(
+    options: CollectOptions,
+    action: () => Promise<void>,
+  ): Promise<Response> {
     await this.ensurePreconditions();
     await this.waitGlobalDelay();
-    
-    const mergedOptions = { ...this.defaults, ...options };
-    const { 
-      minMessages = 1, 
-      maxMessages = undefined, 
+
+    const mergedOptions = { ...this.defaults, ...options } as CollectOptions & {
+      minMessages?: number;
+      maxMessages?: number;
+      numMessages?: number;
+    };
+    const {
+      minMessages: minMessagesOpt,
+      maxMessages: maxMessagesOpt,
+      numMessages,
       maxWait = 10000,
       waitConsecutive = undefined,
       throwOnTimeout = false,
-      validators
+      validators,
     } = mergedOptions;
+
+    // Normalize numMessages to min/max if provided
+    const minMessages =
+      numMessages !== undefined ? numMessages : (minMessagesOpt ?? 1);
+    const maxMessages =
+      numMessages !== undefined ? numMessages : maxMessagesOpt;
 
     const messages: Message[] = [];
     let lastMessageTime = 0;
@@ -151,7 +177,7 @@ export class ChatController {
       await action();
 
       const startTime = Date.now();
-      
+
       while (true) {
         const now = Date.now();
         const elapsed = now - startTime;
@@ -159,7 +185,7 @@ export class ChatController {
         if (elapsed > maxWait) break;
 
         const count = messages.length;
-        
+
         // Check maxMessages
         if (maxMessages !== undefined && count > maxMessages) break;
 
@@ -167,38 +193,41 @@ export class ChatController {
         const enoughCount = count >= minMessages;
         let passedValidators = true;
         if (validators) {
-            passedValidators = validators(messages);
+          passedValidators = validators(messages);
         }
 
         if (enoughCount && passedValidators) {
-             if (waitConsecutive) {
-                 const silenceDuration = now - lastMessageTime;
-                 if (silenceDuration >= waitConsecutive) break;
-             } else {
-                 break;
-             }
+          if (waitConsecutive) {
+            const silenceDuration = now - lastMessageTime;
+            if (silenceDuration >= waitConsecutive) break;
+          } else {
+            break;
+          }
         }
 
         await sleep(100);
       }
-
     } finally {
       this.client.onNewMessage.remove(handler);
       this.updateLastActionTime();
     }
 
     const count = messages.length;
-    
+
     if (throwOnTimeout) {
-        if (count < minMessages) {
-            throw new InvalidResponseError(`Expected at least ${minMessages} messages, got ${count}`);
-        }
-        if (maxMessages !== undefined && count > maxMessages) {
-            throw new InvalidResponseError(`Expected at most ${maxMessages} messages, got ${count}`);
-        }
-        if (validators && !validators(messages)) {
-            throw new InvalidResponseError("Validators failed");
-        }
+      if (count < minMessages) {
+        throw new InvalidResponseError(
+          `Expected at least ${minMessages} messages, got ${count}`,
+        );
+      }
+      if (maxMessages !== undefined && count > maxMessages) {
+        throw new InvalidResponseError(
+          `Expected at most ${maxMessages} messages, got ${count}`,
+        );
+      }
+      if (validators && !validators(messages)) {
+        throw new InvalidResponseError("Validators failed");
+      }
     }
 
     return new Response(this, messages);

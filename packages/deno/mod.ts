@@ -1,1 +1,1 @@
-export * from "npm:@tgintegration/core@0.0.1";
+// export * from "npm:@tgintegration/core@0.0.1";

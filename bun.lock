@@ -9,7 +9,7 @@
         "@mtcute/core": "^0.27.1",
       },
       "devDependencies": {
-        "@biomejs/biome": "latest",
+        "@biomejs/biome": "^2.3.7",
         "@types/bun": "latest",
       },
       "peerDependencies": {
@@ -21,6 +21,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@tgintegration/core": "workspace:*",
+        "dotenv": "^16.4.5",
       },
     },
     "packages/bun": {
@@ -33,12 +34,14 @@
     },
     "packages/core": {
       "name": "@tgintegration/core",
-      "version": "0.0.1",
+      "version": "0.0.0",
       "dependencies": {
         "@mtcute/core": "^0.27.1",
       },
       "devDependencies": {
         "@mtcute/tl": "^218.0.1",
+        "@types/bun": "latest",
+        "typescript": "^5",
       },
     },
     "packages/node": {
@@ -119,6 +122,8 @@
     "domhandler": ["domhandler@5.0.3", "", { "dependencies": { "domelementtype": "^2.3.0" } }, "sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w=="],
 
     "domutils": ["domutils@3.2.2", "", { "dependencies": { "dom-serializer": "^2.0.0", "domelementtype": "^2.3.0", "domhandler": "^5.0.3" } }, "sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw=="],
+
+    "dotenv": ["dotenv@16.6.1", "", {}, "sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow=="],
 
     "entities": ["entities@6.0.1", "", {}, "sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g=="],
 

@@ -1,38 +1,17 @@
-import type {
-  Message,
-  InputPeerLike,
-  InputText,
-  FullChat,
-  FullUser,
-  User,
-  InputMessageId
-} from "@mtcute/core";
-import type { tl } from "@mtcute/tl";
+import type { Message } from "@mtcute/core";
+import type { TelegramClient } from "@mtcute/core/client.js";
 
-export interface AnyTelegramClient {
-  start(params?: any): Promise<User>;
-
-  getFullChat(chatId: InputPeerLike): Promise<FullChat>;
-  getFullUser(userId: InputPeerLike): Promise<FullUser>;
-  sendText(chatId: InputPeerLike, text: InputText, params?: any): Promise<Message>;
-  deleteHistory(chat: InputPeerLike, params?: {
-    mode?: 'delete' | 'clear' | 'revoke';
-    maxId?: number;
-  }): Promise<void>;
-
-  readonly onNewMessage: {
-    add: (handler: (msg: Message) => void) => void;
-    remove: (handler: (msg: Message) => void) => void;
-  };
-
-  getCallbackAnswer(params: InputMessageId & {
-    data: string | Uint8Array;
-    timeout?: number;
-    fireAndForget?: boolean;
-    game?: boolean;
-    password?: string;
-  }): Promise<tl.messages.TypeBotCallbackAnswer>;
-}
+export type AnyTelegramClient = Pick<
+  TelegramClient,
+  | "start"
+  | "sendText"
+  | "deleteHistory"
+  | "onNewMessage"
+  | "getFullChat"
+  | "getFullUser"
+  | "getCallbackAnswer"
+  | "disconnect"
+>;
 
 export interface TimeoutSettings {
   maxWait?: number;
@@ -40,12 +19,43 @@ export interface TimeoutSettings {
   throwOnTimeout?: boolean;
 }
 
-export interface Expectation {
-  minMessages?: number;
-  maxMessages?: number;
+interface ExpectationBase {
   validators?: (messages: Message[]) => boolean;
 }
 
-export interface CollectOptions extends TimeoutSettings, Expectation {
-  // merged options
+export type Expectation = ExpectationBase &
+  ({ minMessages?: number; maxMessages?: number } | { numMessages: number });
+
+export type CollectOptions = TimeoutSettings &
+  ExpectationBase &
+  (
+    | {
+        minMessages?: number;
+        maxMessages?: number;
+      }
+    | { numMessages?: number }
+  );
+
+export interface ClickOptions {
+  /**
+   * Maximum time in milliseconds to wait for the bot to answer the callback query.
+   * If the bot doesn't call `answerCallbackQuery` within this time, an error is thrown.
+   * @default 10000
+   */
+  maxWait?: number;
+
+  /**
+   * If true, don't throw an error when the callback query is not answered.
+   *
+   * Some bots neglect to call `answerCallbackQuery()`, leaving users with a
+   * loading spinner until Telegram times out. This is poor UX and generally
+   * indicates a bug in the bot. By default, tgintegration treats this as an
+   * error to help you catch such issues during testing.
+   *
+   * Set to `true` if you're testing a bot known to have this behavior and
+   * want to proceed regardless.
+   *
+   * @default false
+   */
+  allowUnanswered?: boolean;
 }
