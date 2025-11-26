@@ -1,0 +1,13 @@
+{
+  "name": "@tgintegration/bun",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@tgintegration/core": "workspace:*",
+    "@mtcute/core": "^0.19.0"
+  }
+}

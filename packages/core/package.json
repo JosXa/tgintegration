@@ -1,0 +1,15 @@
+{
+  "name": "@tgintegration/core",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@mtcute/core": "^0.27.1"
+  },
+  "devDependencies": {
+    "@mtcute/tl": "^218.0.1"
+  }
+}

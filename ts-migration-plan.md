@@ -100,12 +100,15 @@ This document outlines the plan to rewrite `tgintegration` from Python (Pyrogram
     - Configure for JSR publishing.
 
 ## Phase 4: Testing Infrastructure
-- [ ] **Setup Test Environment**:
+- [x] **Setup Test Environment**:
     - Create `setup.ts` for global test configuration.
     - Implement a `createTestController` helper (fixture-like).
-- [ ] **Migrate Tests**:
-    - Port `tests/integration/test_basic.py` to `packages/core/tests/basic.test.ts`.
-    - Verify `collect` works as expected with `bun test`.
+- [x] **Migrate Tests**:
+    - **Note**: The `BotListBot` (used in legacy Python tests) is no longer functioning. We cannot run integration tests against it.
+    - Ported generic logic tests to unit tests.
+    - Verified `collect` works as expected with `bun test`.
+    - Renamed `raise*` parameters to `throw*`.
+    - Fixed type issues and aligned with `mtcute` API.
 
 ## Phase 5: Documentation (VitePress)
 - [ ] **Initialize VitePress**: Setup in `docs/`.
@@ -117,8 +120,12 @@ This document outlines the plan to rewrite `tgintegration` from Python (Pyrogram
     - Investigate tools for generating API docs from TS comments (e.g., TypeDoc) or write manual API references if preferred.
 
 ## Phase 5: Examples & CI/CD
-- [ ] **Migrate Examples**:
-    - Rewrite `examples/` scripts to TypeScript using the new library (consuming `packages/core`).
+- [x] **Migrate Examples**:
+    - Rewrote `examples/` scripts to TypeScript using the new library.
+    - `examples/readme-example.ts` (canonical example).
+    - `examples/playground.ts` (interactive).
+    - `examples/automation-dinopark.ts` (complex POM example).
+    - Created `examples/README.md` instructions.
 - [ ] **GitHub Actions**:
     - Create `test.yml` to run `bun test` and `biome check` across workspaces.
     - Create `publish.yml` to publish to JSR/NPM on release.

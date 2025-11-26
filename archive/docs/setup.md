@@ -1,2 +1,0 @@
-{!prerequisites.md!}
-{!installation.md!}
