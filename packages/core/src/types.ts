@@ -7,6 +7,8 @@ export type AnyTelegramClient = Pick<
   | "sendText"
   | "deleteHistory"
   | "onNewMessage"
+  | "on"
+  | "off"
   | "getFullChat"
   | "getFullUser"
   | "getCallbackAnswer"

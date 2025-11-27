@@ -16,7 +16,10 @@ describe("Inline Queries", () => {
   });
 
   test("should query inline results", async () => {
-    const results = await controller.inlineQuery("cats", { limit: 5, paginationDelay: 10000 });
+    const results = await controller.inlineQuery("cats", {
+      limit: 5,
+      paginationDelay: 10000,
+    });
 
     expect(results.count).toBeGreaterThan(0);
     expect(results.query).toBe("cats");
@@ -24,7 +27,10 @@ describe("Inline Queries", () => {
   });
 
   test("should filter results by type pattern", async () => {
-    const results = await controller.inlineQuery("dogs", { limit: 5, paginationDelay: 10000 });
+    const results = await controller.inlineQuery("dogs", {
+      limit: 5,
+      paginationDelay: 10000,
+    });
     const gifs = results.findResults({
       typePattern: /gif/i,
     });
@@ -34,7 +40,10 @@ describe("Inline Queries", () => {
   });
 
   test("should respect limit parameter", async () => {
-    const results = await controller.inlineQuery("funny", { limit: 3, paginationDelay: 10000 });
+    const results = await controller.inlineQuery("funny", {
+      limit: 3,
+      paginationDelay: 10000,
+    });
 
     expect(results.count).toBeLessThanOrEqual(3);
   });

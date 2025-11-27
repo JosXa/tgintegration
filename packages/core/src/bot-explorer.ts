@@ -33,18 +33,24 @@ export class BotExplorer {
   ): Promise<ExplorationResult> {
     const { maxDepth = 5, maxSteps = 100 } = options;
 
-    console.log(`[EXPLORER] Starting exploration with maxDepth=${maxDepth}, maxSteps=${maxSteps}`);
+    console.log(
+      `[EXPLORER] Starting exploration with maxDepth=${maxDepth}, maxSteps=${maxSteps}`,
+    );
 
     // Initial ping with /start and /help
     console.log(`[EXPLORER] Sending initial messages: /start, /help`);
     const initialResponse = await this.controller.pingBot({
       messages: ["/start", "/help"],
     });
-    console.log(`[EXPLORER] Initial response: ${initialResponse.count} messages`);
+    console.log(
+      `[EXPLORER] Initial response: ${initialResponse.count} messages`,
+    );
 
     // Get bot commands
     const botCommands = await this.controller.getBotCommands();
-    console.log(`[EXPLORER] Retrieved ${botCommands.length} bot commands: ${botCommands.join(', ')}`);
+    console.log(
+      `[EXPLORER] Retrieved ${botCommands.length} bot commands: ${botCommands.join(", ")}`,
+    );
 
     // If no interactive elements, send a sample message to trigger bot response
     let currentResponse = initialResponse;
@@ -53,12 +59,19 @@ export class BotExplorer {
       !initialResponse.replyKeyboard &&
       initialResponse.commands.length === 0
     ) {
-      console.log(`[EXPLORER] No interactive elements found, sending sample message to trigger bot`);
-      currentResponse = await this.controller.collect({ minMessages: 1 }, async () => {
-        await this.controller.sendText("This is an awesome poll");
-        await this.controller.sendText("👍🫰👎");
-      });
-      console.log(`[EXPLORER] Sample message response: ${currentResponse.count} messages`);
+      console.log(
+        `[EXPLORER] No interactive elements found, sending sample message to trigger bot`,
+      );
+      currentResponse = await this.controller.collect(
+        { minMessages: 1 },
+        async () => {
+          await this.controller.sendText("This is an awesome poll");
+          await this.controller.sendText("👍🫰👎");
+        },
+      );
+      console.log(
+        `[EXPLORER] Sample message response: ${currentResponse.count} messages`,
+      );
     }
 
     const root: ExplorationNode = {
@@ -78,12 +91,18 @@ export class BotExplorer {
     while (queue.length > 0 && steps < maxSteps) {
       const current = queue.shift()!;
       if (current.explored || current.depth >= maxDepth) {
-        if (current.explored) console.log(`[EXPLORER] Skipping already explored node at depth ${current.depth}`);
-        if (current.depth >= maxDepth) console.log(`[EXPLORER] Skipping node at max depth ${maxDepth}`);
+        if (current.explored)
+          console.log(
+            `[EXPLORER] Skipping already explored node at depth ${current.depth}`,
+          );
+        if (current.depth >= maxDepth)
+          console.log(`[EXPLORER] Skipping node at max depth ${maxDepth}`);
         continue;
       }
       current.explored = true;
-      console.log(`[EXPLORER] Exploring node at depth ${current.depth}, path: ${current.path.join(' -> ') || 'Root'}`);
+      console.log(
+        `[EXPLORER] Exploring node at depth ${current.depth}, path: ${current.path.join(" -> ") || "Root"}`,
+      );
 
       const actions = this.extractActions(
         current.response,
@@ -94,13 +113,17 @@ export class BotExplorer {
 
       for (const action of actions) {
         if (steps >= maxSteps) {
-          console.log(`[EXPLORER] Reached max steps limit (${maxSteps}), stopping`);
+          console.log(
+            `[EXPLORER] Reached max steps limit (${maxSteps}), stopping`,
+          );
           break;
         }
 
         console.log(`[EXPLORER] Performing action: ${action.description}`);
         const newResponse = await this.performAction(action);
-        console.log(`[EXPLORER] Action response: ${newResponse.count} messages`);
+        console.log(
+          `[EXPLORER] Action response: ${newResponse.count} messages`,
+        );
 
         const newNode: ExplorationNode = {
           path: [...current.path, action.description],
@@ -110,7 +133,7 @@ export class BotExplorer {
           explored: false,
         };
         current.children.push(newNode);
-        if (action.type === 'inline_click' || action.type === 'reply_click') {
+        if (action.type === "inline_click" || action.type === "reply_click") {
           queue.unshift(newNode); // Prioritize interactive actions
         } else {
           queue.push(newNode);
@@ -120,15 +143,17 @@ export class BotExplorer {
       }
     }
 
-    let stopReason = '';
+    let stopReason = "";
     if (queue.length === 0) {
-      stopReason = 'All reachable nodes explored';
+      stopReason = "All reachable nodes explored";
     } else if (steps >= maxSteps) {
       stopReason = `Reached maximum steps limit (${maxSteps})`;
     } else {
-      stopReason = 'Unknown reason';
+      stopReason = "Unknown reason";
     }
-    console.log(`[EXPLORER] Exploration completed: ${steps} steps taken. Stop reason: ${stopReason}`);
+    console.log(
+      `[EXPLORER] Exploration completed: ${steps} steps taken. Stop reason: ${stopReason}`,
+    );
     return { root, steps };
   }
 
@@ -204,20 +229,26 @@ export class BotExplorer {
   private async performAction(action: Action): Promise<Response> {
     switch (action.type) {
       case "inline_click":
-        return this.controller.collect({ minMessages: 0, maxMessages: 3, maxWait: 2500 }, async () => {
-          await (action.keyboard as InlineKeyboard).click(
-            action.buttonIndex as number,
-          );
-        });
+        return this.controller.collect(
+          { minMessages: 0, maxMessages: 3, maxWait: 2500 },
+          async () => {
+            await (action.keyboard as InlineKeyboard).click(
+              action.buttonIndex as number,
+            );
+          },
+        );
       case "reply_click":
         return (action.keyboard as ReplyKeyboard).click(
           action.buttonText as string,
-          { maxMessages: 3, maxWait: 2500 }
+          { maxMessages: 3, maxWait: 2500 },
         );
       case "command":
-        return this.controller.collect({ minMessages: 0, maxMessages: 3, maxWait: 2500 }, async () => {
-          await this.controller.sendCommand(action.command as string);
-        });
+        return this.controller.collect(
+          { minMessages: 0, maxMessages: 3, maxWait: 2500 },
+          async () => {
+            await this.controller.sendCommand(action.command as string);
+          },
+        );
     }
   }
 }
