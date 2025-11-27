@@ -82,9 +82,10 @@ export class Response {
   get commands(): string[] {
     const commands = new Set<string>();
     const regex = /\/(\w+)/g;
-    let match;
-    while ((match = regex.exec(this.fullText)) !== null) {
+    let match = regex.exec(this.fullText);
+    while (match !== null) {
       commands.add(match[1]);
+      match = regex.exec(this.fullText);
     }
     return Array.from(commands);
   }

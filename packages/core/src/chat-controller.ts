@@ -353,11 +353,10 @@ export class ChatController {
     try {
       const commands = await this.client.call({
         _: "bots.getBotCommands",
-        bot: await this.client.resolveUser(this.peer),
         scope: { _: "botCommandScopeDefault" },
         langCode: "",
       });
-      return commands.map((c: any) => c.command);
+      return commands.map((c: { command: string }) => c.command);
     } catch {
       return [];
     }

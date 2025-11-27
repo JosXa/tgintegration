@@ -1,4 +1,8 @@
-import { BotExplorer, ChatController } from "@tgintegration/core";
+import {
+  BotExplorer,
+  ChatController,
+  type ExplorationNode,
+} from "@tgintegration/core";
 import { createClient } from "../utils.js";
 
 /**
@@ -7,10 +11,10 @@ import { createClient } from "../utils.js";
 async function main() {
   const client = await createClient();
 
-  const peer = "@like";
+  const peer = "@josxatlbot";
 
   const controller = new ChatController(client, peer, {
-    globalActionDelay: 1000, // 1s delay
+    globalActionDelay: 1500, // 1.5s delay
   });
 
   await controller.initialize();
