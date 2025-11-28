@@ -7,9 +7,11 @@ describe("ChatController", () => {
   let mockClient: AnyTelegramClient;
   let controller: ChatController;
   let messageHandler: ((msg: Message) => void) | undefined;
+  let editHandler: ((msg: Message) => void) | undefined;
 
   beforeEach(() => {
     messageHandler = undefined;
+    editHandler = undefined;
     mockClient = {
       isConnected: true,
       start: mock(async () => {}),
@@ -24,6 +26,16 @@ describe("ChatController", () => {
         remove: mock((handler: (msg: Message) => void) => {
           if (messageHandler === handler) {
             messageHandler = undefined;
+          }
+        }),
+      },
+      onEditMessage: {
+        add: mock((handler: (msg: Message) => void) => {
+          editHandler = handler;
+        }),
+        remove: mock((handler: (msg: Message) => void) => {
+          if (editHandler === handler) {
+            editHandler = undefined;
           }
         }),
       },
@@ -98,5 +110,29 @@ describe("ChatController", () => {
   test("clearChat calls deleteHistory", async () => {
     await controller.clearChat();
     expect(mockClient.deleteHistory).toHaveBeenCalledWith("bot_username");
+  });
+
+  test("collect captures edited messages", async () => {
+    await controller.initialize();
+
+    const promise = controller.collect(
+      { minMessages: 1, maxWait: 1000 },
+      async () => {
+        // Simulate an edited message arriving shortly after action starts
+        setTimeout(() => {
+          if (editHandler) {
+            editHandler({
+              chat: { id: 12345 },
+              text: "Edited Hello",
+              date: new Date(),
+            } as Message);
+          }
+        }, 10);
+      },
+    );
+
+    const response = await promise;
+    expect(response.count).toBe(1);
+    expect(response.messages[0].text).toBe("Edited Hello");
   });
 });

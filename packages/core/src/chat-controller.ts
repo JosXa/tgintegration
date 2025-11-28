@@ -167,22 +167,22 @@ export class ChatController {
     const messages: Message[] = [];
     let lastMessageTime = 0;
 
-    const handler = (msg: Message) => {
+    const newHandler = (msg: Message) => {
       if (msg.chat.id === this._peerIdResolved) {
         messages.push(msg);
         lastMessageTime = Date.now();
       }
     };
 
-    const editHandler = (upd: any) => {
-      if (upd.chat.id === this._peerIdResolved) {
-        messages.push(upd.message);
+    const editHandler = (message: Message) => {
+      if (message.chat.id === this._peerIdResolved) {
+        messages.push(message);
         lastMessageTime = Date.now();
       }
     };
 
-    this.client.onNewMessage.add(handler);
-    this.client.on('editMessage', editHandler);
+    this.client.onNewMessage.add(newHandler);
+    this.client.onEditMessage.add(editHandler);
 
     try {
       await action();
@@ -219,8 +219,8 @@ export class ChatController {
         await sleep(100);
       }
     } finally {
-      this.client.onNewMessage.remove(handler);
-      this.client.off('editMessage', editHandler);
+      this.client.onNewMessage.remove(newHandler);
+      this.client.onEditMessage.remove(editHandler);
       this.updateLastActionTime();
     }
 

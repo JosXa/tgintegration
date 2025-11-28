@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:integration": "bun test"
+    "test": "bun test"
   },
   "devDependencies": {
     "bun-types": "latest"

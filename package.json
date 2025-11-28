@@ -10,7 +10,7 @@
   },
   "private": true,
   "scripts": {
-    "test": "bun test",
+    "test": "bun test packages/*",
     "lint": "biome check .",
     "format": "biome check .",
     "format:fix": "biome check --write --unsafe .",

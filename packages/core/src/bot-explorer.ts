@@ -89,7 +89,8 @@ export class BotExplorer {
     console.log(`[EXPLORER] Beginning BFS exploration`);
 
     while (queue.length > 0 && steps < maxSteps) {
-      const current = queue.shift()!;
+      const current = queue.shift();
+      if (!current) continue;
       if (current.explored || current.depth >= maxDepth) {
         if (current.explored)
           console.log(
