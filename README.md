@@ -1,102 +1,114 @@
-TgIntegration
-=============
+# tgintegration
 
-<ins>An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots) based on [Pyrogram](https://github.com/pyrogram/pyrogram).</ins>
+<ins>An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots) based on [mtcute](https://github.com/mtcute/mtcute). Written in TypeScript.</ins>
 <br />**Test your bot in realtime scenarios!**
 
-**Are you a user of TgIntegration?** I'm actively looking for feedback and ways to improve the library, come and let me know in the [official group](https://t.me/TgIntegration)!
+**Are you a user of tgintegration?** I'm actively looking for feedback and ways to improve the library, come and let me know in the [official group](https://t.me/tgintegration)!
 
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tgintegration)](https://pypi.org/project/tgintegration/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/tgintegration)](https://pypi.org/project/tgintegration/)
-[![PyPI](https://img.shields.io/pypi/v/tgintegration)](https://pypi.org/project/tgintegration/)
+[![JSR](https://jsr.io/badges/@tgintegration/core)](https://jsr.io/@tgintegration/core)
+[![NPM](https://img.shields.io/npm/v/@tgintegration/core)](https://www.npmjs.com/package/@tgintegration/core)
 ![GitHub top language](https://img.shields.io/github/languages/top/josxa/tgintegration)
-[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/josxa/tgintegration/Build/master)](https://github.com/JosXa/tgintegration/actions?query=workflow%3ABuild)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/josxa/tgintegration/Docs?label=docs)](https://josxa.github.io/tgintegration)
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/josxa/tgintegration/ci.yml?branch=main)](https://github.com/JosXa/tgintegration/actions/workflows/ci.yml)
 
-[Features](#features) • [Requirements](#prerequisites) • [Installation](#installation) • [**Quick Start Guide**](#quick-start-guide) • [Test Frameworks](#integrating-with-test-frameworks)
+[Features](#features) • [Prerequisites](#prerequisites) • [Installation](#installation) • [**Quick Start Guide**](#quick-start-guide) • [Test Frameworks](#integrating-with-test-frameworks)
 
 - 📖 [Documentation](https://josxa.github.io/tgintegration/)
-- 👥 [Telegram Chat](https://t.me/TgIntegration)
+- 👥 [Telegram Chat](https://t.me/tgintegration)
 - 📄 Free software: [MIT License](https://tldrlegal.com/license/mit-license)
-- [<img src="https://raw.githubusercontent.com/JosXa/tgintegration/master/docs/assets/pycharm-logos/icon-pycharm.svg" width="20" height="20" />]((https://www.jetbrains.com/?from=tgintegration)) Built with [PyCharm](https://www.jetbrains.com/?from=tgintegration)
 
-Features
---------
+## Features
 
-▶️ [**See it in action!** 🎬](https://josxa.github.io/tgintegration/#see-it-in-action)
+<!-- ▶️ [**See it in action!** 🎬](https://josxa.github.io/tgintegration/#see-it-in-action) (coming soon) -->
 
 - 👤 Log into a Telegram user account and interact with bots or other users
-- ✅ Write **realtime integration tests** to ensure that your bot works as expected! ▶️ [Pytest examples](https://github.com/JosXa/tgintegration/tree/master/examples/pytest)
-- ⚡️ **Automate any interaction** on Telegram! ▶️ [Automatically play @IdleTownBot](https://github.com/JosXa/tgintegration/blob/master/examples/automation/idletown.py) | [More examples](https://github.com/JosXa/tgintegration/tree/master/examples/automation)
-- 🛡 Fully typed for safety and **autocompletion** with your favorite IDE
-- 🐍 Built for modern Python (3.8+) with high test coverage
+- ✅ Write **realtime integration tests** to ensure that your bot works as expected! ▶️ [Bun Test examples](https://github.com/JosXa/tgintegration/tree/master/examples/bun-test)
+- ⚡️ **Automate any interaction** on Telegram! ~~▶️ [Automatically play @IdleTownBot](https://github.com/JosXa/tgintegration/blob/master/examples/automation/like-bot.ts)~~ | [More examples](https://github.com/JosXa/tgintegration/tree/master/examples/automation)
+- 🛡 Fully typed
+- 🚀 **Runtime agnostic** - Works with Bun, Node.js, and Deno
+- 📦 **ES modules** only - Modern ESM JavaScript ecosystem
+- 🧪 Built with high test coverage and modern tooling
 
+## Prerequisites
 
-Prerequisites
--------------
+- A [Telegram API key](https://docs.mtcute.dev/getting-started/setup#api-keys).
+- A [signed in mtcute Telegram Client](https://mtcute.dev/guide/intro/sign-in.html)
+- **Node.js 18+**, **Bun 1.0+**, or **Deno 1.40+**
+- **TypeScript 5.0+** (recommended)
 
-[Same as Pyrogram](https://github.com/pyrogram/pyrogram#requirements):
+A basic understanding of async/await and **callback patterns** is assumed, as tgintegration heavily relies on the `collect(callback)` pattern to automate conversations.
 
-- A [Telegram API key](https://docs.pyrogram.ml/start/ProjectSetup#api-keys).
-- A user session (seeing things happen in your own account is great for getting started)
-- But: **Python 3.8** or higher!
+## Installation
 
-A basic understanding of async/await and [asynchronous context managers](https://docs.python.org/3/library/contextlib.html#contextlib.asynccontextmanager) is assumed, as TgIntegration heavily relies on the latter to automate conversations.
+### Bun
 
+```bash
+bun add @tgintegration/core @tgintegration/bun
+```
 
-Installation
-------------
+### Node.js
 
-All hail pip!
+```bash
+npm add @tgintegration/core @tgintegration/node
+```
 
-$ `pip install tgintegration --upgrade`
+### Deno
 
-<br />
-<details><summary><i>Feeling adventurous?</i></summary><p>
+```bash
+deno add jsr:@tgintegration/core
+```
 
-For bleeding edge, install the master branch:
+### JSR (Universal)
 
-$ `pip install git+https://github.com/JosXa/tgintegration.git`
+```bash
+npx jsr add @tgintegration/core
+```
 
-</p></details>
+## Quick Start Guide
 
+_You can [follow along by running the example](https://github.com/JosXa/tgintegration/blob/master/examples/readme-example.ts) ([README](https://github.com/JosXa/tgintegration/blob/master/examples/README.md))_
 
-Quick Start Guide
------------------
-
-_You can [follow along by running the example](https://github.com/JosXa/tgintegration/blob/master/examples/readme_example/readmeexample.py) ([README](https://github.com/JosXa/tgintegration/blob/master/examples/README.md))_
-
-#### Setup
+### Setup
 
 Suppose we want to write integration tests for [@BotListBot](https://t.me/BotListBot) by sending it a couple of
 messages and checking that it responds the way it should.
 
-After [configuring a Pyrogram **user client**](https://docs.pyrogram.org/start/setup),
-let's start by creating a `BotController`:
+After [configuring an mtcute **user client**](https://docs.mtcute.dev/getting-started/setup),
+let's start by creating a `ChatController`:
 
-``` python
-from tgintegration import BotController
+```typescript
+import { ChatController } from "@tgintegration/core";
+import { TelegramClient } from "@mtcute/bun";
 
-controller = BotController(
-    peer="@BotListBot",      # The bot under test is https://t.me/BotListBot 🤖
-    client=client,           # This assumes you already have a Pyrogram user client available
-    max_wait=8,              # Maximum timeout for responses (optional)
-    wait_consecutive=2,      # Minimum time to wait for more/consecutive messages (optional)
-    raise_no_response=True,  # Raise `InvalidResponseError` when no response is received (defaults to True)
-    global_action_delay=2.5  # Choosing a rather high delay so we can observe what's happening (optional)
-)
+const client = new TelegramClient({
+  apiId: 12345, // Your API ID
+  apiHash: "abc123", // Your API hash
+  storage: "session.db",
+});
 
-await controller.clear_chat()  # Start with a blank screen (⚠️)
+const controller = new ChatController(client, "@BotListBot", {
+  maxWait: 8000, // Maximum timeout for responses (optional)
+  globalActionDelay: 2500, // Delay between actions for observation (optional)
+});
+
+await controller.initialize();
+await controller.clearChat(); // Start with a blank screen (⚠️)
 ```
 
-Now, let's send `/start` to the bot and wait until exactly three messages have been received by using the asynchronous `collect` context manager:
+Now, let's send `/start` to the bot and wait until exactly three messages have been received by using the `collect` method with a callback:
 
-``` python
-async with controller.collect(count=3) as response:
-    await controller.send_command("start")
+```typescript
+const response = await controller.collect(
+  {
+    numMessages: 3,
+    maxWait: 8000,
+  },
+  async () => {
+    await controller.sendCommand("start");
+  }
+);
 
-assert response.num_messages == 3  # Three messages received, bundled under a `Response` object
-assert response.messages[0].sticker  # The first message is a sticker
+console.log(`Received ${response.count} messages`);
+console.log("First message is a sticker:", response.messages[0].media?.type === "sticker");
 ```
 
 The result should look like this:
@@ -105,18 +117,16 @@ The result should look like this:
 
 Examining the buttons in the response...
 
-``` python
-# Get first (and only) inline keyboard from the replies
-inline_keyboard = response.inline_keyboards[0]
-
-# Three buttons in the first row
-assert len(inline_keyboard.rows[0]) == 3
+```typescript
+// Get the inline keyboard and examine its buttons
+const inlineKeyboard = response.inlineKeyboards[0];
+console.log("Three buttons in the first row:", inlineKeyboard.buttons[0].length === 3);
 ```
 
 We can also press the inline keyboard buttons, for example based on a regular expression:
 
-``` python
-examples = await inline_keyboard.click(pattern=r".*Examples")
+```typescript
+const examples = await inlineKeyboard.click(/.*Examples/);
 ```
 
 As the bot edits the message, `.click()` automatically listens for "message edited" updates and returns
@@ -124,53 +134,129 @@ the new state as another `Response`.
 
 ![image](https://raw.githubusercontent.com/JosXa/tgintegration/master/docs/assets/examples_botlistbot.png)
 
-``` python
-assert "Examples for contributing to the BotList" in examples.full_text
+```typescript
+console.log("Found examples text:", examples.fullText.includes("Examples for contributing to the BotList"));
 ```
 
-#### Error handling
+### Error handling
 
 So what happens when we send an invalid query or the peer fails to respond?
 
-The following instruction will raise an `InvalidResponseError` after `controller.max_wait` seconds.
-This is because we passed `raise_no_response=True` during controller initialization.
+The following instruction will raise an `InvalidResponseError` after `maxWait` seconds.
+This is because we passed `throwOnTimeout: true` in the collect options.
 
-``` python
-try:
-    async with controller.collect():
-        await controller.send_command("ayylmao")
-except InvalidResponseError:
-    pass  # OK
+```typescript
+import { InvalidResponseError } from "@tgintegration/core";
+
+try {
+  await controller.collect(
+    {
+      maxWait: 8000,
+      throwOnTimeout: true,
+    },
+    async () => {
+      await controller.sendCommand("ayylmao");
+    }
+  );
+} catch (e) {
+  if (e instanceof InvalidResponseError) {
+    console.log("Expected timeout occurred");
+  }
+}
 ```
 
-Let's explicitly set `raise_` to `False` so that no exception occurs:
+Let's explicitly set `throwOnTimeout` to `false` so that no exception occurs:
 
-``` python
-async with controller.collect(raise_=False) as response:
-    await client.send_message(controller.peer_id, "Henlo Fren")
+```typescript
+const noReplyResponse = await controller.collect(
+  {
+    maxWait: 3000,
+    throwOnTimeout: false,
+  },
+  async () => {
+    await controller.client.sendText(controller.peer, "Henlo Fren");
+  }
+);
+
+if (noReplyResponse.isEmpty) {
+  console.log("No response received as expected");
+}
 ```
 
-In this case, _tgintegration_ will simply emit a warning, but you can still assert
-that no response has been received by using the `is_empty` property:
+## Integrating with Test Frameworks
 
-``` python
-assert response.is_empty
+### Bun Test (Recommended)
+
+Bun Test is the recommended test framework for use with **tgintegration**. You can
+[browse through several examples](https://github.com/JosXa/tgintegration/tree/master/examples/bun-test)
+and **tgintegration** also uses Bun Test for its own test suite.
+
+```typescript
+import { test, expect } from "bun:test";
+import { ChatController } from "@tgintegration/core";
+
+test("bot should respond to /start", async () => {
+  const controller = new ChatController(client, "@MyBot");
+  await controller.initialize();
+
+  const response = await controller.collect(
+    { minMessages: 1 },
+    async () => await controller.sendCommand("start")
+  );
+
+  expect(response.count).toBeGreaterThan(0);
+});
 ```
 
+### Node.js Test Runner
 
-Integrating with Test Frameworks
---------------------------------
+**tgintegration** is runner-agnostic and works perfectly with Node.js's built-in test runner:
 
-### [pytest](https://docs.pytest.org/en/stable/index.html)
+```typescript
+import { test } from "node:test";
+import { strict as assert } from "node:assert";
+import { ChatController } from "@tgintegration/core";
 
-Pytest is the recommended test framework for use with _tgintegration_. You can
-[browse through several examples](https://github.com/JosXa/tgintegration/tree/master/examples/pytest)
-and _tgintegration_ also uses pytest for its own test suite.
+test("bot should respond to /start", async () => {
+  const controller = new ChatController(client, "@MyBot");
+  await controller.initialize();
 
-### unittest
+  const response = await controller.collect(
+    { minMessages: 1 },
+    async () => await controller.sendCommand("start")
+  );
 
-I haven't tried out the builtin `unittest` library in combination with _tgintegration_ yet,
-but theoretically I don't see any problems with it.
-If you do decide to try it, it would be awesome if you could tell me about your
-experience and whether anything could be improved 🙂
-Let us know at 👉 https://t.me/TgIntegration or in an issue.
+  assert(response.count > 0);
+});
+```
+
+### Deno Test
+
+Deno users can enjoy the same seamless experience:
+
+```typescript
+import { test } from "deno:test";
+import { assertEquals } from "std/assert";
+import { ChatController } from "@tgintegration/core";
+
+test("bot should respond to /start", async () => {
+  const controller = new ChatController(client, "@MyBot");
+  await controller.initialize();
+
+  const response = await controller.collect(
+    { minMessages: 1 },
+    async () => await controller.sendCommand("start")
+  );
+
+  assertEquals(response.count > 0, true);
+});
+```
+
+## Architecture
+
+**tgintegration** follows a monorepo structure with platform-specific packages:
+
+- `@tgintegration/core` - Main library logic (platform agnostic)
+- `@tgintegration/bun` - Bun-specific optimizations and entry point
+- `@tgintegration/node` - Node.js compatibility layer
+- `@tgintegration/deno` - Deno compatibility and JSR publishing

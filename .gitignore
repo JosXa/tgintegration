@@ -1,75 +1,44 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# dependencies (bun install)
+node_modules
 
-# C extensions
-*.so
+# output
+out
+dist
+*.tgz
 
-# Distribution / packaging
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
+# code coverage
+coverage
+*.lcov
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
+# caches
+.eslintcache
 .cache
-nosetests.xml
-coverage.xml
-*,cover
-.hypothesis/
+*.tsbuildinfo
 
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# pyenv python configuration file
-.python-version
-/examples/test.py
-/examples/config.ini
-/examples/*/config.ini
-
-*.session*
-/.env
+# IntelliJ based IDEs
 .idea
 
-.mypy_cache
-/site/
+# Finder (MacOS) folder config
+.DS_Store
 
-test-results*
-docs/api
+# Added by dotagent: ignore exported AI rule files
+AGENTS.md
+.roo/rules/**
+GEMINI.md
+
+# Database files
+**/session.db*
+**/test-session.db*
+**/memory*

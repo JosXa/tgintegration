@@ -1,0 +1,29 @@
+{
+  "name": "tgintegration",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@biomejs/biome": "^2.3.7"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "private": true,
+  "scripts": {
+    "test": "bun test packages/*",
+    "lint": "biome check .",
+    "format": "biome check .",
+    "format:fix": "biome check --write --unsafe .",
+    "typecheck": "tsc -b --noEmit",
+    "ai:check": "bun run format:fix && bun run typecheck && bun run test"
+  },
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "examples"
+  ],
+  "dependencies": {
+    "@mtcute/bun": "^0.27.1",
+    "@mtcute/core": "^0.27.1"
+  }
+}
