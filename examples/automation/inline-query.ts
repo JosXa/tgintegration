@@ -11,7 +11,6 @@ async function main() {
 
   // @gif is a popular bot that returns GIF results for inline queries
   const controller = new ChatController(client, "@gif");
-  await controller.initialize();
 
   console.log("Querying @gif for cat GIFs...");
   const results = await controller.inlineQuery("cats", { limit: 10 });
@@ -51,7 +50,6 @@ async function main() {
   // Example: Filter by title pattern
   console.log("\n--- Filtering by title pattern ---");
   const botListController = new ChatController(client, "@BotListBot");
-  await botListController.initialize();
 
   const botResults = await botListController.inlineQuery("examples");
   const exampleResults = botResults.findResults({

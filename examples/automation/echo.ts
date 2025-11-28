@@ -7,8 +7,6 @@ async function main() {
   const client = await createClient();
   const controller = new ChatController(client, peer);
 
-  await controller.initialize();
-
   while (true) {
     console.log("Waiting for a message...");
 

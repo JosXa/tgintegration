@@ -14,7 +14,6 @@ describe("ChatController", () => {
     editHandler = undefined;
     mockClient = {
       isConnected: true,
-      start: mock(async () => {}),
       getFullChat: mock(async () => ({ id: 12345 })), // The resolved ID
       getFullUser: mock(async () => ({ id: 12345 })), // The resolved ID
       sendText: mock(async () => {}),
@@ -45,8 +44,6 @@ describe("ChatController", () => {
   });
 
   test("collect captures messages sent during action", async () => {
-    await controller.initialize();
-
     const promise = controller.collect(
       { minMessages: 1, maxWait: 1000 },
       async () => {
@@ -69,8 +66,6 @@ describe("ChatController", () => {
   });
 
   test("collect throws on timeout if throwOnTimeout is true", async () => {
-    await controller.initialize();
-
     const promise = controller.collect(
       {
         minMessages: 1,
@@ -86,8 +81,6 @@ describe("ChatController", () => {
   });
 
   test("pingBot sends commands", async () => {
-    await controller.initialize();
-
     // Mock collect since pingBot calls it
     const collectSpy = mock(
       async (_opts: unknown, action: () => Promise<void>) => {
@@ -113,8 +106,6 @@ describe("ChatController", () => {
   });
 
   test("collect captures edited messages", async () => {
-    await controller.initialize();
-
     const promise = controller.collect(
       { minMessages: 1, maxWait: 1000 },
       async () => {

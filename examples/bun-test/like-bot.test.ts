@@ -8,8 +8,6 @@ describe("@like bot", () => {
   beforeAll(async () => {
     controller = new ChatController(await createClient(), "@like");
 
-    await controller.initialize();
-
     // Clear chat to start fresh
     await controller.clearChat();
   });

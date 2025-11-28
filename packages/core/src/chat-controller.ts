@@ -22,22 +22,7 @@ export class ChatController {
     this.globalActionDelay = this.defaults.globalActionDelay ?? 800;
   }
 
-  async initialize() {
-    // We assume start() is safe to call or check if connected
-    // TelegramClient (highlevel) usually doesn't expose simple isConnected
-    // We can try accessing network.isConnected if available, but start() is robust.
-    // For now, just call start({}) which should be idempotent or we catch error.
-    try {
-      await this.client.start({});
-    } catch (e: unknown) {
-      if (e instanceof Error && e.message?.includes("already connected")) {
-        // ignore
-      } else {
-        // throw e;
-        // actually start() might not throw if already connected, just return user.
-      }
-    }
-
+  private async initialize() {
     // Try to get as chat first (groups/channels), fallback to user (bots/private chats)
     try {
       const chat = await this.client.getFullChat(this.peer);

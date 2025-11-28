@@ -11,28 +11,37 @@ const projectRoot = resolve(__dirname, "..");
 dotenv.config({ path: resolve(projectRoot, ".env") });
 
 export async function createClient() {
-  const apiId = parseInt(process.env.API_ID || "", 10);
-  const apiHash = process.env.API_HASH || "";
-  const _phone = process.env.PHONE_NUMBER || "";
-  const session = process.env.SESSION_STRING || "";
+  const apiId = process.env.API_ID;
+  const apiHash = process.env.API_HASH;
+  const phone = process.env.PHONE_NUMBER;
+  const session = process.env.SESSION_STRING;
 
   if (!apiId || !apiHash) {
     throw new Error("Please set API_ID and API_HASH environment variables.");
+  }
+
+  if (!phone && !session) {
+    throw new Error("Please set either PHONE_NUMBER or SESSION_STRING environment variable.");
   }
 
   // Use file storage with session import (like in test-client.ts)
   const dbPath = resolve(projectRoot, "examples", "session.db");
 
   const client = new TelegramClient({
-    apiId,
+    apiId: parseInt(apiId, 10),
     apiHash,
     storage: dbPath,
   });
 
-  await client.connect();
-
   if (session) {
     await client.importSession(session, true);
+  }
+
+  await client.start({ phone });
+
+  if (!session) {
+    const sessionString = await client.exportSession();
+    console.log(`Please add your session string to .env:\n\nSESSION_STRING=${sessionString}\n`);
   }
 
   return client;

@@ -8,7 +8,6 @@ describe("Inline Queries", () => {
   beforeAll(async () => {
     // Use @gif bot for testing - it has inline query support
     controller = new ChatController(await createClient(), "@gif");
-    await controller.initialize();
   });
 
   afterAll(() => {

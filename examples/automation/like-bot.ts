@@ -25,8 +25,6 @@ async function main() {
     }
   */
 
-  await controller.initialize();
-
   console.log("Clearing chat to start with a blank screen...");
   await controller.clearChat();
 

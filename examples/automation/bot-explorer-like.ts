@@ -17,8 +17,6 @@ async function main() {
     globalActionDelay: 1500, // 1.5s delay
   });
 
-  await controller.initialize();
-
   console.log("Clearing chat...");
   await controller.clearChat();
 

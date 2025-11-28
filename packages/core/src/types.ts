@@ -3,7 +3,6 @@ import type { TelegramClient } from "@mtcute/core/client.js";
 
 export type AnyTelegramClient = Pick<
   TelegramClient,
-  | "start"
   | "sendText"
   | "deleteHistory"
   | "onNewMessage"

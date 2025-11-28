@@ -15,8 +15,6 @@ async function main() {
     globalActionDelay: 2500, // 2.5s delay to follow along
   });
 
-  await controller.initialize();
-
   console.log("Clearing chat to start with a blank screen...");
   await controller.clearChat();
 
