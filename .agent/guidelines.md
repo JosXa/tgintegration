@@ -6,13 +6,7 @@ alwaysApply: true
 
 ### Architecture & Design
 
-**TgIntegration** is a TypeScript library for Telegram integration testing and automation, treating Telegram chats like web pages ("Playwright for Telegram").
-
-#### Core Principles
-- **Action-Wrapper Pattern**: Use `collect(options, action)` API to ensure event listeners are attached before actions occur
-- **Page Object Model**: `ChatController` wraps an existing `mtcute` client instance, scoped to specific chat/peer
-- **Runner Agnostic**: Use standard Promises and Errors, compatible with Bun Test, Node Test Runner, and Deno Test
-- **Monorepo Structure**: Root workspace with platform-specific packages
+**TgIntegration** is a TypeScript library for Telegram integration testing and automation
 
 ### Technology Stack
 
@@ -22,19 +16,8 @@ alwaysApply: true
 - **Testing**: `bun test`
 - **Linting/Formatting**: Biome
 - **Package Management**: ESM only
-- **Registry**: JSR (primary), NPM (secondary)
-
-### Project Structure
-
-```
-├── packages/
-│   ├── core/          # Main library logic (@tgintegration/core)
-│   ├── bun/           # Bun entry point (@tgintegration/bun)
-│   ├── node/          # Node.js entry point (@tgintegration/node)
-│   └── deno/          # Deno entry point (@tgintegration/deno)
-├── docs/              # VitePress documentation
-└── examples/          # TypeScript examples
-```
+- **Registry**: JSR, NPM
+- **Targets**: Deno, NPM, Bun, NodeJS
 
 ### Implementation Guidelines
 
