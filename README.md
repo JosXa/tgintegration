@@ -1,6 +1,6 @@
 # tgintegration
 
-<ins>An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots) based on [mtcute](https://github.com/mtcute/mtcute). Written in TypeScript.</ins>
+An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots) based on [mtcute](https://github.com/mtcute/mtcute). Written in TypeScript.
 <br />**Test your bot in realtime scenarios!**
 
 **Are you a user of tgintegration?** I'm actively looking for feedback and ways to improve the library, come and let me know in the [official group](https://t.me/tgintegration)!
