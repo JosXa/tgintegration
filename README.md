@@ -1,5 +1,9 @@
 # tgintegration
 
+> [!IMPORTANT]
+> I'm in the process of rewriting this project from Python to TypeScript.
+> It is not published on any registry yet, and **NOT READY FOR USE**.
+
 An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots) based on [mtcute](https://github.com/mtcute/mtcute). Written in TypeScript.
 <br />**Test your bot in realtime scenarios!**
 
