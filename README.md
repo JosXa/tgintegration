@@ -1,6 +1,6 @@
 # tgintegration
 
-<ins>An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots) based on [mtcute](https://github.com/mtcute/mtcute). Written in TypeScript.</ins>
+An integration test and automation library for [Telegram Bots](https://core.telegram.org/bots) based on [mtcute](https://github.com/mtcute/mtcute). Written in TypeScript.
 <br />**Test your bot in realtime scenarios!**
 
 **Are you a user of tgintegration?** I'm actively looking for feedback and ways to improve the library, come and let me know in the [official group](https://t.me/tgintegration)!
@@ -31,11 +31,9 @@
 ## Prerequisites
 
 - A [Telegram API key](https://docs.mtcute.dev/getting-started/setup#api-keys).
-- A [signed in mtcute Telegram Client](https://mtcute.dev/guide/intro/sign-in.html)
+- A [signed in mtcute Telegram Client](https://mtcute.dev/guide/intro/sign-in.html#signing-in-1)
 - **Node.js 18+**, **Bun 1.0+**, or **Deno 1.40+**
 - **TypeScript 5.0+** (recommended)
-
-A basic understanding of async/await and **callback patterns** is assumed, as tgintegration heavily relies on the `collect(callback)` pattern to automate conversations.
 
 ## Installation
 

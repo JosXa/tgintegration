@@ -1,5 +1,5 @@
 import { ChatController, InvalidResponseError } from "@tgintegration/core";
-import { createClient } from "./utils.js";
+import { createClient } from "../utils.js";
 
 /**
  * Full version of the GitHub README example.
