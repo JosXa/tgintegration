@@ -21,7 +21,9 @@ export async function createClient() {
   }
 
   if (!phone && !session) {
-    throw new Error("Please set either PHONE_NUMBER or SESSION_STRING environment variable.");
+    throw new Error(
+      "Please set either PHONE_NUMBER or SESSION_STRING environment variable.",
+    );
   }
 
   // Use file storage with session import (like in test-client.ts)
@@ -41,7 +43,9 @@ export async function createClient() {
 
   if (!session) {
     const sessionString = await client.exportSession();
-    console.log(`Please add your session string to .env:\n\nSESSION_STRING=${sessionString}\n`);
+    console.log(
+      `Please add your session string to .env:\n\nSESSION_STRING=${sessionString}\n`,
+    );
   }
 
   return client;

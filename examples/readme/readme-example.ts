@@ -21,8 +21,7 @@ async function main() {
   console.log("Sending /start and waiting for exactly 3 messages...");
   const response = await controller.collect(
     {
-      minMessages: 3,
-      maxMessages: 3,
+      numMessages: 3,
       maxWait: 8000,
     },
     async () => {

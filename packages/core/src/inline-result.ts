@@ -31,8 +31,7 @@ export class InlineResult {
     // Use collect to capture the sent message
     const response = await this.controller.collect(
       {
-        minMessages: 1,
-        maxMessages: 1,
+        numMessages: 1,
         maxWait: 10000,
       },
       async () => {
