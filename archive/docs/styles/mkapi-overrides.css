@@ -1,0 +1,65 @@
+/* http://127.0.0.1:8000/css/mkapi-common.css */
+
+.mkapi-node {
+  font-size: 0.8rem;
+}
+
+.mkapi-node a.mkapi-src-link, a.mkapi-docs-link {
+  font-size: 0.64rem;
+}
+
+.mkapi-object.code .mkapi-object-body {
+  font-size: inherit;
+}
+
+.mkapi-node .mkapi-object.code mkapi-object-body {
+  font-size: 0.8rem;
+}
+
+.mkapi-node .mkapi-section-name .mkapi-section-name-body {
+  font-size: 1em;
+}
+
+.mkapi-section-body {
+  font-size: 1em;
+}
+
+div.mkapi-section-body.examples pre code {
+  font-size: inherit;
+}
+
+.highlight {
+  font-size: 1em;
+}
+
+.mkapi-node .mkapi-base {
+  font-size: .9em;
+}
+
+.mkapi-node code.mkapi-item-name,
+.mkapi-node code.mkapi-object-signature,
+.mkapi-node code.mkapi-object-parenthesis,
+.mkapi-node span.mkapi-item-dash,
+.mkapi-node span.mkapi-item-type {
+  font-size: 0.9em;
+}
+
+.mkapi-node .mkapi-item-name,
+.mkapi-node .mkapi-object,
+.mkapi-node .mkapi-object code,
+.mkapi-node .mkapi-object.code h2.mkapi-object-body,
+.mkapi-node h2 .mkapi-object {
+  font-size: 1em;
+}
+
+.mkapi-node ul.mkapi-items li::before {
+  font-size: 80%;
+}
+
+.mkapi-section-name {
+  padding: 0px 8px 2px 8px;
+}
+
+.mkapi-object.plain .mkapi-object-kind {
+  font-weight: normal;
+}

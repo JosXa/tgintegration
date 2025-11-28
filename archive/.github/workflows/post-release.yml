@@ -1,0 +1,26 @@
+name: Post release
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+jobs:
+  changelog:
+    name: Update changelog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+      - uses: rhysd/changelog-from-release/action@v2
+        with:
+          file: CHANGELOG.md
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send message to @TgIntegration  # https://github.com/appleboy/telegram-action
+        uses: appleboy/telegram-action@master
+        with:
+          to: -1001246107966
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            A new version of TgIntegration has been released! 🎉
+            See what's new at https://github.com/JosXa/tgintegration/releases

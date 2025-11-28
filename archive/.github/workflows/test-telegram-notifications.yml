@@ -1,0 +1,23 @@
+name: Test Telegram Notifications
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v2
+      - name: Send message to @TgIntegration  # https://github.com/appleboy/telegram-action
+        uses: appleboy/telegram-action@master
+        with:
+          to: -1001246107966
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            A new version of TgIntegration has been released! 🎉
+            See what's new at https://github.com/JosXa/tgintegration/releases
