@@ -1,0 +1,16 @@
+{
+  "name": "@tgintegration/bun-test",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "dependencies": {
+    "@tgintegration/core": "workspace:*",
+    "@mtcute/bun": "latest"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@examples/panda-quiz-bot",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "bun run index.ts",
+    "dev": "bun --watch run index.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.74",
+    "@mtcute/core": "^0.27.1",
+    "@types/node": "^24.10.1",
+    "ai": "^5.0.104",
+    "zod": "^4.1.13",
+    "@tgintegration/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.0.0"
+  }
+}
