@@ -35,8 +35,6 @@ An integration test and automation library for [Telegram Bots](https://core.tele
 - **Node.js 18+**, **Bun 1.0+**, or **Deno 1.40+**
 - **TypeScript 5.0+** (recommended)
 
-A basic understanding of async/await and **callback patterns** is assumed, as tgintegration heavily relies on the `collect(callback)` pattern to automate conversations.
-
 ## Installation
 
 ### Bun
