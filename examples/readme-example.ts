@@ -37,34 +37,23 @@ async function main() {
   }
   console.log("Three messages received, bundled as a `Response`.");
 
-  // Check for sticker
-  if (response.messages[0].media?.type === "sticker") {
-    console.log("First message is a sticker.");
-  }
+  // First message is a sticker
+  console.log(
+    "First message is a sticker:",
+    response.messages[0].media?.type === "sticker",
+  );
 
-  console.log("Let's examine the buttons in the response...");
-  const inlineKeyboards = response.inlineKeyboards;
-  if (inlineKeyboards.length > 0) {
-    const kb = inlineKeyboards[0];
-    // In legacy code, rows[0] had 3 buttons.
-    if (kb.buttons[0].length === 3) {
-      console.log("Yep, there are three buttons in the first row.");
-    }
+  // Get the inline keyboard and examine its buttons
+  const inlineKeyboard = response.inlineKeyboards[0];
+  console.log(
+    "Three buttons in the first row:",
+    inlineKeyboard.buttons[0].length === 3,
+  );
 
-    // Click button by pattern
-    console.log("Clicking button matching 'Examples'...");
-    try {
-      const clickResult = await kb.click(/.*Examples/);
-
-      if (clickResult.answered) {
-        console.log("Button click was acknowledged by the bot!");
-      }
-    } catch (_e) {
-      console.log(
-        "Could not find or click button (bot might be down or changed).",
-      );
-    }
-  }
+  // Click the Examples button
+  console.log("Clicking Examples button...");
+  const clickResult = await inlineKeyboard.click(/.*Examples/);
+  console.log("Button click acknowledged:", clickResult.answered);
 
   console.log(
     "So what happens when we send an invalid query or the peer fails to respond?",
